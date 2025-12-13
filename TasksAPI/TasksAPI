@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TasksAPI</name>
+    </assembly>
+    <members>
+        <member name="M:TasksAPI.Controllers.UsersControllers.Get">
+            <summary>
+            Get Users
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

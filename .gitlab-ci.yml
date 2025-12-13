@@ -1,0 +1,88 @@
+stages:
+  - sonarqube-check
+  - sonarqube-vulnerability-report
+  - test
+  - build
+  - deploy
+        
+test:
+  stage: test
+  image: registry.danielsplaygrounds.com/docker/images/sonnar_net:latest
+  variables:
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  script:  
+      - dotnet build
+      - dotnet test TMSTest
+  allow_failure: false
+  tags:
+   - test
+    
+build:
+  stage: build
+  tags:
+    - build
+  script:  
+    - echo "Build stage"
+    - cd TasksAPI
+    - docker build -t registry.danielsplaygrounds.com/docker/images/tms_api:latest .
+  needs:
+  - job: test
+    artifacts: false  
+  only:
+    - main
+deploy:
+  stage: deploy
+  before_script:
+    - echo "$REGYSTRY_PASSWORD" | docker login $REGYSTRY_URL --username $REGYSTRY_USER --password-stdin
+  script:
+  - echo "Deploy stage"
+  - docker push registry.danielsplaygrounds.com/docker/images/tms_api:latest
+  needs:
+  - job: build
+    artifacts: false
+  only:
+    - main
+
+
+
+sonarqube-check:
+  stage: sonarqube-check
+  image: registry.danielsplaygrounds.com/docker/images/sonnar_net:latest
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+      - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
+      - "dotnet sonarscanner begin /k:\"main_tms_api_AY1m4-5FhBmORvJkFybs\" /d:sonar.token=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
+      - "dotnet build"
+      - "dotnet sonarscanner end /d:sonar.token=\"$SONAR_TOKEN\""
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - main
+    - develop
+
+
+
+sonarqube-vulnerability-report:
+  stage: sonarqube-vulnerability-report
+  image: registry.danielsplaygrounds.com/docker/images/sonnar_net:latest
+  script:
+    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/gitlab_sast_export?projectKey=main_tms_api_AY1m4-5FhBmORvJkFybs&branch=${CI_COMMIT_BRANCH}&pullRequest=${CI_MERGE_REQUEST_IID}" -o gl-sast-sonar-report.json'
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - main
+    - develop
+  artifacts:
+    expire_in: 1 day
+    reports:
+      sast: gl-sast-sonar-report.json
+  dependencies:
+    - sonarqube-check

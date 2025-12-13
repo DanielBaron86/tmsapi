@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  test:
+    name: Build and analyze
+    runs-on: local_shell
+    
+    steps:
+      - uses: actions/checkout@v4
+      - run: "dotnet-sonarscanner begin /k:\"tmsapi\" /d:sonar.token=\"${{ secrets.SONAR_TOKEN }}\" /d:\"sonar.host.url=${{ secrets.SONAR_HOST_URL }}\" "
+      - run: "dotnet build"
+      - run: "dotnet-sonarscanner end /d:sonar.token=\"${{ secrets.SONAR_TOKEN }}\""
+
+  
+  build:
+    needs:
+      - test
+    name: Build Docker
+    runs-on: local_shell
+
+    steps:
+      - uses: actions/checkout@v4
+      - run : docker build -f Dockerfile -t registry.danielsplaygrounds.com/docker/images/tms_api:latest . 
+        working-directory: ./TasksAPI

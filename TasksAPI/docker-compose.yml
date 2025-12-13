@@ -1,0 +1,17 @@
+services:
+  tmsapi:
+    image: registry.danielsplaygrounds.com/registry/docker/tms_api
+    restart: unless-stopped
+    container_name: tmsapi
+    ports:
+      - 8182:8080
+    tty: true
+    environment:
+        ASPNETCORE_ENVIRONMENT: Development
+        DataBaseType: MicrosoftSQL
+    secrets:
+      - db_secrets
+   
+secrets:
+  db_secrets:
+     file: ./secrets.json     

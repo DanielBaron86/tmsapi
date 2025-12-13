@@ -1,0 +1,596 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TasksAPI</name>
+    </assembly>
+    <members>
+        <member name="T:TasksAPI.Configuration.JsonPatchDocumentFilter">
+            <summary>
+            FIXES Swagger PATCH example
+            </summary>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.#ctor(System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TasksAPI.Configuration.SwaggerControllerOrder`1"/> class.
+            </summary>
+            <param name="assembly">The assembly to scan for for classes implementing <typeparamref name="T"/>.</param>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.#ctor(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Initializes a new instance of the <see cref="T:TasksAPI.Configuration.SwaggerControllerOrder`1"/> class.
+            </summary>
+            <param name="controllers">
+            The controllers to scan for a <see cref="T:TasksAPI.Configuration.SwaggerControllerOrderAttribute"/> to determine the sortorder.
+            </param>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.GetFromAssembly``1(System.Reflection.Assembly)">
+            <summary>
+            Returns all <typeparamref name="TController"/>'s from the given assembly.
+            </summary>
+            <typeparam name="TController">The type classes must implement to be regarded a controller.</typeparam>
+            <param name="assembly">The assembly to scan for given <typeparamref name="TController"/>s.</param>
+            <returns>Returns all types implementing <typeparamref name="TController"/>.</returns>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.ResolveControllerName(System.String)">
+            <summary>
+            Determines the 'friendly' name of the controller by stripping the (by convention) "Controller" suffix
+            from the name. If there's a built-in way to do this in .Net then I'd love to hear about it!
+            </summary>
+            <param name="name">The name of the controller.</param>
+            <returns>The friendly name of the controller.</returns>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.Order(System.String)">
+            <summary>
+            Returns the unsigned integer sort order value.  
+            </summary>
+            <param name="controller">The controller name.</param>
+            <returns>The unsigned integer sort order value.</returns>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.OrderKey(System.String)">
+            <summary>
+            Returns an order key based on a the SwaggerControllerOrderAttribute for use with OrderActionsBy.
+            </summary>
+            <param name="controller">The controller name.</param>
+            <returns>A zero padded 32-bit unsigned integer.</returns>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrder`1.SortKey(System.String)">
+            <summary>
+            Returns a sort key based on a the SwaggerControllerOrderAttribute for use with OrderActionsBy.
+            </summary>
+            <param name="controller">The controller name.</param>
+            <returns>A zero padded 32-bit unsigned integer combined with the controller's name.</returns>
+        </member>
+        <member name="T:TasksAPI.Configuration.SwaggerControllerOrderAttribute">
+            <summary>
+            Annotates a controller with a Swagger sorting order that is used when generating 
+            the Swagger documentation to order the controllers in a specific desired order.
+            </summary>
+            <remarks>
+            Ref: http://blog.robiii.nl/2018/08/swashbuckle-custom-ordering-of.html modified for AddSwaggerGen() extension OrderActionsBy().
+            https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/README.md#change-operation-sort-order-eg-for-ui-sorting
+            </remarks>
+        </member>
+        <member name="P:TasksAPI.Configuration.SwaggerControllerOrderAttribute.Order">
+            <summary>
+            Gets the sorting order of the controller.
+            </summary>
+        </member>
+        <member name="M:TasksAPI.Configuration.SwaggerControllerOrderAttribute.#ctor(System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TasksAPI.Configuration.SwaggerControllerOrderAttribute"/> class.
+            </summary>
+            <param name="order">Sets the sorting order of the controller.</param>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.Register(TasksAPI.Models.ClientResource,System.Threading.CancellationToken)">
+            <summary>
+            Register a new client
+            </summary>
+            <param name="resource"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.Login(TasksAPI.Models.LoginResource,System.Threading.CancellationToken)">
+            <summary>
+            Client Login
+            </summary>
+            <param name="resource"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.GetUserByID(System.Int32)">
+            <summary>
+            Get Client by Id
+            </summary>
+            <param name="clientID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.UpdateUser(System.Int32,TasksAPI.Models.ClientResourceForUpdate,System.Threading.CancellationToken)">
+            <summary>
+            Update Client
+            </summary>
+            <param name="clientID"></param>
+            <param name="user"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.PatchUser(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument,System.Threading.CancellationToken)">
+            <summary>
+            Patch Client
+            </summary>
+            <param name="clientID"></param>
+            <param name="patchUser"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.DeleteUser(System.Int32)">
+            <summary>
+            Delete client account
+            </summary>
+            <param name="clientID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoods">
+            <summary>
+            Returns a list of all goods
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoodTypes">
+            <summary>
+            Returs a list of good types
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodsByID(System.Int32)">
+            <summary>
+            Returns goods by ID
+            </summary>
+            <param name="goodID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodTypesByID(System.Int32)">
+            <summary>
+            Get Good Type by Id
+            </summary>
+            <param name="goodID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodHistorysByID(System.Int32)">
+            <summary>
+            Get the movement history of an item
+            </summary>
+            <param name="goodID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoods(TasksAPI.Models.CreateGoodsModels)">
+            <summary>
+            Create a new Goods instance
+            </summary>
+            <param name="goodsModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoodTypes(TasksAPI.Models.CeateGoodsTypesModel)">
+            <summary>
+            Create a new Good Type
+            </summary>
+            <param name="goodsModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.UpdateGoods(System.Int32,TasksAPI.Models.UpdateGoodsModels)">
+            <summary>
+            Update Existing Good
+            </summary>
+            <param name="goodID"></param>
+            <param name="goodsModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.UpdateGoodTypes(System.Int32,TasksAPI.Models.UpdateGoodsTypesModel)">
+            <summary>
+            Update a good type
+            </summary>
+            <param name="goodID"></param>
+            <param name="goodsModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.PatchGoods(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Patch user values
+            </summary>
+            <param name="goodID"></param>
+            <param name="patchGood"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.DeleteGoods(System.Int32)">
+            <summary>
+            Delete Goods by ID
+            </summary>
+            <param name="goodID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.DeleteGoodTypess(System.Int32)">
+            <summary>
+            Delete Good Types by ID
+            </summary>
+            <param name="goodID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Returns a list of existing tasks
+            taskType 1 = PROCUREMENT, 2 = TRANSFER.
+            taskStatus 1 = PENDING, 2 = OPEN, 3 = CLOSED  4 = COMPLETE
+            </summary>
+            <returns></returns>
+            <response code="200">return list of tasks</response>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetTaskByID(System.Int32)">
+            Generic Tasks *
+            <summary>
+            Return Task by ID
+            </summary>
+            <param name="taskID"></param>
+            <returns></returns>
+            <response code="200">return task</response>
+            <response code="404">Not Found</response>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.UpdateTask(System.Int32,TasksAPI.Models.UpdateTasksModel)">
+            <summary>
+            Update Task
+            </summary>
+            <param name="taskID"></param>
+            <param name="taskToUpdate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetTasksModelWithProcurementsTasks">
+            <summary>
+            Get all Procurements type tasks
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.UpdateProcurementSubTasks(System.Collections.Generic.IEnumerable{TasksAPI.Models.ProcurementsSubtaskModelForUpdate})">
+            <summary>
+            Update Procurement Task Subtasks
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.AddItemsToProcurementTask(System.Int32,System.Collections.Generic.ICollection{TasksAPI.Models.GoodsOrder})">
+            <summary>
+            Add a new items requests to an existing procurement task
+            </summary>
+            <param name="taskID"></param>
+            <param name="GoodsOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetTasksModelWithTransferTasks">
+            <summary>
+            Get All Transfer Type tasks
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetTasksModelWithTransferTasksByID(System.Int32)">
+            <summary>
+            Returns Transfer Tasks by ID
+            </summary>
+            <param name="taskID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.UpdateTransferSubTasks(System.Collections.Generic.IEnumerable{TasksAPI.Models.TransferSubtaskModelForUpdate})">
+            <summary>
+            Update Transfer Task Subtasks
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.AddItemsToTransferTask(System.Int32,TasksAPI.Models.GoodsTransfer)">
+            <summary>
+            Add a new items requests to an existing transfer task
+            </summary>
+            <param name="taskID"></param>
+            <param name="GoodsOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.CreateProcurementTask(TasksAPI.Models.CreateProcurementModel)">
+            <summary>
+            Create a new procurement task with the given items
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.CreateTranferTask(TasksAPI.Models.CreateTransferModel)">
+            <summary>
+            Create a new transfer task with the given items
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.DeleteInventoryTask(System.Int32)">
+            <summary>
+            Delete an inventory task
+            </summary>
+            <param name="taskID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.GetAll">
+             <summary>
+             Get a list of all locations
+             </summary>
+            <response code="200">return list of locations</response>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.GetAllLocationType">
+            <summary>
+            Get a list of all location types
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.GetLocationById(System.Int32)">
+            <summary>
+            Get Locations by ID
+            </summary>
+            <param name="locationid"></param>
+            <response code="200">returns list single location</response>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.GetLocationTypeById(System.Int32)">
+            <summary>
+            Get Location Type by Id
+            </summary>
+            <param name="locationid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.CreateLocation(TasksAPI.Models.LocationUnitForCreate)">
+            <summary>
+            Create A new location unit
+            </summary>
+            <param name="locationUnitModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.CreateLocationType(TasksAPI.Models.CreateLocationTypesModel)">
+            <summary>
+            Create a new Location type
+            </summary>
+            <param name="locationUnitModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.UpdateLocation(System.Int32,TasksAPI.Models.LocationUnitForUpdate)">
+            <summary>
+            Update Location by ID
+            </summary>
+            <param name="locationID"></param>
+            <param name="location"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.UpdateLocationType(System.Int32,TasksAPI.Models.EditLocationTypesModel)">
+            <summary>
+            Update Location Type
+            </summary>
+            <param name="locationID"></param>
+            <param name="location"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.PatchLocation(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Partialy Update location instance
+            </summary>
+            <param name="locationID"></param>
+            <param name="patchLocation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.DeleteLocation(System.Int32)">
+            <summary>
+            Delete Location
+            </summary>
+            <param name="locationId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.DeleteLocationType(System.Int32)">
+            <summary>
+            Delete Location type
+            </summary>
+            <param name="locationId"></param>
+            <returns></returns>
+            <response code="200">returns 1</response>
+        </member>
+        <member name="M:TasksAPI.Controllers.ReportsTasksBuilderController.CreateInventoryReport(TasksAPI.Models.CreateReportsEntitiesModel)">
+            <summary>
+            Create a new inventory type report. ReportMode 1 - Full list, 2 - Summary
+            </summary>
+            <param name="InventoryReportsModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ReportsTasksBuilderController.CreateSalesReport(TasksAPI.Models.CreateSalesReportsEntitiesModel)">
+            <summary>
+            Create Sales Report. ReportMode 1 - Full list, 2 - Summary
+            </summary>
+            <param name="salesReportsModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ReportsTasksBuilderController.DeleteReport(System.Int32)">
+            <summary>
+            Delete Report Task
+            </summary>
+            <param name="reportId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ReportsTasksBuilderController.DeleteReportResults(System.Int32)">
+            <summary>
+            Delete the results of a report Task
+            </summary>
+            <param name="resultsId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GetCartByID(System.Int32)">
+            <summary>
+            Return the contents of a cart
+            </summary>
+            <param name="cartId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GetCarts(System.Int32,System.Int32)">
+            <summary>
+            Get all existing carts
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GetCartByAccountID(System.Int32)">
+            <summary>
+            Get all carts from a client
+            </summary>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.RemoveCartDetail(System.Int32)">
+            <summary>
+            Remove an item from the cart
+            </summary>
+            <param name="cartDetailsId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.CloseCart(System.Int32)">
+            <summary>
+            Close cart and remove cart items
+            </summary>
+            <param name="cartId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.CreateRegister(TasksAPI.Models.CreateCashRegisterEntity)">
+            <summary>
+            Create a new cash register and assign it to a location
+            </summary>
+            <param name="cashRegisterEntity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.OpenNewSession(TasksAPI.Models.CreateCashRegisterSessionsEntityModel)">
+            <summary>
+            Open a new session on an existing cash register
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.CloseSession(System.Int32)">
+            <summary>
+            Close existing cash register sessions
+            </summary>
+            <param name="sessionId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.CreateNewCart(TasksAPI.Models.CreateNewCart)">
+            <summary>
+            Create a new cart
+            </summary>
+            <param name="CreateNewCart"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.AddDetailsToCart(System.Int32,TasksAPI.Models.CreateRegisterOperationsModel)">
+            <summary>
+            Add items to an existing cart
+            </summary>
+            <param name="cartId"></param>
+            <param name="operationModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.PayForCartByID(System.Int32,System.Decimal)">
+            <summary>
+            Pay for an existing cart and close on full payment
+            </summary>
+            <param name="cartId"></param>
+            <param name="money"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.TasksOperationsController.FullfillProcurement(System.Int32,System.Collections.Generic.IEnumerable{TasksAPI.Models.FulfillModel})">
+            <summary>
+            Supply a list of items requested by a fulfilment task
+            </summary>
+            <param name="taskID"></param>
+            <param name="FulfilProcurements"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.TasksOperationsController.FulfillTranfer(System.Int32,TasksAPI.Models.FulfillTransferTask)">
+            <summary>
+            Supply a list of items requested by a transfer task
+            </summary>
+            <param name="taskID"></param>
+            <param name="fulfillGoodsTransfer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.TasksOperationsController.GetTaskResults(System.Int32)">
+            <summary>
+            Get the results of a report as CSV
+            </summary>
+            <param name="reportResultsTaskId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.TasksOperationsController.RunReportTask(System.Int32)">
+            <summary>
+            Run an existing Report Task
+            </summary>
+            <param name="reportTaskId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.Register(TasksAPI.Models.RegisterResource,System.Threading.CancellationToken)">
+            <summary>
+            Register a new User. User type  3- Clerk , 4 - Supervisor
+            </summary>
+            <param name="resource"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.Login(TasksAPI.Models.LoginResource,System.Threading.CancellationToken)">
+            <summary>
+            Login
+            </summary>
+            <param name="resource"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.GetAllUsers">
+            <summary>
+            Returns all users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.GetUserByID(System.Int32)">
+            <summary>
+            Return user by ID
+            </summary>
+            <param name="userID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.UpdateUser(System.Int32,TasksAPI.Models.UserResourceForUpdate,System.Threading.CancellationToken)">
+            <summary>
+            Update user details
+            </summary>
+            <param name="userID"></param>
+            <param name="user"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.PatchUser(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument,System.Threading.CancellationToken)">
+            <summary>
+            Patch User Details
+            </summary>
+            <param name="userID"></param>
+            <param name="patchUser"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.DeleteUser(System.Int32)">
+            <summary>
+            Delete User and any entities related to the user
+            </summary>
+            <param name="userID"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TasksAPI.DataBaseContext.DatabaseConnectContext">
+            <summary>
+            Main Database Connection Handler 
+            </summary>
+        </member>
+        <member name="M:TasksAPI.DataBaseContext.DatabaseConnectContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{TasksAPI.DataBaseContext.DatabaseConnectContext})">
+            <summary>
+            Initiate with base options
+            </summary>
+            <param name="options"></param>
+        </member>
+    </members>
+</doc>
