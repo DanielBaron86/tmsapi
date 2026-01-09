@@ -47,6 +47,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 });
 
 
+
 // Restrict accepted heaers types to  application/json and application/xml
 builder.Services.AddControllers(controllerOptions =>
 {
@@ -98,7 +99,6 @@ builder.Services.AddSwaggerGen(swaggerOptions =>
 //Add Database Connection
 
 var DBServer = builder.Configuration["DataBaseType"] ?? "MySql";
-
 var HOST = builder.Configuration["DBHost"];
 var USER = builder.Configuration["DBUser"];
 var PASSWORD = builder.Configuration["DBPassword"];
@@ -127,7 +127,8 @@ if (DBServer == "MySql")
 else
 {
     DATABASEPORT = builder.Configuration["DBPort"] ?? "1433";
-    var MicrosoftSQLconnectionString = @$"Server={HOST},{DATABASEPORT};Database={DATABASE};User Id={USER};Password={PASSWORD};Trust Server Certificate=True;Connect Timeout=30;Application Intent=ReadWrite;Multi Subnet Failover=False";
+    var MicrosoftSQLconnectionString = @$"Server={HOST},{DATABASEPORT};Database={DATABASE};User Id={USER};Password={PASSWORD};Trust Server Certificate=True;Encrypt=False;Connect Timeout=130;Application Intent=ReadWrite;Multi Subnet Failover=False";
+    Console.WriteLine($"MicrosoftSQLconnectionString: {MicrosoftSQLconnectionString}");
     builder.Services.AddDbContextPool<DatabaseConnectContext>(options =>
     {
         options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
@@ -197,12 +198,28 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: "local", policy =>
+//    {
+//        policy.WithOrigins("*")
+//        .AllowAnyOrigin()
+//        .AllowAnyHeader();
+//    });
+//});
+
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.RedirectStatusCode = 307;
+//    options.HttpsPort = 8443;
+//});
+
 var app = builder.Build();
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 //Configure Swagger Versioning support
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger(options =>
     {
 
@@ -221,11 +238,12 @@ var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>()
         }
     });
 
-//}
+}
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 app.UseAuthentication();
+//app.UseCors("local");
 app.UseAuthorization();
 
 app.MapControllers();
