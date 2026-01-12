@@ -9,6 +9,8 @@ using TasksAPI.DataBaseContext;
 using TasksAPI.Entities;
 using TasksAPI.Interfaces;
 using TasksAPI.Models;
+using TasksAPI.Profiles;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TasksAPI.Services
 {
@@ -48,7 +50,7 @@ namespace TasksAPI.Services
             var checkUser = _DBContext.Users.FirstOrDefault(u => u.Username == resource.Username || u.Email == resource.Email);
             if (checkUser != null)
             {
-               throw new ArgumentException("Username or Email already exists.");
+                throw new ArgumentException("Username or Email already exists.");
             }
 
             var user = new User
@@ -69,7 +71,9 @@ namespace TasksAPI.Services
             return _mapper.Map<UserResource>(user);
         }
 
-        public async Task<string> Login(LoginResource resource, CancellationToken cancellationToken)
+
+        
+        public async Task<LoginResponse> Login(LoginResource resource, CancellationToken cancellationToken)
         {
             var user = await _DBContext.Users
                 .FirstOrDefaultAsync(x => x.Username == resource.Username, cancellationToken) ?? throw new Exception("Username not found.");
@@ -113,7 +117,9 @@ namespace TasksAPI.Services
                 );
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            return tokenToReturn;
+            var userprofile =  await GetUserById(user.Id);
+            
+            return new LoginResponse( tokenToReturn, userprofile) ;
         }
 
 
@@ -174,8 +180,4 @@ namespace TasksAPI.Services
             return _mapper.Map<UserResource>(userToPatch);
         }
     }
-
-
-
-
 }
