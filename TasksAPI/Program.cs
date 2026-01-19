@@ -198,15 +198,15 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "local", policy =>
-    {
-        policy.WithOrigins("*")
-        .AllowAnyOrigin()
-        .AllowAnyHeader();
-    });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: "local", policy =>
+//    {
+//        policy.WithOrigins("*")
+//        .AllowAnyOrigin()
+//        .AllowAnyHeader();
+//    });
+//});
 
 //builder.Services.AddHttpsRedirection(options =>
 //{
@@ -243,7 +243,7 @@ if (app.Environment.IsDevelopment())
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 app.UseAuthentication();
-app.UseCors("local");
+//app.UseCors("local");
 app.UseAuthorization();
 
 app.MapControllers();
