@@ -44,7 +44,7 @@ namespace TMSTest
                 UserService userService = new UserService(contextDB, mockIconf.Object, mockMapper.Object);
                 await userService.Register(userToRegister, CancellationToken.None);
                 var loginResult = await userService.Login(new LoginResource("daniel", "asdasd1234"), CancellationToken.None);
-                var isValid = userService.ValidateToken(loginResult);
+                var isValid = userService.ValidateToken(loginResult.Token);
 
                 Assert.True(isValid);
             }
