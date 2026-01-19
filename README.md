@@ -23,7 +23,7 @@ Create and run Inventory and Sales Report Tasks
 - [ ] `/api/v1/stores/pay_cart/{cartId}` - Pay for existing cart
 
 
-4. TasksOperationsController
+4. TasksOperationsController 
 
 - [ ] `/api/v1/operations/procurements/{taskID}` - Supply a list of items requested by a fulfilment task
 - [ ] `/api/v1/operations/transfers/{taskID}` - Supply a list of items requested by a transfer task
