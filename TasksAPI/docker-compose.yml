@@ -1,6 +1,6 @@
 services:
   tmsapi:
-    image: registry.danielsplaygrounds.com/registry/docker/tms_api
+    image: registry.danielsplaygrounds.com/docker/images/tms_api
     restart: unless-stopped
     container_name: tmsapi
     ports:
