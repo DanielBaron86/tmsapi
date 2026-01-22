@@ -128,7 +128,6 @@ else
 {
     DATABASEPORT = builder.Configuration["DBPort"] ?? "1433";
     var MicrosoftSQLconnectionString = @$"Server={HOST},{DATABASEPORT};Database={DATABASE};User Id={USER};Password={PASSWORD};Trust Server Certificate=True;Encrypt=False;Connect Timeout=130;Application Intent=ReadWrite;Multi Subnet Failover=False";
-    Console.WriteLine($"MicrosoftSQLconnectionString: {MicrosoftSQLconnectionString}");
     builder.Services.AddDbContextPool<DatabaseConnectContext>(options =>
     {
         options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
@@ -198,11 +197,15 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>();
+    Console.WriteLine(allowedOrigins);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "open", policy =>
     {
-        policy.WithOrigins("*")
+        policy.WithOrigins(allowedOrigins)
         .AllowAnyOrigin()
         .AllowAnyHeader();
     });
