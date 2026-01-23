@@ -31,6 +31,8 @@ namespace TasksAPI.Profiles
 
             CreateMap<CreateSellGoods, AccountsGoodsEntity>();
 
+            CreateMap<GoodModelBaseType, GoodBaseTypeModel>();
+
         }
     }
 }

@@ -135,6 +135,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GetBaseGoods">
+            <summary>
+            Returs a list of base good types
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoodTypes">
             <summary>
             Returs a list of good types

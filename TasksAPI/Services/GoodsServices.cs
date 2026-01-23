@@ -16,7 +16,8 @@ namespace TasksAPI.Services
 
         private readonly DatabaseConnectContext _DBContext;
         private readonly IMapper _mapper;
-
+        
+         
         public GoodsServices(DatabaseConnectContext context, IMapper mapper)
         {
 
@@ -29,6 +30,13 @@ namespace TasksAPI.Services
             var goods = await _DBContext.GoodsTypesInstances.ToListAsync();
             return _mapper.Map<IEnumerable<GoodsModels>>(goods);
         }
+        
+        public async Task<IEnumerable<GoodBaseTypeModel>> GetBaseGoodTypes()
+        {
+            var goods = await _DBContext.GoodModelBaseType.ToListAsync();
+            return _mapper.Map<IEnumerable<GoodBaseTypeModel>>(goods);
+        }
+        
 
         public async Task<IEnumerable<GoodsTypesModel>> GetGoodTypes()
         {

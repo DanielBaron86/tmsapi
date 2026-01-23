@@ -9,6 +9,7 @@ namespace TasksAPI.Interfaces
     {
         Task<IEnumerable<GoodsModels>> GetGoods();
         Task<IEnumerable<GoodsTypesModel>> GetGoodTypes();
+        Task<IEnumerable<GoodBaseTypeModel>> GetBaseGoodTypes();
         Task<GoodsModels> GetGoodById(int GoodID);
         Task<GoodsTypesModel> GetGoodTypeById(int GoodID);
 

@@ -1,5 +1,15 @@
 ﻿namespace TasksAPI.Models
 {
+    
+    public class GoodBaseTypeModel : BaseModel
+    {
+       
+        public int Id { get; set; }
+        public int GoodModelBaseTypeId { get; set; }
+        public string Description { get; set; } = default!;
+        public string Manufacturer { get; set; } = default!;
+        
+    }
     public class GoodsModels : BaseModel
     {
 

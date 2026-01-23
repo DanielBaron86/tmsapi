@@ -32,6 +32,16 @@ namespace TasksAPI.Controllers
         {
             return Ok(await _goodsService.GetGoods());
         }
+        
+        /// <summary>
+        /// Returs a list of base good types
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("base_goods")]
+        public async Task<ActionResult<IEnumerable<GoodBaseTypeModel>>> GetBaseGoods()
+        {
+            return Ok(await _goodsService.GetBaseGoodTypes());
+        }
 
 
         /// <summary>
