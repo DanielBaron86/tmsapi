@@ -8,27 +8,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TasksAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class GoodModelBaseType : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "GoodsTypes",
+                name: "GoodModelBaseType",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GoodModelId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GoodModelBaseTypeId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GoodsTypes", x => x.Id);
-                    table.UniqueConstraint("AK_GoodsTypes_GoodModelId", x => x.GoodModelId);
+                    table.PrimaryKey("PK_GoodModelBaseType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,6 +123,29 @@ namespace TasksAPI.Migrations
                 {
                     table.PrimaryKey("PK_UserTypes", x => x.Id);
                     table.UniqueConstraint("AK_UserTypes_UserTypeId", x => x.UserTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GoodsTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GoodModelId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GoodsTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GoodsTypes_GoodModelBaseType_GoodModelId",
+                        column: x => x.GoodModelId,
+                        principalTable: "GoodModelBaseType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -294,7 +316,7 @@ namespace TasksAPI.Migrations
                         name: "FK_GoodsTypesInstances_GoodsTypes_GoodModelId",
                         column: x => x.GoodModelId,
                         principalTable: "GoodsTypes",
-                        principalColumn: "GoodModelId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GoodsTypesInstances_LocationTypesInstances_LocationId",
@@ -405,7 +427,7 @@ namespace TasksAPI.Migrations
                         name: "FK_TasksEntitiesProcurements_GoodsTypes_GoodTypeID",
                         column: x => x.GoodTypeID,
                         principalTable: "GoodsTypes",
-                        principalColumn: "GoodModelId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TasksEntitiesProcurements_TasksEntities_TaskID",
@@ -478,15 +500,12 @@ namespace TasksAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "GoodsTypes",
-                columns: new[] { "Id", "CreatedDate", "Description", "GoodModelId", "Name", "UpdatedDate" },
+                table: "GoodModelBaseType",
+                columns: new[] { "Id", "CreatedDate", "Description", "GoodModelBaseTypeId", "Manufacturer", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5510), "Samsung Smartphone", 1, "A53", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5511) },
-                    { 2, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5717), "Samsung Smartphone", 2, "ZFLIP", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5718) },
-                    { 3, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5720), "Samsung Smartphone", 3, "M14", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5720) },
-                    { 4, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5722), "Samsung Smartphone", 4, "S21", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5722) },
-                    { 5, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5723), "Apple Smartphone", 5, "Apple 15", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5724) }
+                    { 1, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2849), "Smartphone", 1, "Samsung", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2850) },
+                    { 2, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3059), "Smartphone", 2, "Apple", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3059) }
                 });
 
             migrationBuilder.InsertData(
@@ -494,10 +513,10 @@ namespace TasksAPI.Migrations
                 columns: new[] { "Id", "CreatedDate", "Description", "LocationType", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4704), "Warehouse", 1, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4711) },
-                    { 2, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4951), "STORE", 2, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4952) },
-                    { 3, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4954), "CLIENT", 3, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4954) },
-                    { 4, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4955), "SUPPLIER", 4, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4956) }
+                    { 1, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2007), "Warehouse", 1, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2013) },
+                    { 2, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2253), "STORE", 2, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2254) },
+                    { 3, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2255), "CLIENT", 3, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2255) },
+                    { 4, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2257), "SUPPLIER", 4, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2257) }
                 });
 
             migrationBuilder.InsertData(
@@ -505,9 +524,21 @@ namespace TasksAPI.Migrations
                 columns: new[] { "Id", "CreatedDate", "Description", "UpdatedDate", "UserTypeId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Client", new DateTime(2026, 1, 13, 21, 41, 29, 527, DateTimeKind.Local).AddTicks(6816), 2 },
-                    { 2, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1714), "Clerk", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1730), 3 },
-                    { 3, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1734), "Supervisor", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1735), 4 }
+                    { 1, new DateTime(2025, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Client", new DateTime(2026, 1, 23, 16, 12, 36, 594, DateTimeKind.Local).AddTicks(1753), 2 },
+                    { 2, new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5492), "Clerk", new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5497), 3 },
+                    { 3, new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5499), "Supervisor", new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5500), 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "GoodsTypes",
+                columns: new[] { "Id", "CreatedDate", "Description", "GoodModelId", "Name", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3188), "Samsung Smartphone", 1, "A53", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3189) },
+                    { 2, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3391), "Samsung Smartphone", 1, "ZFLIP", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3392) },
+                    { 3, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3393), "Samsung Smartphone", 1, "M14", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3394) },
+                    { 4, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3395), "Samsung Smartphone", 1, "S21", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3395) },
+                    { 5, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3397), "Apple Smartphone", 2, "Apple 15", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3397) }
                 });
 
             migrationBuilder.InsertData(
@@ -515,12 +546,12 @@ namespace TasksAPI.Migrations
                 columns: new[] { "Id", "Adress", "CreatedDate", "Description", "LocationTypeID", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "Iasi", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5126), "MAIN Warehouse", 1, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5127) },
-                    { 2, "Iasi", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5353), "Iasi Mall", 2, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5353) },
-                    { 3, "Suceava", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5355), "Suceava Mall", 2, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5356) },
-                    { 4, "Client", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5357), "Goods Assigned to clients", 3, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5357) },
-                    { 5, "Iasi", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5358), "Returned Items", 1, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5359) },
-                    { 6, "Iasi", new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5360), "Item Supplier", 4, new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5361) }
+                    { 1, "Iasi", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2430), "MAIN Warehouse", 1, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2431) },
+                    { 2, "Iasi", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2648), "Iasi Mall", 2, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2649) },
+                    { 3, "Suceava", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2650), "Suceava Mall", 2, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2651) },
+                    { 4, "Client", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2652), "Goods Assigned to clients", 3, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2653) },
+                    { 5, "Iasi", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2654), "Returned Items", 1, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2654) },
+                    { 6, "Iasi", new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2656), "Item Supplier", 4, new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2656) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -551,8 +582,7 @@ namespace TasksAPI.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_GoodsTypes_GoodModelId",
                 table: "GoodsTypes",
-                column: "GoodModelId",
-                unique: true);
+                column: "GoodModelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GoodsTypesInstances_GoodModelId",
@@ -691,6 +721,9 @@ namespace TasksAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "GoodModelBaseType");
 
             migrationBuilder.DropTable(
                 name: "LocationEntity");

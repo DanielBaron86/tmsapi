@@ -24,6 +24,7 @@ namespace TasksAPI.DataBaseContext
         public DbSet<LocationTypesInstances> LocationTypesInstances { get; set; }
         public DbSet<LocationTypes> LocationEntity { get; set; }
         public DbSet<GoodsTypes> GoodsTypes { get; set; }
+        public DbSet<GoodModelBaseType> GoodModelBaseType { get; set; }
         public DbSet<GoodsTypesInstances> GoodsTypesInstances { get; set; }
         public DbSet<TasksEntities> TasksEntities { get; set; }
         public DbSet<TasksEntitiesProcurements> TasksEntitiesProcurements { get; set; }
@@ -46,8 +47,13 @@ namespace TasksAPI.DataBaseContext
             modelBuilder.Entity<User>(ut => ut.HasIndex(i => i.Email).IsUnique());
             modelBuilder.Entity<User>(ut => ut.HasIndex(i => i.Username).IsUnique());
 
-            modelBuilder.Entity<GoodsTypes>(ut => ut.HasIndex(i => i.GoodModelId).IsUnique());
+            modelBuilder.Entity<GoodsTypes>(ut => ut.HasIndex(i => i.GoodModelId ) );
 
+            modelBuilder.Entity<GoodsTypes>()
+                .HasOne(g => g.GoodModelBaseType)
+                .WithMany(g => g.GoodsTypesList)
+                .HasForeignKey(g => g.GoodModelId);
+            
             modelBuilder.Entity<LocationTypes>(ut => ut.HasIndex(i => i.LocationType).IsUnique());
             
 
@@ -70,20 +76,18 @@ namespace TasksAPI.DataBaseContext
                         .HasPrincipalKey(e => e.LocationType);
 
             modelBuilder.Entity<GoodsTypesInstances>()
-                        .HasOne(e => e.GoodsTypes)
-                        .WithMany(e => e.GoodsTypesInstances)
-                        .HasForeignKey(e => e.GoodModelId)
-                        .HasPrincipalKey(e => e.GoodModelId);
+                .HasOne(e => e.GoodsTypes)
+                .WithMany(e => e.GoodsTypesInstances)
+                .HasForeignKey(e => e.GoodModelId);
 
             modelBuilder.Entity<GoodsTypesInstances>()
                         .Property(p => p.Price)
                         .HasColumnType("decimal(18,4)");
 
             modelBuilder.Entity<TasksEntitiesProcurements>()
-                        .HasOne(e => e.GoodsTypes)
-                        .WithMany(e => e.TasksEntitiesProcurements)
-                        .HasForeignKey(e => e.GoodTypeID)
-                        .HasPrincipalKey(e => e.GoodModelId);
+                .HasOne(e => e.GoodsTypes)
+                .WithMany(e => e.TasksEntitiesProcurements)
+                .HasForeignKey(e => e.GoodTypeID);
 
             modelBuilder.Entity<TasksEntitiesTransfer>()
                         .HasOne(e => e.LocationTypesInstances)
@@ -145,15 +149,20 @@ namespace TasksAPI.DataBaseContext
                 new LocationTypesInstances() { Id = 6, LocationTypeID = 4, Adress = "Iasi", Description = "Item Supplier" }
 
                 );
-
+            
+            modelBuilder.Entity<GoodModelBaseType>().HasData(
+                new GoodModelBaseType() {Id = 1,GoodModelBaseTypeId = 1,Description ="Smartphone", Manufacturer = "Samsung"}    ,
+                new GoodModelBaseType() {Id = 2,GoodModelBaseTypeId = 2,Description ="Smartphone", Manufacturer = "Apple"} 
+                );
+            
+                
             modelBuilder.Entity<GoodsTypes>().HasData(
                 new GoodsTypes() { Id = 1, GoodModelId = 1, Name = "A53", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 2, GoodModelId = 2, Name = "ZFLIP", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 3, GoodModelId = 3, Name = "M14", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 4, GoodModelId = 4, Name = "S21", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 5, GoodModelId = 5, Name = "Apple 15", Description = "Apple Smartphone" }
+                new GoodsTypes() { Id = 2, GoodModelId = 1, Name = "ZFLIP", Description = "Samsung Smartphone" },
+                new GoodsTypes() { Id = 3, GoodModelId = 1, Name = "M14", Description = "Samsung Smartphone" },
+                new GoodsTypes() { Id = 4, GoodModelId = 1, Name = "S21", Description = "Samsung Smartphone" },
+                new GoodsTypes() { Id = 5, GoodModelId = 2, Name = "Apple 15", Description = "Apple Smartphone" }
                 );
-
 
         }
 

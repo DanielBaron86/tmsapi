@@ -191,6 +191,56 @@ namespace TasksAPI.Migrations
                     b.ToTable("CashRegisterEntitySessions");
                 });
 
+            modelBuilder.Entity("TasksAPI.Entities.GoodModelBaseType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GoodModelBaseTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GoodModelBaseType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2849),
+                            Description = "Smartphone",
+                            GoodModelBaseTypeId = 1,
+                            Manufacturer = "Samsung",
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2850)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3059),
+                            Description = "Smartphone",
+                            GoodModelBaseTypeId = 2,
+                            Manufacturer = "Apple",
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3059)
+                        });
+                });
+
             modelBuilder.Entity("TasksAPI.Entities.GoodsTypes", b =>
                 {
                     b.Property<int>("Id")
@@ -218,8 +268,7 @@ namespace TasksAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GoodModelId")
-                        .IsUnique();
+                    b.HasIndex("GoodModelId");
 
                     b.ToTable("GoodsTypes");
 
@@ -227,47 +276,47 @@ namespace TasksAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5510),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3188),
                             Description = "Samsung Smartphone",
                             GoodModelId = 1,
                             Name = "A53",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5511)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3189)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5717),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3391),
                             Description = "Samsung Smartphone",
-                            GoodModelId = 2,
+                            GoodModelId = 1,
                             Name = "ZFLIP",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5718)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3392)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5720),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3393),
                             Description = "Samsung Smartphone",
-                            GoodModelId = 3,
+                            GoodModelId = 1,
                             Name = "M14",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5720)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3394)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5722),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3395),
                             Description = "Samsung Smartphone",
-                            GoodModelId = 4,
+                            GoodModelId = 1,
                             Name = "S21",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5722)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3395)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5723),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3397),
                             Description = "Apple Smartphone",
-                            GoodModelId = 5,
+                            GoodModelId = 2,
                             Name = "Apple 15",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5724)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(3397)
                         });
                 });
 
@@ -378,34 +427,34 @@ namespace TasksAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4704),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2007),
                             Description = "Warehouse",
                             LocationType = 1,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4711)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2013)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4951),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2253),
                             Description = "STORE",
                             LocationType = 2,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4952)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2254)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4954),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2255),
                             Description = "CLIENT",
                             LocationType = 3,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4954)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2255)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4955),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2257),
                             Description = "SUPPLIER",
                             LocationType = 4,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(4956)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2257)
                         });
                 });
 
@@ -445,55 +494,55 @@ namespace TasksAPI.Migrations
                         {
                             Id = 1,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5126),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2430),
                             Description = "MAIN Warehouse",
                             LocationTypeID = 1,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5127)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2431)
                         },
                         new
                         {
                             Id = 2,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5353),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2648),
                             Description = "Iasi Mall",
                             LocationTypeID = 2,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5353)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2649)
                         },
                         new
                         {
                             Id = 3,
                             Adress = "Suceava",
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5355),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2650),
                             Description = "Suceava Mall",
                             LocationTypeID = 2,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5356)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2651)
                         },
                         new
                         {
                             Id = 4,
                             Adress = "Client",
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5357),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2652),
                             Description = "Goods Assigned to clients",
                             LocationTypeID = 3,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5357)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2653)
                         },
                         new
                         {
                             Id = 5,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5358),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2654),
                             Description = "Returned Items",
                             LocationTypeID = 1,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5359)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2654)
                         },
                         new
                         {
                             Id = 6,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5360),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2656),
                             Description = "Item Supplier",
                             LocationTypeID = 4,
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(5361)
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 599, DateTimeKind.Local).AddTicks(2656)
                         });
                 });
 
@@ -842,23 +891,23 @@ namespace TasksAPI.Migrations
                             Id = 1,
                             CreatedDate = new DateTime(2025, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Client",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 527, DateTimeKind.Local).AddTicks(6816),
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 594, DateTimeKind.Local).AddTicks(1753),
                             UserTypeId = 2
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1714),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5492),
                             Description = "Clerk",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1730),
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5497),
                             UserTypeId = 3
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1734),
+                            CreatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5499),
                             Description = "Supervisor",
-                            UpdatedDate = new DateTime(2026, 1, 13, 21, 41, 29, 532, DateTimeKind.Local).AddTicks(1735),
+                            UpdatedDate = new DateTime(2026, 1, 23, 16, 12, 36, 598, DateTimeKind.Local).AddTicks(5500),
                             UserTypeId = 4
                         });
                 });
@@ -931,12 +980,22 @@ namespace TasksAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TasksAPI.Entities.GoodsTypes", b =>
+                {
+                    b.HasOne("TasksAPI.Entities.GoodModelBaseType", "GoodModelBaseType")
+                        .WithMany("GoodsTypesList")
+                        .HasForeignKey("GoodModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GoodModelBaseType");
+                });
+
             modelBuilder.Entity("TasksAPI.Entities.GoodsTypesInstances", b =>
                 {
                     b.HasOne("TasksAPI.Entities.GoodsTypes", "GoodsTypes")
                         .WithMany("GoodsTypesInstances")
                         .HasForeignKey("GoodModelId")
-                        .HasPrincipalKey("GoodModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1001,7 +1060,6 @@ namespace TasksAPI.Migrations
                     b.HasOne("TasksAPI.Entities.GoodsTypes", "GoodsTypes")
                         .WithMany("TasksEntitiesProcurements")
                         .HasForeignKey("GoodTypeID")
-                        .HasPrincipalKey("GoodModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1063,6 +1121,11 @@ namespace TasksAPI.Migrations
             modelBuilder.Entity("TasksAPI.Entities.CashRegisterEntity", b =>
                 {
                     b.Navigation("CashRegisterEntitySessions");
+                });
+
+            modelBuilder.Entity("TasksAPI.Entities.GoodModelBaseType", b =>
+                {
+                    b.Navigation("GoodsTypesList");
                 });
 
             modelBuilder.Entity("TasksAPI.Entities.GoodsTypes", b =>

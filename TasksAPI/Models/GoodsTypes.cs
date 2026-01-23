@@ -25,4 +25,8 @@
         public string Description { get; set; } = default!;
 
     }
+
+    public class GoodModelBase
+    {
+    }
 }

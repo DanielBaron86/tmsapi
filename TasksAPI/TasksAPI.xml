@@ -592,16 +592,16 @@
             </summary>
             <param name="options"></param>
         </member>
-        <member name="T:TasksAPI.Migrations.InitialCreate">
+        <member name="T:TasksAPI.Migrations.GoodModelBaseType">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:TasksAPI.Migrations.GoodModelBaseType.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:TasksAPI.Migrations.GoodModelBaseType.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:TasksAPI.Migrations.GoodModelBaseType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>
