@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Runtime.CompilerServices;
 using TasksAPI.Models;
 
 namespace TasksAPI.Entities
 {
-    public sealed class User : BaseEntity
+    public sealed class UserEntity : BaseEntity
     {
 
-        public User() {
+        public UserEntity() {
             Status = (int)DBEntityStatus.ACTIVE;
         }
 
@@ -33,15 +34,12 @@ namespace TasksAPI.Entities
         
         public string PasswordSalt { get; set; } = default!;
         public string PasswordHash { get; set; } = default!;
-        public string RefreshTokenId { get; set; } = default!;
-
         public UserTypes UserTypes { get; set; } = default!;
+        public RefreshTokenEntity RefreshTokenEntity  { get; set; } = default!;
 
         public ICollection<TasksEntities> TasksEntities { get; set; } = default!;
         public ICollection<CashRegisterEntitySessions> CashRegisterEntitySessions { get; set; } = default!;
-        public RefreshTokenEntity RefreshTokenEntity { get; set; } = default!;
-
-    }
+        }
     
     public class RefreshTokenEntity :  BaseEntity {
         [Key]
@@ -52,8 +50,8 @@ namespace TasksAPI.Entities
         [Required]
         public bool Revoked;
         [Required]
+        public int userId { get; set; }
         public DateTime ExpiryDate { get; set; }
-
-        public User User { get; set; } = default!;
+        public UserEntity UserEntity { get; set; }
     }
 }

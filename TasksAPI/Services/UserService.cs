@@ -52,22 +52,29 @@ namespace TasksAPI.Services
             {
                 throw new ArgumentException("Username or Email already exists.");
             }
-
-            var user = new User
+            
+            var user = new UserEntity
             {
                 Username = resource.Username,
                 Email = resource.Email,
                 FirstName = resource.FirstName,
                 LastName = resource.LastName,
                 UserTypeId = resource.UserTypeId,
-
                 PasswordSalt = PasswordHasher.GenerateSalt()
             };
             user.PasswordHash = PasswordHasher.ComputeHash(resource.Password, user.PasswordSalt, _pepper, _iteration);
 
             await _DBContext.Users.AddAsync(user, cancellationToken);
             await _DBContext.SaveChangesAsync(cancellationToken);
-
+            var refreshToken = new RefreshTokenEntity()
+            {
+                Token = GenerateRefreshToken(),
+                Revoked = false,
+                userId = user.Id,
+                ExpiryDate = DateTime.UtcNow.AddMinutes(15),
+                    
+            };
+            var res =  await saveOrUpdateRefreshToken(refreshToken);
             return _mapper.Map<UserResource>(user);
         }
 
@@ -225,6 +232,21 @@ namespace TasksAPI.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        }
+
+        private async Task<RefreshToken> saveOrUpdateRefreshToken(RefreshTokenEntity refreshToken)
+        {   var tokenToBeUpdated = await _DBContext.RefreshTokenEntity
+                .FirstOrDefaultAsync(x => x.Id == refreshToken.userId);
+            if (tokenToBeUpdated == null)
+            {
+                await _DBContext.RefreshTokenEntity.AddAsync(refreshToken);
+            }
+            else
+            {
+                _mapper.Map(refreshToken, tokenToBeUpdated);
+            }
+            await _DBContext.SaveChangesAsync(true);
+            return _mapper.Map<RefreshToken>(refreshToken);
         }
     }
 }

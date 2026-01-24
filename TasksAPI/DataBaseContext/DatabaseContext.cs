@@ -18,7 +18,7 @@ namespace TasksAPI.DataBaseContext
         /// <param name="options"></param>
         public DatabaseConnectContext(DbContextOptions<DatabaseConnectContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
         public DbSet<Accounts> Accounts { get; set; }
         public DbSet<UserTypes> UserTypes { get; set; }
         public DbSet<LocationTypesInstances> LocationTypesInstances { get; set; }
@@ -45,8 +45,8 @@ namespace TasksAPI.DataBaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(ut => ut.HasIndex(i => i.Email).IsUnique());
-            modelBuilder.Entity<User>(ut => ut.HasIndex(i => i.Username).IsUnique());
+            modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Email).IsUnique());
+            modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Username).IsUnique());
 
             modelBuilder.Entity<GoodsTypes>(ut => ut.HasIndex(i => i.GoodModelId ) );
 
@@ -60,19 +60,19 @@ namespace TasksAPI.DataBaseContext
             modelBuilder.Entity<LocationTypes>(ut => ut.HasIndex(i => i.LocationType).IsUnique());
             
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<UserEntity>()
                         .HasOne(e => e.UserTypes)
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.UserTypeId)
                         .HasPrincipalKey(e => e.UserTypeId);
 
-            modelBuilder.Entity<User>()
-                .HasOne(e => e.RefreshTokenEntity)
-                .WithOne(e => e.User)
-                .HasForeignKey<User>(e => e.Id);
+            modelBuilder.Entity<RefreshTokenEntity>()
+                .HasOne(e => e.UserEntity)
+                .WithOne(e => e.RefreshTokenEntity)
+                .HasForeignKey<RefreshTokenEntity>(e => e.userId);
+             
                 
-              
-
+               
             modelBuilder.Entity<Accounts>()
                         .HasOne(e => e.UserTypes)
                         .WithMany(e => e.Accounts)

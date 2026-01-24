@@ -13,7 +13,7 @@ namespace TasksAPI.Entities
         public int UserTypeId { get; set; }
         public string Description { get; set; } = default!;
 
-        public ICollection<User> Users { get; set; } = default!;
+        public ICollection<UserEntity> Users { get; set; } = default!;
         public ICollection<Accounts> Accounts { get; set; } = default!;
     }
 }

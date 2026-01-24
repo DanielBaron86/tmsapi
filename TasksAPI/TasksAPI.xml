@@ -600,5 +600,17 @@
             </summary>
             <param name="options"></param>
         </member>
+        <member name="T:TasksAPI.Migrations.Data">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Data.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Data.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Data.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

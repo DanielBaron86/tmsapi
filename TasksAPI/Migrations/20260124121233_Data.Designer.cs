@@ -12,7 +12,7 @@ using TasksAPI.DataBaseContext;
 namespace TasksAPI.Migrations
 {
     [DbContext(typeof(DatabaseConnectContext))]
-    [Migration("20260124103220_Data")]
+    [Migration("20260124121233_Data")]
     partial class Data
     {
         /// <inheritdoc />
@@ -224,18 +224,18 @@ namespace TasksAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8508),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5289),
                             Description = "Smartphone",
                             Manufacturer = "Samsung",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8508)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5290)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8674),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5449),
                             Description = "Smartphone",
                             Manufacturer = "Apple",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8674)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5450)
                         });
                 });
 
@@ -274,47 +274,47 @@ namespace TasksAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8805),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5573),
                             Description = "Samsung Smartphone",
                             GoodModelId = 1,
                             Name = "A53",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8806)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5574)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9012),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5774),
                             Description = "Samsung Smartphone",
                             GoodModelId = 1,
                             Name = "ZFLIP",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9013)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5775)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9015),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5777),
                             Description = "Samsung Smartphone",
                             GoodModelId = 1,
                             Name = "M14",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9015)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5777)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9016),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5778),
                             Description = "Samsung Smartphone",
                             GoodModelId = 1,
                             Name = "S21",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9017)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5779)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9018),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5780),
                             Description = "Apple Smartphone",
                             GoodModelId = 2,
                             Name = "Apple 15",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(9019)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5781)
                         });
                 });
 
@@ -425,34 +425,34 @@ namespace TasksAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7628),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4367),
                             Description = "Warehouse",
                             LocationType = 1,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7634)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4372)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7880),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4663),
                             Description = "STORE",
                             LocationType = 2,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7881)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4664)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7882),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4666),
                             Description = "CLIENT",
                             LocationType = 3,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7883)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4666)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7884),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4667),
                             Description = "SUPPLIER",
                             LocationType = 4,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(7884)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4668)
                         });
                 });
 
@@ -492,55 +492,55 @@ namespace TasksAPI.Migrations
                         {
                             Id = 1,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8058),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4883),
                             Description = "MAIN Warehouse",
                             LocationTypeID = 1,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8058)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(4883)
                         },
                         new
                         {
                             Id = 2,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8276),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5101),
                             Description = "Iasi Mall",
                             LocationTypeID = 2,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8276)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5102)
                         },
                         new
                         {
                             Id = 3,
                             Adress = "Suceava",
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8278),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5104),
                             Description = "Suceava Mall",
                             LocationTypeID = 2,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8278)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5104)
                         },
                         new
                         {
                             Id = 4,
                             Adress = "Client",
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8279),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5105),
                             Description = "Goods Assigned to clients",
                             LocationTypeID = 3,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8280)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5106)
                         },
                         new
                         {
                             Id = 5,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8281),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5107),
                             Description = "Returned Items",
                             LocationTypeID = 1,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8282)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5108)
                         },
                         new
                         {
                             Id = 6,
                             Adress = "Iasi",
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8283),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5109),
                             Description = "Item Supplier",
                             LocationTypeID = 4,
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(8284)
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(5109)
                         });
                 });
 
@@ -565,7 +565,13 @@ namespace TasksAPI.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("userId")
+                        .IsUnique();
 
                     b.ToTable("RefreshTokenEntity");
                 });
@@ -827,11 +833,13 @@ namespace TasksAPI.Migrations
                     b.ToTable("TasksEntitiesTransfer");
                 });
 
-            modelBuilder.Entity("TasksAPI.Entities.User", b =>
+            modelBuilder.Entity("TasksAPI.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -853,10 +861,6 @@ namespace TasksAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RefreshTokenId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -917,23 +921,23 @@ namespace TasksAPI.Migrations
                             Id = 1,
                             CreatedDate = new DateTime(2025, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Client",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 196, DateTimeKind.Local).AddTicks(221),
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 607, DateTimeKind.Local).AddTicks(7706),
                             UserTypeId = 2
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(4569),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(1418),
                             Description = "Clerk",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(4578),
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(1426),
                             UserTypeId = 3
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(4580),
+                            CreatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(1429),
                             Description = "Supervisor",
-                            UpdatedDate = new DateTime(2026, 1, 24, 12, 32, 20, 200, DateTimeKind.Local).AddTicks(4581),
+                            UpdatedDate = new DateTime(2026, 1, 24, 14, 12, 33, 612, DateTimeKind.Local).AddTicks(1429),
                             UserTypeId = 4
                         });
                 });
@@ -989,7 +993,7 @@ namespace TasksAPI.Migrations
 
             modelBuilder.Entity("TasksAPI.Entities.CashRegisterEntitySessions", b =>
                 {
-                    b.HasOne("TasksAPI.Entities.User", "User")
+                    b.HasOne("TasksAPI.Entities.UserEntity", "User")
                         .WithMany("CashRegisterEntitySessions")
                         .HasForeignKey("AssignedClerk")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1048,6 +1052,17 @@ namespace TasksAPI.Migrations
                     b.Navigation("LocationTypes");
                 });
 
+            modelBuilder.Entity("TasksAPI.Entities.RefreshTokenEntity", b =>
+                {
+                    b.HasOne("TasksAPI.Entities.UserEntity", "UserEntity")
+                        .WithOne("RefreshTokenEntity")
+                        .HasForeignKey("TasksAPI.Entities.RefreshTokenEntity", "userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserEntity");
+                });
+
             modelBuilder.Entity("TasksAPI.Entities.ReportsEntitiesResults", b =>
                 {
                     b.HasOne("TasksAPI.Entities.ReportsEntities", "ReportsEntities")
@@ -1072,7 +1087,7 @@ namespace TasksAPI.Migrations
 
             modelBuilder.Entity("TasksAPI.Entities.TasksEntities", b =>
                 {
-                    b.HasOne("TasksAPI.Entities.User", "User")
+                    b.HasOne("TasksAPI.Entities.UserEntity", "User")
                         .WithMany("TasksEntities")
                         .HasForeignKey("userID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1127,22 +1142,14 @@ namespace TasksAPI.Migrations
                     b.Navigation("TasksEntities");
                 });
 
-            modelBuilder.Entity("TasksAPI.Entities.User", b =>
+            modelBuilder.Entity("TasksAPI.Entities.UserEntity", b =>
                 {
-                    b.HasOne("TasksAPI.Entities.RefreshTokenEntity", "RefreshTokenEntity")
-                        .WithOne("User")
-                        .HasForeignKey("TasksAPI.Entities.User", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TasksAPI.Entities.UserTypes", "UserTypes")
                         .WithMany("Users")
                         .HasForeignKey("UserTypeId")
                         .HasPrincipalKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("RefreshTokenEntity");
 
                     b.Navigation("UserTypes");
                 });
@@ -1183,12 +1190,6 @@ namespace TasksAPI.Migrations
                     b.Navigation("TasksEntitiesTransfer");
                 });
 
-            modelBuilder.Entity("TasksAPI.Entities.RefreshTokenEntity", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TasksAPI.Entities.ReportsEntities", b =>
                 {
                     b.Navigation("ReportsEntitiesResults");
@@ -1206,9 +1207,12 @@ namespace TasksAPI.Migrations
                     b.Navigation("TasksEntitiesTransfer");
                 });
 
-            modelBuilder.Entity("TasksAPI.Entities.User", b =>
+            modelBuilder.Entity("TasksAPI.Entities.UserEntity", b =>
                 {
                     b.Navigation("CashRegisterEntitySessions");
+
+                    b.Navigation("RefreshTokenEntity")
+                        .IsRequired();
 
                     b.Navigation("TasksEntities");
                 });

@@ -12,8 +12,8 @@ namespace TasksAPI.Entities
 
         public BaseEntity()
         {
-            CreatedDate = DateTime.Now;
-            UpdatedDate = DateTime.Now;
+            CreatedDate = DateTime.UtcNow;
+            UpdatedDate = DateTime.UtcNow;
         }
     }
 }

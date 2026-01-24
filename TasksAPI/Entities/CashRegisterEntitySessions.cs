@@ -14,7 +14,7 @@ namespace TasksAPI.Entities
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
 
         [ForeignKey("AssignedClerk")]
-        public User? User { get; set; }
+        public UserEntity? User { get; set; }
         public int AssignedClerk { get; set; }
         [ForeignKey("CashRegisterID")]
         public CashRegisterEntity? CashRegisterEntity { get; set; }
