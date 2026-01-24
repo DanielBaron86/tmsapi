@@ -65,17 +65,19 @@ namespace TasksAPI.Services
             user.PasswordHash = PasswordHasher.ComputeHash(resource.Password, user.PasswordSalt, _pepper, _iteration);
 
             await _DBContext.Users.AddAsync(user, cancellationToken);
+            await _DBContext.SaveChangesAsync(cancellationToken);
+            var createdUser = _mapper.Map<UserResource>(user);
             var refreshToken = new RefreshTokenEntity()
             {
                 Token = GenerateRefreshToken(),
                 Revoked = false,
-                userId = user.Id,
+                userId = createdUser.Id,
                 ExpiryDate = DateTime.Now.AddMinutes(15),
                     
             };
             await _DBContext.RefreshTokenEntity.AddAsync(refreshToken);
             await _DBContext.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<UserResource>(user);
+            return createdUser;
         }
 
 
