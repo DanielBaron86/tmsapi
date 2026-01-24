@@ -29,7 +29,6 @@ namespace TasksAPI.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int GoodModelBaseTypeId { get; set; }
         public string Description { get; set; } = default!;
         public string Manufacturer { get; set; } = default!;
         public ICollection<GoodsTypes> GoodsTypesList { get; set; } = default!;

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
-using System.Net.NetworkInformation;
 using TasksAPI.DataBaseContext;
 using TasksAPI.Entities;
 using TasksAPI.Interfaces;
@@ -14,7 +12,7 @@ namespace TasksAPI.Services
     public class GoodsServices : IGoodsServices
     {
 
-        private readonly DatabaseConnectContext _DBContext;
+        private readonly DatabaseConnectContext _dbContext;
         private readonly IMapper _mapper;
         
          
@@ -22,43 +20,77 @@ namespace TasksAPI.Services
         {
 
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _DBContext = context ?? throw new ArgumentNullException(nameof(context));
-        }
-
-        public async Task<IEnumerable<GoodsModels>> GetGoods()
-        {
-            var goods = await _DBContext.GoodsTypesInstances.ToListAsync();
-            return _mapper.Map<IEnumerable<GoodsModels>>(goods);
+            _dbContext = context ?? throw new ArgumentNullException(nameof(context));
         }
         
-        public async Task<IEnumerable<GoodBaseTypeModel>> GetBaseGoodTypes()
+        public async Task< (IEnumerable<GoodsModels>, PaginationMetadata)> GetGoods(int pageNumber, int pageSize)
         {
-            var goods = await _DBContext.GoodModelBaseType.ToListAsync();
-            return _mapper.Map<IEnumerable<GoodBaseTypeModel>>(goods);
+            var collection =  _dbContext.GoodsTypesInstances  as IQueryable<GoodsModels>;
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            
+            var returnCollection = _mapper.Map<IEnumerable<GoodsModels>>(collectionReturn);
+
+            return (returnCollection,paginationMetadata);
+        }
+        
+        public async Task< (IEnumerable<GoodBaseTypeModel>, PaginationMetadata)>  GetBaseGoodTypes(int pageNumber, int pageSize)
+        {
+            
+            var collection = _dbContext.GoodModelBaseType as IQueryable<GoodModelBaseType>;
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            
+            var returnCollection = _mapper.Map<IEnumerable<GoodBaseTypeModel>>(collectionReturn);
+
+            return (returnCollection,paginationMetadata);
         }
         
 
-        public async Task<IEnumerable<GoodsTypesModel>> GetGoodTypes()
+        public async Task < (IEnumerable<GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
         {
-            var types = await _DBContext.GoodsTypes.ToListAsync();
-            return _mapper.Map<IEnumerable<GoodsTypesModel>>(types);
+            
+            var collection = _dbContext.GoodsTypes as IQueryable<GoodsTypesModel>;
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            
+            var returnCollection = _mapper.Map<IEnumerable<GoodsTypesModel>>(collectionReturn);
+
+            return (returnCollection,paginationMetadata);
         }
 
-        public async Task<GoodsModels> GetGoodById(int GoodID)
+        public async Task<GoodsModels> GetGoodById(int goodId)
         {
-            var good = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(i => i.Id == GoodID);
+            var good = await _dbContext.GoodsTypesInstances.FirstOrDefaultAsync(i => i.Id == goodId);
             return _mapper.Map<GoodsModels>(good);
         }
 
         public async Task<GoodsModels> CreateGood(CreateGoodsModels GoodUnitModel)
         {
-            _ = await _DBContext.GoodsTypes.FirstOrDefaultAsync(t => t.GoodModelId == GoodUnitModel.GoodModelId) ??throw new ArgumentException("Item model not found");
-            _ = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(t => t.Id == GoodUnitModel.LocationId) ??throw new ArgumentException("Location not found");
+            _ = await _dbContext.GoodsTypes.FirstOrDefaultAsync(t => t.GoodModelId == GoodUnitModel.GoodModelId) ??throw new ArgumentException("Item model not found");
+            _ = await _dbContext.LocationTypesInstances.FirstOrDefaultAsync(t => t.Id == GoodUnitModel.LocationId) ??throw new ArgumentException("Location not found");
 
 
             var goodToBeCreated = _mapper.Map<GoodsTypesInstances>(GoodUnitModel);
-            _DBContext.Add(goodToBeCreated);
-            await _DBContext.SaveChangesAsync(CancellationToken.None);
+            _dbContext.Add(goodToBeCreated);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return _mapper.Map<GoodsModels>(goodToBeCreated);
 
@@ -66,12 +98,12 @@ namespace TasksAPI.Services
 
         public async Task<bool> DeleteGoods(int GoodID)
         {
-            var item = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(i => i.Id == GoodID) ??throw new ArgumentException("Item not found");
+            var item = await _dbContext.GoodsTypesInstances.FirstOrDefaultAsync(i => i.Id == GoodID) ??throw new ArgumentException("Item not found");
 
             if (item.Status == (int)GoodsStatus.NONE || item.Status == (int)GoodsStatus.DELETED)
             {
-                _DBContext.Remove(item);
-                await _DBContext.SaveChangesAsync(CancellationToken.None);
+                _dbContext.Remove(item);
+                await _dbContext.SaveChangesAsync(CancellationToken.None);
                 return true;
 
             }
@@ -84,20 +116,20 @@ namespace TasksAPI.Services
 
         public async Task<GoodsModels> UpdateGood(int goodId, UpdateGoodsModels Good)
         {
-            var itemToBeUpdated = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == goodId) ??throw new ArgumentException("Item not found");
+            var itemToBeUpdated = await _dbContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == goodId) ??throw new ArgumentException("Item not found");
             if (Good.LocationId != itemToBeUpdated.LocationId || (int)Good.Status != itemToBeUpdated.Status)
             {
                 await CreateMovementHistory(itemToBeUpdated.Id, 0, Good.LocationId, (int)Good.Status, 1);
             }
             _mapper.Map(Good, itemToBeUpdated);
-            await _DBContext.SaveChangesAsync(CancellationToken.None);
-            var updatedItem = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == itemToBeUpdated.Id);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
+            var updatedItem = await _dbContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == itemToBeUpdated.Id);
             return _mapper.Map<GoodsModels>(updatedItem);
         }
 
         public async Task<GoodsModels> PatchGood(int goodID, JsonPatchDocument patchGood)
         {
-            var goodToPatch = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == goodID) ??throw new ArgumentException("Item not found");
+            var goodToPatch = await _dbContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == goodID) ??throw new ArgumentException("Item not found");
 
 
             if (goodToPatch.Status == (int)GoodsStatus.DELETED)
@@ -105,18 +137,18 @@ namespace TasksAPI.Services
                throw new ArgumentException("Can't edit items marked as DELETED");
             }
             patchGood.ApplyTo(goodToPatch);
-            await _DBContext.SaveChangesAsync(CancellationToken.None);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
             return _mapper.Map<GoodsModels>(goodToPatch);
 
         }
 
         public async Task<IEnumerable<AccountsGoodsEntity>> SellItem(int clientId, ICollection<SellGoods> args)
         {
-            _= _DBContext.Accounts.FirstOrDefault(u => u.Id == clientId) ?? throw new Exception("Client not found");
+            _= _dbContext.Accounts.FirstOrDefault(u => u.Id == clientId) ?? throw new Exception("Client not found");
             var list = new List<int>();
             foreach (var itemArg in args)
             {
-                var itemToSell = _DBContext.GoodsTypesInstances.FirstOrDefault(t => t.Id == itemArg.goodID) ??throw new ArgumentException("Item not found");
+                var itemToSell = _dbContext.GoodsTypesInstances.FirstOrDefault(t => t.Id == itemArg.goodID) ??throw new ArgumentException("Item not found");
 
                 if (itemToSell.Status != (int)GoodsStatus.AVAILABLE && itemToSell.Status != (int)GoodsStatus.RESERVED)
                 {
@@ -130,24 +162,24 @@ namespace TasksAPI.Services
                 
                 list.Add(itemArg.goodID);
                 var soldItem = _mapper.Map<AccountsGoodsEntity>(new CreateSellGoods { AccountId = clientId, GoodId = itemArg.goodID, price = itemArg.price, Status = GoodsStatus.SOLD });
-                _DBContext.AccountsGoodsEntity.Add(soldItem);
+                _dbContext.AccountsGoodsEntity.Add(soldItem);
                 await CreateMovementHistory(itemToSell.Id, itemToSell.LocationId, 4, (int)GoodsStatus.SOLD, itemArg.clerkId);
                 var patchItem = new JsonPatchDocument();
                 patchItem.Replace("Status", GoodsStatus.SOLD);
                 patchItem.Replace("LocationId", 4);
                 patchItem.ApplyTo(itemToSell);
 
-                _DBContext.SaveChanges();
+                _dbContext.SaveChanges();
 
             }
 
-            return await _DBContext.AccountsGoodsEntity.Where(i => list.Contains(i.GoodId)).Where(t => t.Status == (int)GoodsStatus.SOLD).ToListAsync();
+            return await _dbContext.AccountsGoodsEntity.Where(i => list.Contains(i.GoodId)).Where(t => t.Status == (int)GoodsStatus.SOLD).ToListAsync();
         }
 
         public async Task<int> CreateMovementHistory(int itemID, int FromLocation, int ToLocation, int ToStatus, int userID)
         {
 
-            var item = _DBContext.GoodsTypesInstances.FirstOrDefault(t => t.Id == itemID) ?? throw new ArgumentException($"Item {itemID} not found") ;
+            var item = _dbContext.GoodsTypesInstances.FirstOrDefault(t => t.Id == itemID) ?? throw new ArgumentException($"Item {itemID} not found") ;
 
             var itemMovement = new CreateItemMovementModel
             {
@@ -160,8 +192,8 @@ namespace TasksAPI.Services
             };
 
             var itemHistory = _mapper.Map<ItemMovementEntity>(itemMovement);
-            _DBContext.ItemMovementEntity.Add(itemHistory);
-            return await _DBContext.SaveChangesAsync(CancellationToken.None);
+            _dbContext.ItemMovementEntity.Add(itemHistory);
+            return await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
         public async Task<IEnumerable<AccountsGoodsEntity>> ReturnItems(int userID, ReturnGoods returnGoods)
@@ -169,69 +201,69 @@ namespace TasksAPI.Services
 
             foreach (var iD in returnGoods.goodID)
             {
-                var item = _DBContext.GoodsTypesInstances.FirstOrDefault(t => t.Id == iD) ??throw new ArgumentException("Item not found");
-                var itemInstance = _DBContext.AccountsGoodsEntity.FirstOrDefault(t => t.GoodId == iD);
+                var item = _dbContext.GoodsTypesInstances.FirstOrDefault(t => t.Id == iD) ??throw new ArgumentException("Item not found");
+                var itemInstance = _dbContext.AccountsGoodsEntity.FirstOrDefault(t => t.GoodId == iD);
                 await CreateMovementHistory(item.Id, 0, returnGoods.returnLocation, (int)GoodsStatus.RETURNED, returnGoods.clerkId);
 
-                var JSonPatchInstance = new JsonPatchDocument();
-                JSonPatchInstance.Replace("Status", (int)GoodsStatus.RETURNED);
+                var jSonPatchInstance = new JsonPatchDocument();
+                jSonPatchInstance.Replace("Status", (int)GoodsStatus.RETURNED);
 
-                var JSonPatch = new JsonPatchDocument();
-                JSonPatch.Replace("Status", (int)GoodsStatus.RETURNED);
-                JSonPatch.Replace("LocationId", returnGoods.returnLocation);
+                var jSonPatch = new JsonPatchDocument();
+                jSonPatch.Replace("Status", (int)GoodsStatus.RETURNED);
+                jSonPatch.Replace("LocationId", returnGoods.returnLocation);
 
                
-                JSonPatch.ApplyTo(item);
-                JSonPatchInstance.ApplyTo(itemInstance);
+                jSonPatch.ApplyTo(item);
+                jSonPatchInstance.ApplyTo(itemInstance);
 
-                await _DBContext.SaveChangesAsync(CancellationToken.None);
+                await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             }
-            return await _DBContext.AccountsGoodsEntity.Where(t => returnGoods.goodID.Contains(t.GoodId) && t.Status == (int)GoodsStatus.RETURNED).ToListAsync();
+            return await _dbContext.AccountsGoodsEntity.Where(t => returnGoods.goodID.Contains(t.GoodId) && t.Status == (int)GoodsStatus.RETURNED).ToListAsync();
         }
 
-        public async Task<ICollection<ItemMovementEntity>> GetGoodHistorysByID(int goodID)
+        public async Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodID)
         {
-            return await _DBContext.ItemMovementEntity.Where(t => t.goodId == goodID).OrderBy(t => t.CreatedDate).ToListAsync();
+            return await _dbContext.ItemMovementEntity.Where(t => t.goodId == goodID).OrderBy(t => t.CreatedDate).ToListAsync();
         }
 
         public async Task<GoodsTypesModel> GetGoodTypeById(int GoodID)
         {
-            var good = await _DBContext.GoodsTypes.FirstOrDefaultAsync(i => i.Id == GoodID);
+            var good = await _dbContext.GoodsTypes.FirstOrDefaultAsync(i => i.Id == GoodID);
             return _mapper.Map<GoodsTypesModel>(good);
         }
 
         public async Task<GoodsTypesModel> CreateGoodType(CeateGoodsTypesModel GoodtypeModel)
         {
             var goodToBeCreated = _mapper.Map<GoodsTypes>(GoodtypeModel);
-            _DBContext.Add(goodToBeCreated);
-            await _DBContext.SaveChangesAsync(CancellationToken.None);
+            _dbContext.Add(goodToBeCreated);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return _mapper.Map<GoodsTypesModel>(goodToBeCreated);
         }
 
-        public async Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel GoodType)
+        public async Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel goodType)
         {
-            var itemToBeUpdated = await _DBContext.GoodsTypes.FirstOrDefaultAsync(g => g.Id == goodId) ?? throw new ArgumentException("Item not found");
+            var itemToBeUpdated = await _dbContext.GoodsTypes.FirstOrDefaultAsync(g => g.Id == goodId) ?? throw new ArgumentException("Item not found");
             
-            _mapper.Map(GoodType, itemToBeUpdated);
+            _mapper.Map(goodType, itemToBeUpdated);
 
-            await _DBContext.SaveChangesAsync(CancellationToken.None);
-            var updatedItem = await _DBContext.GoodsTypes.FirstOrDefaultAsync(g => g.Id == itemToBeUpdated.Id);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
+            var updatedItem = await _dbContext.GoodsTypes.FirstOrDefaultAsync(g => g.Id == itemToBeUpdated.Id);
             return _mapper.Map<GoodsTypesModel>(updatedItem);
             
         }
 
-        public async Task<bool> DeleteGoodTypess(int GoodID)
+        public async Task<bool> DeleteGoodTypess(int goodId)
         {
-            var item = await _DBContext.GoodsTypes.FirstOrDefaultAsync(i => i.Id == GoodID) ?? throw new ArgumentException("Item not found");
-            var countItems = _DBContext.GoodsTypesInstances.Where( t => t.GoodModelId == GoodID).Count();
+            var item = await _dbContext.GoodsTypes.FirstOrDefaultAsync(i => i.Id == goodId) ?? throw new ArgumentException("Item not found");
+            var countItems = _dbContext.GoodsTypesInstances.Where( t => t.GoodModelId == goodId).Count();
             
 
             if (countItems <= 0)
             {
-                _DBContext.Remove(item);
-                await _DBContext.SaveChangesAsync(CancellationToken.None);
+                _dbContext.Remove(item);
+                await _dbContext.SaveChangesAsync(CancellationToken.None);
                 return true;
 
             }

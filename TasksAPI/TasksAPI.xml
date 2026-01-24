@@ -129,43 +129,45 @@
             <param name="clientID"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoods">
+        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoods(System.Int32,System.Int32)">
             <summary>
             Returns a list of all goods
             </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetBaseGoods">
+        <member name="M:TasksAPI.Controllers.GoodsController.GetBaseGoods(System.Int32,System.Int32)">
             <summary>
             Returs a list of base good types
             </summary>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoodTypes">
+        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoodTypes(System.Int32,System.Int32)">
             <summary>
             Returs a list of good types
             </summary>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodsByID(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodsById(System.Int32)">
             <summary>
             Returns goods by ID
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodTypesByID(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodTypesById(System.Int32)">
             <summary>
             Get Good Type by Id
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodHistorysByID(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodHistorysById(System.Int32)">
             <summary>
             Get the movement history of an item
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <returns></returns>
         </member>
         <member name="M:TasksAPI.Controllers.GoodsController.CreateGoods(TasksAPI.Models.CreateGoodsModels)">
@@ -186,7 +188,7 @@
             <summary>
             Update Existing Good
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
@@ -194,7 +196,7 @@
             <summary>
             Update a good type
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
@@ -202,7 +204,7 @@
             <summary>
             Patch user values
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <param name="patchGood"></param>
             <returns></returns>
         </member>
@@ -210,14 +212,14 @@
             <summary>
             Delete Goods by ID
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <returns></returns>
         </member>
         <member name="M:TasksAPI.Controllers.GoodsController.DeleteGoodTypess(System.Int32)">
             <summary>
             Delete Good Types by ID
             </summary>
-            <param name="goodID"></param>
+            <param name="goodId"></param>
             <returns></returns>
         </member>
         <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32})">
@@ -608,6 +610,18 @@
             <inheritdoc />
         </member>
         <member name="M:TasksAPI.Migrations.GoodModelBaseType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.GoodModelBaseType2">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodModelBaseType2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodModelBaseType2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodModelBaseType2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using TasksAPI.Entities;
@@ -15,7 +16,7 @@ namespace TasksAPI.Controllers
     public class GoodsController : ControllerBase
     {
 
-
+        const int MaxCitiesPagesSize = 20;
         private readonly IGoodsServices _goodsService;
 
         public GoodsController(IConfiguration configuration, IGoodsServices goodsServices)
@@ -26,11 +27,27 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Returns a list of all goods
         /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoods()
+        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoods(int pageNumber = 1, int pageSize = 10)
         {
-            return Ok(await _goodsService.GetGoods());
+            
+            try
+            {
+                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                var (itemInstances, paginationMetadata) = await _goodsService.GetGoods(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                return Ok(itemInstances);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
         
         /// <summary>
@@ -38,9 +55,21 @@ namespace TasksAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("base_goods")]
-        public async Task<ActionResult<IEnumerable<GoodBaseTypeModel>>> GetBaseGoods()
+        public async Task<ActionResult<IEnumerable<GoodBaseTypeModel>>> GetBaseGoods(int pageNumber = 1, int pageSize = 10)
         {
-            return Ok(await _goodsService.GetBaseGoodTypes());
+            try
+            {
+                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                var (baseItems, paginationMetadata) = await _goodsService.GetBaseGoodTypes(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                return Ok(baseItems);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -49,21 +78,34 @@ namespace TasksAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("goodtypes")]
-        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoodTypes()
-        {
-            return Ok(await _goodsService.GetGoodTypes());
+        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
+        {   
+            try
+            {
+                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                var (goodTypes, paginationMetadata) = await _goodsService.GetGoodTypes(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                return Ok(goodTypes);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
 
 
         /// <summary>
         /// Returns goods by ID
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <returns></returns>
-        [HttpGet("{goodID}")]
-        public async Task<ActionResult<GoodsModels>> GetGoodsByID(int goodID)
+        [HttpGet("{goodId}")]
+        public async Task<ActionResult<GoodsModels>> GetGoodsById(int goodId)
         {
-            var good = await _goodsService.GetGoodById(goodID);
+            var good = await _goodsService.GetGoodById(goodId);
             if (good == null)
             {
                 return NotFound();
@@ -77,12 +119,12 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Get Good Type by Id
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <returns></returns>
-        [HttpGet("goodtypes/{goodID}")]
-        public async Task<ActionResult<GoodsTypesModel>> GetGoodTypesByID(int goodID)
+        [HttpGet("goodtypes/{goodId}")]
+        public async Task<ActionResult<GoodsTypesModel>> GetGoodTypesById(int goodId)
         {
-            var good = await _goodsService.GetGoodTypeById(goodID);
+            var good = await _goodsService.GetGoodTypeById(goodId);
             if (good == null)
             {
                 return NotFound();
@@ -95,12 +137,12 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Get the movement history of an item
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <returns></returns>
-        [HttpGet("history/{goodID}")]
-        public async Task<ActionResult<ICollection<ItemMovementEntity>>> GetGoodHistorysByID(int goodID)
+        [HttpGet("history/{goodId}")]
+        public async Task<ActionResult<ICollection<ItemMovementEntity>>> GetGoodHistorysById(int goodId)
         {
-            var good = await _goodsService.GetGoodHistorysByID(goodID);
+            var good = await _goodsService.GetGoodHistorysById(goodId);
             if (good == null)
             {
                 return NotFound();
@@ -158,15 +200,15 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Update Existing Good
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <param name="goodsModels"></param>
         /// <returns></returns>
-        [HttpPut("{goodID}")]
-        public async Task<ActionResult<GoodsModels>> UpdateGoods(int goodID, UpdateGoodsModels goodsModels)
+        [HttpPut("{goodId}")]
+        public async Task<ActionResult<GoodsModels>> UpdateGoods(int goodId, UpdateGoodsModels goodsModels)
         {
             try
             {
-                return Ok(await _goodsService.UpdateGood(goodID, goodsModels));
+                return Ok(await _goodsService.UpdateGood(goodId, goodsModels));
             }
             catch (Exception ex)
             {
@@ -179,15 +221,15 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Update a good type
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <param name="goodsModels"></param>
         /// <returns></returns>
-        [HttpPut("goodtypes/{goodID}")]
-        public async Task<ActionResult<GoodsModels>> UpdateGoodTypes(int goodID, UpdateGoodsTypesModel goodsModels)
+        [HttpPut("goodtypes/{goodId}")]
+        public async Task<ActionResult<GoodsModels>> UpdateGoodTypes(int goodId, UpdateGoodsTypesModel goodsModels)
         {
             try
             {
-                return Ok(await _goodsService.UpdateGoodType(goodID, goodsModels));
+                return Ok(await _goodsService.UpdateGoodType(goodId, goodsModels));
             }
             catch (Exception ex)
             {
@@ -200,15 +242,15 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Patch user values
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <param name="patchGood"></param>
         /// <returns></returns>
-        [HttpPatch("{goodID}")]
-        public async Task<ActionResult<GoodsModels>> PatchGoods(int goodID, JsonPatchDocument patchGood)
+        [HttpPatch("{goodId}")]
+        public async Task<ActionResult<GoodsModels>> PatchGoods(int goodId, JsonPatchDocument patchGood)
         {
             try
             {
-                return Ok(await _goodsService.PatchGood(goodID, patchGood));
+                return Ok(await _goodsService.PatchGood(goodId, patchGood));
             }
             catch (Exception ex)
             {
@@ -219,15 +261,15 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Delete Goods by ID
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <returns></returns>
-        [HttpDelete("{goodID}")]
+        [HttpDelete("{goodId}")]
         [Authorize(Policy = "Supervisor")]
-        public async Task<ActionResult<bool>> DeleteGoods(int goodID)
+        public async Task<ActionResult<bool>> DeleteGoods(int goodId)
         {
             try
             {
-                return Ok(await _goodsService.DeleteGoods(goodID));
+                return Ok(await _goodsService.DeleteGoods(goodId));
             }
             catch (Exception ex)
             {
@@ -240,15 +282,15 @@ namespace TasksAPI.Controllers
         /// <summary>
         /// Delete Good Types by ID
         /// </summary>
-        /// <param name="goodID"></param>
+        /// <param name="goodId"></param>
         /// <returns></returns>
-        [HttpDelete("goodtypes/{goodID}")]
+        [HttpDelete("goodtypes/{goodId}")]
         [Authorize(Policy = "Supervisor")]
-        public async Task<ActionResult<bool>> DeleteGoodTypess(int goodID)
+        public async Task<ActionResult<bool>> DeleteGoodTypess(int goodId)
         {
             try
             {
-                return Ok(await _goodsService.DeleteGoodTypess(goodID));
+                return Ok(await _goodsService.DeleteGoodTypess(goodId));
             }
             catch (Exception ex)
             {

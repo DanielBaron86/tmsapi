@@ -52,7 +52,9 @@ namespace TasksAPI.DataBaseContext
             modelBuilder.Entity<GoodsTypes>()
                 .HasOne(g => g.GoodModelBaseType)
                 .WithMany(g => g.GoodsTypesList)
-                .HasForeignKey(g => g.GoodModelId);
+                .HasForeignKey(g => g.GoodModelId)
+                .HasPrincipalKey(g => g.Id);
+                
             
             modelBuilder.Entity<LocationTypes>(ut => ut.HasIndex(i => i.LocationType).IsUnique());
             
@@ -151,8 +153,8 @@ namespace TasksAPI.DataBaseContext
                 );
             
             modelBuilder.Entity<GoodModelBaseType>().HasData(
-                new GoodModelBaseType() {Id = 1,GoodModelBaseTypeId = 1,Description ="Smartphone", Manufacturer = "Samsung"}    ,
-                new GoodModelBaseType() {Id = 2,GoodModelBaseTypeId = 2,Description ="Smartphone", Manufacturer = "Apple"} 
+                new GoodModelBaseType() {Id = 1,Description ="Smartphone", Manufacturer = "Samsung"}    ,
+                new GoodModelBaseType() {Id = 2,Description ="Smartphone", Manufacturer = "Apple"} 
                 );
             
                 

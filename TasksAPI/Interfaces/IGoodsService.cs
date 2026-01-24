@@ -1,31 +1,32 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
 using TasksAPI.Entities;
 using TasksAPI.Models;
+using TasksAPI.Services;
 
 namespace TasksAPI.Interfaces
 {
     public interface IGoodsServices
     {
-        Task<IEnumerable<GoodsModels>> GetGoods();
-        Task<IEnumerable<GoodsTypesModel>> GetGoodTypes();
-        Task<IEnumerable<GoodBaseTypeModel>> GetBaseGoodTypes();
-        Task<GoodsModels> GetGoodById(int GoodID);
-        Task<GoodsTypesModel> GetGoodTypeById(int GoodID);
+        Task< (IEnumerable<GoodsModels>, PaginationMetadata)>GetGoods(int pageNumber, int pageSize);
+        Task< (IEnumerable<GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize);
+        Task< (IEnumerable<GoodBaseTypeModel>, PaginationMetadata)>  GetBaseGoodTypes(int pageNumber, int pageSize);
+        
+        Task<GoodsModels> GetGoodById(int goodId);
+        Task<GoodsTypesModel> GetGoodTypeById(int goodId);
 
-        Task<GoodsModels> CreateGood(CreateGoodsModels GoodUnitModel);
-        Task<GoodsTypesModel> CreateGoodType(CeateGoodsTypesModel GoodtypeModel);
-        Task<GoodsModels> UpdateGood(int goodId, UpdateGoodsModels Good);
-        Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel GoodType);
-        Task<GoodsModels> PatchGood(int goodID, JsonPatchDocument patchGood);
-        Task<bool> DeleteGoods(int GoodID);
-        Task<bool> DeleteGoodTypess(int GoodID);
+        Task<GoodsModels> CreateGood(CreateGoodsModels goodUnitModel);
+        Task<GoodsTypesModel> CreateGoodType(CeateGoodsTypesModel goodtypeModel);
+        Task<GoodsModels> UpdateGood(int goodId, UpdateGoodsModels good);
+        Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel goodType);
+        Task<GoodsModels> PatchGood(int goodId, JsonPatchDocument patchGood);
+        Task<bool> DeleteGoods(int goodId);
+        Task<bool> DeleteGoodTypess(int goodId);
         Task<IEnumerable<AccountsGoodsEntity>> SellItem(int clientId, ICollection<SellGoods> args);
-        Task<int> CreateMovementHistory(int itemID, int FromLocation, int ToLocation, int ToStatus, int userID);
+        Task<int> CreateMovementHistory(int itemId, int fromLocation, int toLocation, int toStatus, int userId);
 
-        Task<IEnumerable<AccountsGoodsEntity>> ReturnItems(int userID, ReturnGoods returnGoods);
+        Task<IEnumerable<AccountsGoodsEntity>> ReturnItems(int userId, ReturnGoods returnGoods);
 
-        Task<ICollection<ItemMovementEntity>> GetGoodHistorysByID(int goodID);
+        Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodId);
 
 
     }
