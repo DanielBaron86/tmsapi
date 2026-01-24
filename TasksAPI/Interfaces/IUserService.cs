@@ -14,6 +14,7 @@ namespace TasksAPI.Interfaces
 
         Task<IEnumerable<UserResource>> GetUsers();
         Task<bool> DeleteUser(int userID, CancellationToken cancellationToken);
-        Task<string> RefreshToken(string oldToken);
+        Task<string> RefreshToken(RefreshResource resource, CancellationToken cancellationToken);
+        Task<RefreshToken> GetRefreshToken(RefreshResource resource, CancellationToken cancellationToken);
     }
 }

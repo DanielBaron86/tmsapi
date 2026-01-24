@@ -19,5 +19,5 @@
         public int userId { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
-
+    public sealed record RefreshResource(string oldToken, string refreshToken,int userId);
 }

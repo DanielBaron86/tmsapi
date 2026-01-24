@@ -65,16 +65,16 @@ namespace TasksAPI.Services
             user.PasswordHash = PasswordHasher.ComputeHash(resource.Password, user.PasswordSalt, _pepper, _iteration);
 
             await _DBContext.Users.AddAsync(user, cancellationToken);
-            await _DBContext.SaveChangesAsync(cancellationToken);
             var refreshToken = new RefreshTokenEntity()
             {
                 Token = GenerateRefreshToken(),
                 Revoked = false,
                 userId = user.Id,
-                ExpiryDate = DateTime.UtcNow.AddMinutes(15),
+                ExpiryDate = DateTime.Now.AddMinutes(15),
                     
             };
-            var res =  await saveOrUpdateRefreshToken(refreshToken);
+            await _DBContext.RefreshTokenEntity.AddAsync(refreshToken);
+            await _DBContext.SaveChangesAsync(cancellationToken);
             return _mapper.Map<UserResource>(user);
         }
 
@@ -92,43 +92,39 @@ namespace TasksAPI.Services
             if (user.PasswordHash != passwordHash)
                throw new ArgumentException("Username or password did not match.");
             
-            var claimsForToken = new List<Claim>
-            {
-                new Claim("sub", user.Id.ToString()),
-                new Claim("userType", user.UserTypeId.ToString()),
-                new Claim("given_name", user.FirstName),
-                new Claim("family_name", user.LastName)
-            };
-
-            switch (user.UserTypeId) 
-            {
-                case  3:
-                    claimsForToken.Add(new Claim("role", "clerk"));
-                    break;
-                case  4:
-                    claimsForToken.Add(new Claim("role", "clerk"));
-                    claimsForToken.Add(new Claim("role", "supervisor"));
-                    break;
-            }
+            var claimsForToken = GenerateClaimsForToken(user);
             var tokenToReturn = GenerateToken(claimsForToken);
             var userprofile =  await GetUserById(user.Id);
-            var refreshToken = GenerateRefreshToken();
-            return new LoginResponse( tokenToReturn, userprofile,refreshToken) ;
+            var refreshToken = new RefreshTokenForUpdate()
+            {
+                Token = GenerateRefreshToken(),
+                Revoked = false,
+                userId = user.Id,
+                ExpiryDate = DateTime.Now.AddMinutes(15),
+                    
+            };
+            await UpdateRefreshToken(refreshToken);
+            return new LoginResponse( tokenToReturn, userprofile,refreshToken.Token) ;
+
+         
         }
 
-        public Task<string> RefreshToken(string refreshToken)
+        public Task<string> RefreshToken(RefreshResource resource, CancellationToken cancellationToken)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = _configuration["Authentification:SecretForkey"];
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var checkUser = _DBContext.Users.FirstOrDefault(u => u.Id == resource.userId);
+            var isValidToken = ValidateToken(resource.oldToken, false);
+            if (checkUser!=null && isValidToken)
             {
-                Expires = DateTime.UtcNow.AddMinutes(15), // Extend expiration time
-                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
-            };
+                var claims = GenerateClaimsForToken(checkUser);
+                return  Task.FromResult(GenerateToken(claims));
+            }
+            return Task.FromResult<string>(null);
+        }
 
-            var newToken = tokenHandler.CreateToken(tokenDescriptor);
-            return  Task.FromResult(tokenHandler.WriteToken(newToken));
+        public async Task<RefreshToken> GetRefreshToken(RefreshResource resource, CancellationToken cancellationToken)
+        {
+            var refreshToken = await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync( r => r.Token == resource.refreshToken && r.userId == resource.userId ,cancellationToken);
+            return  _mapper.Map<RefreshToken>(refreshToken);;
         }
 
         public async Task<UserResource> UpdateUser(int userID, UserResourceForUpdate userResource, CancellationToken cancellationToken)
@@ -169,10 +165,11 @@ namespace TasksAPI.Services
             
         }
 
-        public bool ValidateToken(string authToken)
+        public bool ValidateToken(string authToken,bool ValidateLifetime=true)
         {
             var conf = new string[] { _configuration["Authentification:Issuer"], _configuration["Authentification:Audience"], _configuration["Authentification:SecretForkey"] };
-            return PasswordHasher.ValidateToken(authToken, conf);
+            var reply= PasswordHasher.ValidateToken(authToken, conf,ValidateLifetime);
+            return reply.IsValid;
         }
 
         public async Task<UserResource> PatchUser(int userID, JsonPatchDocument patchUser, CancellationToken cancellationToken)
@@ -195,29 +192,8 @@ namespace TasksAPI.Services
             return Convert.ToBase64String(randomNumber);
         }
         
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token, SymmetricSecurityKey securityKey)
-        {
-            
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = securityKey,
-                ValidateLifetime = false // We want to get claims from expired token
-            };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-
-            if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
-
-            return principal;
-        }
-
-        private string GenerateToken(List<Claim> claimsForToken)
+        private string GenerateToken(IEnumerable<Claim> claimsForToken)
         {
             var key = _configuration["Authentification:SecretForkey"];
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
@@ -234,19 +210,40 @@ namespace TasksAPI.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
 
-        private async Task<RefreshToken> saveOrUpdateRefreshToken(RefreshTokenEntity refreshToken)
+        private async Task<RefreshToken> UpdateRefreshToken(RefreshTokenForUpdate refreshToken)
         {   var tokenToBeUpdated = await _DBContext.RefreshTokenEntity
                 .FirstOrDefaultAsync(x => x.Id == refreshToken.userId);
             if (tokenToBeUpdated == null)
             {
-                await _DBContext.RefreshTokenEntity.AddAsync(refreshToken);
+                throw new ArgumentException(nameof(refreshToken));
             }
-            else
-            {
-                _mapper.Map(refreshToken, tokenToBeUpdated);
-            }
+            _mapper.Map(refreshToken, tokenToBeUpdated);
             await _DBContext.SaveChangesAsync(true);
-            return _mapper.Map<RefreshToken>(refreshToken);
+            return _mapper.Map<RefreshToken>(await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync(r => r.Token == tokenToBeUpdated.Token));
+        }
+        
+        List<Claim> GenerateClaimsForToken(UserEntity userEntity)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim("sub", userEntity.Id.ToString()),
+                new Claim("userType", userEntity.UserTypeId.ToString()),
+                new Claim("given_name", userEntity.FirstName),
+                new Claim("family_name", userEntity.LastName)
+            };
+
+            switch (userEntity.UserTypeId) 
+            {
+                case  3:
+                    claims.Add(new Claim("role", "clerk"));
+                    break;
+                case  4:
+                    claims.Add(new Claim("role", "clerk"));
+                    claims.Add(new Claim("role", "supervisor"));
+                    break;
+            }
+
+            return claims;
         }
     }
 }

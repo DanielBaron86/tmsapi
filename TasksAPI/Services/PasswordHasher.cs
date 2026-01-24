@@ -29,27 +29,36 @@ namespace TasksAPI.Services
             return salt;
         }
 
-        public static bool ValidateToken(string authToken, string[] conf)
+        public static ValidationResponse ValidateToken(string authToken, string[] conf,bool ValidateLifetime =true)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = GetValidationParameters(conf);
-
-            SecurityToken validatedToken;
-            IPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out validatedToken);
-            return true;
-        }
-
-        private static TokenValidationParameters GetValidationParameters(string[] conf)
-        {
-            return new TokenValidationParameters()
+            var validationParameters = new TokenValidationParameters()
             {
-                ValidateLifetime = true, // Because there is no expiration in the generated token
+                ValidateLifetime = ValidateLifetime, // Because there is no expiration in the generated token
                 ValidateAudience = true, // Because there is no audiance in the generated token
                 ValidateIssuer = true,   // Because there is no issuer in the generated token
+                ValidateIssuerSigningKey = true,
                 ValidIssuer = conf[0],
                 ValidAudience = conf[1],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf[2])) // The same key as the one that generate the token
-            };
+            };;
+
+            SecurityToken validatedToken;
+            IPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out validatedToken);
+            if (principal != null)
+            {
+                return new ValidationResponse(){IsValid = true,Principal=principal};  
+            }
+
+            return new ValidationResponse() { IsValid = false };
+
         }
+        
+        public struct ValidationResponse
+        {
+            public bool IsValid;
+            public IPrincipal? Principal;
+        }
+        
     }
 }

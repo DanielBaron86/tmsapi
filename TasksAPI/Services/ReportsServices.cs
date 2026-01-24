@@ -183,7 +183,7 @@ namespace TasksAPI.Services
                 .Where(t => !operationTypes.Any() || locations.Contains(t.OperationType))
                 .Include(t => t.StoreCartsEntity)
                 .Where(t => t.StoreCartsEntity.Status == 2)
-                .Where(t => t.StoreCartsEntity.CreatedDate.Date == DateTime.Now.Date)
+                .Where(t => t.StoreCartsEntity.CreatedDate.Date == DateTime.UtcNow.Date)
 
                 .Select(t => new { 
                     t.CartId,

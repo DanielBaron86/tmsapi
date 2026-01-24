@@ -48,7 +48,7 @@ namespace TasksAPI.Entities
         [Required]
         public string Token { get; set; } = default!;
         [Required]
-        public bool Revoked;
+        public bool Revoked { get; set; } = default!;
         [Required]
         public int userId { get; set; }
         public DateTime ExpiryDate { get; set; }
