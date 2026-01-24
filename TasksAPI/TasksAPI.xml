@@ -600,29 +600,5 @@
             </summary>
             <param name="options"></param>
         </member>
-        <member name="T:TasksAPI.Migrations.GoodModelBaseType">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodModelBaseType.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodModelBaseType.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodModelBaseType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.GoodModelBaseType2">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodModelBaseType2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodModelBaseType2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodModelBaseType2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
     </members>
 </doc>

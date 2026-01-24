@@ -33,11 +33,27 @@ namespace TasksAPI.Entities
         
         public string PasswordSalt { get; set; } = default!;
         public string PasswordHash { get; set; } = default!;
+        public string RefreshTokenId { get; set; } = default!;
 
         public UserTypes UserTypes { get; set; } = default!;
 
         public ICollection<TasksEntities> TasksEntities { get; set; } = default!;
         public ICollection<CashRegisterEntitySessions> CashRegisterEntitySessions { get; set; } = default!;
+        public RefreshTokenEntity RefreshTokenEntity { get; set; } = default!;
 
+    }
+    
+    public class RefreshTokenEntity :  BaseEntity {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required]
+        public string Token { get; set; } = default!;
+        [Required]
+        public bool Revoked;
+        [Required]
+        public DateTime ExpiryDate { get; set; }
+
+        public User User { get; set; } = default!;
     }
 }

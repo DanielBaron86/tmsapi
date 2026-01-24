@@ -37,6 +37,7 @@ namespace TasksAPI.DataBaseContext
         public DbSet<StoreCartsEntityDetails> StoreCartsEntityDetails { get; set; }
         public DbSet<ReportsEntities> ReportsEntities { get; set; }
         public DbSet<ReportsEntitiesResults> ReportsEntitiesResults { get; set; }
+        public DbSet<RefreshTokenEntity> RefreshTokenEntity { get; set; }
 
 
 
@@ -64,6 +65,13 @@ namespace TasksAPI.DataBaseContext
                         .WithMany(e => e.Users)
                         .HasForeignKey(e => e.UserTypeId)
                         .HasPrincipalKey(e => e.UserTypeId);
+
+            modelBuilder.Entity<User>()
+                .HasOne(e => e.RefreshTokenEntity)
+                .WithOne(e => e.User)
+                .HasForeignKey<User>(e => e.Id);
+                
+              
 
             modelBuilder.Entity<Accounts>()
                         .HasOne(e => e.UserTypes)

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using TasksAPI.DataBaseContext;
 using TasksAPI.Entities;
 using TasksAPI.Interfaces;
 using TasksAPI.Models;
-using TasksAPI.Profiles;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace TasksAPI.Services
 {
@@ -84,11 +84,7 @@ namespace TasksAPI.Services
             var passwordHash = PasswordHasher.ComputeHash(resource.Password, user.PasswordSalt, _pepper, _iteration);
             if (user.PasswordHash != passwordHash)
                throw new ArgumentException("Username or password did not match.");
-
             
-            var key = _configuration["Authentification:SecretForkey"];
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claimsForToken = new List<Claim>
             {
                 new Claim("sub", user.Id.ToString()),
@@ -97,32 +93,36 @@ namespace TasksAPI.Services
                 new Claim("family_name", user.LastName)
             };
 
-            if (user.UserTypeId == 3)
+            switch (user.UserTypeId) 
             {
-                claimsForToken.Add(new Claim("role", "clerk"));
+                case  3:
+                    claimsForToken.Add(new Claim("role", "clerk"));
+                    break;
+                case  4:
+                    claimsForToken.Add(new Claim("role", "clerk"));
+                    claimsForToken.Add(new Claim("role", "supervisor"));
+                    break;
             }
-
-            if (user.UserTypeId == 4) {
-                claimsForToken.Add(new Claim("role", "clerk"));
-                claimsForToken.Add(new Claim("role", "supervisor"));
-            }
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                    _configuration["Authentification:Issuer"],
-                    _configuration["Authentification:Audience"],
-                    claimsForToken,
-                    DateTime.UtcNow,
-                    DateTime.UtcNow.AddHours(1),
-                    signingCredentials
-                );
-
-            var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            var tokenToReturn = GenerateToken(claimsForToken);
             var userprofile =  await GetUserById(user.Id);
-            
-            return new LoginResponse( tokenToReturn, userprofile) ;
+            var refreshToken = GenerateRefreshToken();
+            return new LoginResponse( tokenToReturn, userprofile,refreshToken) ;
         }
 
+        public Task<string> RefreshToken(string refreshToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = _configuration["Authentification:SecretForkey"];
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Expires = DateTime.UtcNow.AddMinutes(15), // Extend expiration time
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
+            };
 
+            var newToken = tokenHandler.CreateToken(tokenDescriptor);
+            return  Task.FromResult(tokenHandler.WriteToken(newToken));
+        }
 
         public async Task<UserResource> UpdateUser(int userID, UserResourceForUpdate userResource, CancellationToken cancellationToken)
         {
@@ -178,6 +178,53 @@ namespace TasksAPI.Services
             patchUser.ApplyTo(userToPatch);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
             return _mapper.Map<UserResource>(userToPatch);
+        }
+        
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+        
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token, SymmetricSecurityKey securityKey)
+        {
+            
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = securityKey,
+                ValidateLifetime = false // We want to get claims from expired token
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+
+            if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+        }
+
+        private string GenerateToken(List<Claim> claimsForToken)
+        {
+            var key = _configuration["Authentification:SecretForkey"];
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var jwtSecurityToken = new JwtSecurityToken(
+                _configuration["Authentification:Issuer"],
+                _configuration["Authentification:Audience"],
+                claimsForToken,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(1),
+                signingCredentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
     }
 }
