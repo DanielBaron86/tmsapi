@@ -19,6 +19,8 @@
         public int LocationId { get; set; }
 
         public GoodsStatus Status { get; set; }
+        public GoodsTypesModel GoodsTypes { get; set; }
+        public LocationUnitModel LocationTypesInstances { get; set; }
     }
 
 

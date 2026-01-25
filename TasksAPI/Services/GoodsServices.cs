@@ -25,7 +25,11 @@ namespace TasksAPI.Services
         
         public async Task< (IEnumerable<GoodsModels>, PaginationMetadata)> GetGoods(int pageNumber, int pageSize)
         {
-            var collection =  _dbContext.GoodsTypesInstances  as IQueryable<GoodsTypesInstances>;
+           var collection =  _dbContext.GoodsTypesInstances
+               .Include( i => i.GoodsTypes)
+               .Include( i => i.LocationTypesInstances)
+               as IQueryable<GoodsTypesInstances>;
+
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
@@ -41,6 +45,8 @@ namespace TasksAPI.Services
         
         public async Task< (IEnumerable<GoodBaseTypeModel>, PaginationMetadata)>  GetBaseGoodTypes(int pageNumber, int pageSize)
         {
+            
+            
             
             var collection = _dbContext.GoodModelBaseType as IQueryable<GoodModelBaseType>;
             
@@ -61,7 +67,7 @@ namespace TasksAPI.Services
         public async Task < (IEnumerable<GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
         {
             
-            var collection = _dbContext.GoodsTypes as IQueryable<GoodsTypes>;
+            var collection = _dbContext.GoodsTypes.Include( b => b.GoodModelBaseType) as IQueryable<GoodsTypes>;
             
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
