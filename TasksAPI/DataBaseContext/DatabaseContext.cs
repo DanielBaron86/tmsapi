@@ -151,12 +151,12 @@ namespace TasksAPI.DataBaseContext
 
 
             modelBuilder.Entity<LocationTypesInstances>().HasData(
-                new LocationTypesInstances() { Id = 1, LocationTypeID = 1, Adress = "Iasi", Description = "MAIN Warehouse" },
-                new LocationTypesInstances() { Id = 2, LocationTypeID = 2, Adress = "Iasi", Description = "Iasi Mall" },
-                new LocationTypesInstances() { Id = 3, LocationTypeID = 2, Adress = "Suceava", Description = "Suceava Mall" },
-                new LocationTypesInstances() { Id = 4, LocationTypeID = 3, Adress = "Client", Description = "Goods Assigned to clients" },
-                new LocationTypesInstances() { Id = 5, LocationTypeID = 1, Adress = "Iasi", Description = "Returned Items" },
-                new LocationTypesInstances() { Id = 6, LocationTypeID = 4, Adress = "Iasi", Description = "Item Supplier" }
+                new LocationTypesInstances() { Id = 1, LocationTypeID = 1, Address = "Iasi", Description = "MAIN Warehouse" },
+                new LocationTypesInstances() { Id = 2, LocationTypeID = 2, Address = "Iasi", Description = "Iasi Mall" },
+                new LocationTypesInstances() { Id = 3, LocationTypeID = 2, Address = "Suceava", Description = "Suceava Mall" },
+                new LocationTypesInstances() { Id = 4, LocationTypeID = 3, Address = "Client", Description = "Goods Assigned to clients" },
+                new LocationTypesInstances() { Id = 5, LocationTypeID = 1, Address = "Iasi", Description = "Returned Items" },
+                new LocationTypesInstances() { Id = 6, LocationTypeID = 4, Address = "Iasi", Description = "Item Supplier" }
 
                 );
             

@@ -232,6 +232,7 @@ namespace TasksAPI.Services
         {
             return await _dbContext.ItemMovementEntity.Where(t => t.goodId == goodID).OrderBy(t => t.CreatedDate).ToListAsync();
         }
+        
 
         public async Task<GoodsTypesModel> GetGoodTypeById(int GoodID)
         {
@@ -278,6 +279,26 @@ namespace TasksAPI.Services
                 throw new ArgumentException("Unable to delete item type. Already has items instances associated");
             }
             
+        }
+        
+        public  async Task<GoodBaseTypeModel> CreateBaseType(CreateGoodBaseTypeModel goodBaseModel)
+        {
+            var goodBaseToBeCreated = _mapper.Map<GoodModelBaseType>(goodBaseModel);
+            _dbContext.Add(goodBaseToBeCreated);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
+
+            return _mapper.Map<GoodBaseTypeModel>(goodBaseToBeCreated);
+        }
+
+        public async Task<GoodBaseTypeModel> UpdateBaseType(int goodId, CreateGoodBaseTypeModel goodBaseModel)
+        {
+            var itemToBeUpdated = await _dbContext.GoodModelBaseType.FirstOrDefaultAsync(g => g.Id == goodId) ?? throw new ArgumentException("Item not found");
+            
+            _mapper.Map(goodBaseModel, itemToBeUpdated);
+
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
+            var updatedItem = await _dbContext.GoodModelBaseType.FirstOrDefaultAsync(g => g.Id == itemToBeUpdated.Id);
+            return _mapper.Map<GoodBaseTypeModel>(updatedItem);
         }
     }
 }

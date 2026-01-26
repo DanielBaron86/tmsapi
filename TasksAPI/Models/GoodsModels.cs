@@ -11,6 +11,23 @@ namespace TasksAPI.Models
         public string Manufacturer { get; set; } = default!;
         
     }
+
+    public class CreateGoodBaseTypeModel
+    {
+        [JsonRequired]
+        public string Description { get; set; } = default!;
+        [JsonRequired]
+        public string Manufacturer { get; set; } = default!;
+    }
+    
+    public class UpdateGoodBaseTypeModel
+    {
+        [JsonRequired]
+        public string Description { get; set; } = default!;
+        [JsonRequired]
+        public string Manufacturer { get; set; } = default!;
+    }
+
     public class GoodsModels : BaseModel
     {
 
@@ -39,30 +56,40 @@ namespace TasksAPI.Models
 
     public class TransferModel
     {
+        [JsonRequired]
         public int SubTaskId { get; set; }
+        [JsonRequired]
         public int UserId { get; set; }
+        [JsonRequired]
         public int GoodModelId { get; set; }
         public ICollection<FulfillGoodsModels>? FulfillGoodsModels { get; set; } = new List<FulfillGoodsModels>();
     }
 
     public class FulfillGoodsModels
-    {
+    {   
+        [JsonRequired]
         public Decimal Price { get; set; }
+        [JsonRequired]
         public string SerialNumber { get; set; } = default!;
     }
 
     public class FulfillTransferTask
     {
+        [JsonRequired]
         public int UserId { get; set; }
         public ICollection<string>? fulfillGoodsTransfer { get; set; }
     }
 
     public class CreateGoodsModels
     {
-
+    
+        [JsonRequired]
         public int GoodModelId { get; set; }
+        [JsonRequired]
         public Decimal Price { get; set; }
+        [JsonRequired]
         public string SerialNumber { get; set; } = default!;
+        [JsonRequired]
         public int LocationId { get; set; }
         public GoodsStatus Status { get; set; } = GoodsStatus.AVAILABLE;
     }
@@ -83,24 +110,34 @@ namespace TasksAPI.Models
 
     public struct ReturnGoods
     {
+        [JsonRequired]
         public int ClerkId { get; set; }
+        [JsonRequired]
         public int ReturnLocation { get; set; }
+        [JsonRequired]
         public ICollection<int> GoodId { get; set; }
     }
 
     public class SellGoods
     {
+        [JsonRequired]
         public int ClerkId { get; set; }
+        [JsonRequired]
         public int StoreLocation { get; set; }
+        [JsonRequired]
         public int GoodId { get; set; }
+        [JsonRequired]
         public Decimal Price { get; set; }
     }
     public class CreateSellGoods
     {
+        [JsonRequired]
         public int AccountId { get; set; }
+        [JsonRequired]
         public int GoodId { get; set; }
+        [JsonRequired]
         public Decimal Price { get; set; }
-
+        [JsonRequired]
         public GoodsStatus Status { get; set; }
     }
 }

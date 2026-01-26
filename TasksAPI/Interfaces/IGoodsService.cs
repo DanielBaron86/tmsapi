@@ -27,7 +27,9 @@ namespace TasksAPI.Interfaces
         Task<IEnumerable<AccountsGoodsEntity>> ReturnItems(int userId, ReturnGoods returnGoods);
 
         Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodId);
-
+        Task<GoodBaseTypeModel> CreateBaseType(CreateGoodBaseTypeModel goodBaseModel);
+        Task<GoodBaseTypeModel> UpdateBaseType(int goodId,CreateGoodBaseTypeModel goodBaseModel);
+        
 
     }
 }

@@ -299,5 +299,46 @@ namespace TasksAPI.Controllers
 
         }
         
+        /// <summary>
+        /// Create Base Model
+        /// </summary>
+        /// <param name="goodBaseModel"></param>
+        /// <returns></returns>
+        [HttpPost("base_goods")]
+        public async Task<ActionResult<GoodBaseTypeModel>> CreateBaseModel(CreateGoodBaseTypeModel goodBaseModel)
+        {
+            if (goodBaseModel == null) { return NotFound(); }
+
+            if (!ModelState.IsValid) { return BadRequest(); }
+
+            try
+            {
+                return Ok(await _goodsService.CreateBaseType(goodBaseModel));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update Existing Good Base Good
+        /// </summary>
+        /// <param name="baseGoodId"></param>
+        /// <param name="goodBaseModel"></param>
+        /// <returns></returns>
+        [HttpPut("base_goods/{baseGoodId}")]
+        public async Task<ActionResult<GoodsModels>> UpdateBaseGoods(int baseGoodId, CreateGoodBaseTypeModel goodBaseModel)
+        {
+            try
+            {
+                return Ok(await _goodsService.UpdateBaseType(baseGoodId, goodBaseModel));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

@@ -222,6 +222,21 @@
             <param name="goodId"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.CreateBaseModel(TasksAPI.Models.CreateGoodBaseTypeModel)">
+            <summary>
+            Create Base Model
+            </summary>
+            <param name="goodBaseModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.UpdateBaseGoods(System.Int32,TasksAPI.Models.CreateGoodBaseTypeModel)">
+            <summary>
+            Update Existing Good Base Good
+            </summary>
+            <param name="baseGoodId"></param>
+            <param name="goodBaseModel"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Returns a list of existing tasks
