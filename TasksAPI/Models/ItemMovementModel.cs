@@ -2,7 +2,7 @@
 {
     public class ItemMovementModel : BaseModel
     {
-        public int goodId { get; set; }
+        public int GoodId { get; set; }
 
         public int FromLocation { get; set; }
         public int ToLocation { get; set; }
@@ -16,7 +16,7 @@
 
     public class CreateItemMovementModel
     {
-        public int goodId { get; set; }
+        public int GoodId { get; set; }
 
         public int FromLocation { get; set; }
         public int ToLocation { get; set; }

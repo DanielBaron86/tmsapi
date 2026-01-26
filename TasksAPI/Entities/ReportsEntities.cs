@@ -10,7 +10,7 @@ namespace TasksAPI.Entities
     {
 
         public ReportsEntities() {
-            ReportStatus = (int)DBEntityStatus.ACTIVE;
+            ReportStatus = (int)DbEntityStatus.ACTIVE;
         }
 
         [Key]

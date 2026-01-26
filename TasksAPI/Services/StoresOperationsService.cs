@@ -21,7 +21,7 @@ namespace TasksAPI.Services
             _goodsServices = goodsServices ?? throw new ArgumentNullException(nameof(goodsServices));
         }
 
-        public async Task<StoreCartsEntity_DetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
+        public async Task<StoreCartsEntityDetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
         {
             
             var checkCart = _DBContext.StoreCartsEntity.Where(t => t.Status == 1).FirstOrDefault(t => t.Id == cartId) ??throw new ArgumentException("Cart not found or already closed");
@@ -61,7 +61,7 @@ namespace TasksAPI.Services
 
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
 
-                return _mapper.Map<StoreCartsEntity_DetailsModel>(newOperation);
+                return _mapper.Map<StoreCartsEntityDetailsModel>(newOperation);
             }
             else {
                 throw new Exception($"Item with id {operationModel.GoodId}  already in cart");
@@ -89,12 +89,12 @@ namespace TasksAPI.Services
             }
         }
 
-        public Task<StoreCartsEntity_DetailsModel> AddReturnToCart(int cartId, CreateRegisterOperationsModel operationModel)
+        public Task<StoreCartsEntityDetailsModel> AddReturnToCart(int cartId, CreateRegisterOperationsModel operationModel)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<CashRegisterEntity_SessionsModel> CloseSession(int sessionId)
+        public async Task<CashRegisterEntitySessionsModel> CloseSession(int sessionId)
         {
             var session = _DBContext.CashRegisterEntitySessions.FirstOrDefault(t => t.Id == sessionId) ??throw new ArgumentException("Session not found");  
 
@@ -104,18 +104,18 @@ namespace TasksAPI.Services
             patcher.ApplyTo(session);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
 
-            return _mapper.Map<CashRegisterEntity_SessionsModel>(session);
+            return _mapper.Map<CashRegisterEntitySessionsModel>(session);
 
         }
 
         public async Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity)
         {
-            var location = _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefault(t => t.Id == cashRegisterEntity.LocationID);
+            var location = _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefault(t => t.Id == cashRegisterEntity.LocationId);
             if(location == null || location.LocationTypeID != 2) {
                throw new ArgumentException("Location doesn't exists or wrong type");
             }
             else {
-                var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationID = cashRegisterEntity.LocationID, Notes = cashRegisterEntity.Notes });
+                var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationId = cashRegisterEntity.LocationId, Notes = cashRegisterEntity.Notes });
                 _DBContext.CashRegisterEntity.Add(newCashRegister);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
                 return _mapper.Map<CashRegisterEntityModel>(newCashRegister);
@@ -126,9 +126,9 @@ namespace TasksAPI.Services
 
         public async Task<StoreCartsEntityModel> CreateNewCart(CreateNewCart CreateNewCart)
         {
-            var session = _DBContext.CashRegisterEntitySessions.Where( t => t.SessionStatus == 1).FirstOrDefault( t => t.AssignedClerk == CreateNewCart.clerkId) ??throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.clerkId} ");
+            var session = _DBContext.CashRegisterEntitySessions.Where( t => t.SessionStatus == 1).FirstOrDefault( t => t.AssignedClerk == CreateNewCart.ClerkId) ??throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
             
-            var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionID = session.Id, Status = 1 ,clientId = CreateNewCart.clientId, clerktId = CreateNewCart.clerkId, storeLocation= CreateNewCart.storeLocation });
+            var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionId = session.Id, Status = 1 ,ClientId = CreateNewCart.ClientId, ClerktId = CreateNewCart.ClerkId, StoreLocation= CreateNewCart.StoreLocation });
 
             _DBContext.StoreCartsEntity.Add(cartToCreate);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -143,27 +143,27 @@ namespace TasksAPI.Services
             return _mapper.Map<StoreCartsEntityModelWithDetails>(newCart);
         }
 
-        public async Task<StoreCartsEntity_DetailsModel> GetCartDetilsByID(int cartDetailsId)
+        public async Task<StoreCartsEntityDetailsModel> GetCartDetilsByID(int cartDetailsId)
         {
             var details =await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync(t => t.Id == cartDetailsId) ??throw new ArgumentException("Fail");
 
-            return _mapper.Map<StoreCartsEntity_DetailsModel>(details);
+            return _mapper.Map<StoreCartsEntityDetailsModel>(details);
         }
 
-        public async  Task<CashRegisterEntity_SessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
+        public async  Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
         {
-            _= _DBContext.CashRegisterEntity.FirstOrDefault( t => t.Id ==args.CashRegisterID) ??throw new ArgumentException("Register not found");
+            _= _DBContext.CashRegisterEntity.FirstOrDefault( t => t.Id ==args.CashRegisterId) ??throw new ArgumentException("Register not found");
 
             var checkClerk = _DBContext.CashRegisterEntitySessions.Where( t=> t.AssignedClerk == args.AssignedClerk && t.SessionStatus == 1).FirstOrDefault();
             if(checkClerk != null ) {
                throw new ArgumentException("Clerk is already assigned to register. Please close session with id " + checkClerk.Id);
             }
 
-            var newSession = _mapper.Map<CashRegisterEntitySessions>(new CashRegisterEntity_SessionsModel { AssignedClerk = args.AssignedClerk, SessionStatus = 1, CashRegisterID = args.CashRegisterID, OpenHour = DateTime.UtcNow, Notes = args.Notes });
+            var newSession = _mapper.Map<CashRegisterEntitySessions>(new CashRegisterEntitySessionsModel { AssignedClerk = args.AssignedClerk, SessionStatus = 1, CashRegisterId = args.CashRegisterId, OpenHour = DateTime.UtcNow, Notes = args.Notes });
             _DBContext.CashRegisterEntitySessions.Add(newSession);
 
             await _DBContext.SaveChangesAsync(CancellationToken.None);
-            return _mapper.Map<CashRegisterEntity_SessionsModel>(newSession);
+            return _mapper.Map<CashRegisterEntitySessionsModel>(newSession);
 
         }
 
@@ -196,7 +196,7 @@ namespace TasksAPI.Services
                     if(good.OperationType == 1)
                     {
                         SellGoods.Add( 
-                            new SellGoods { clerkId = cartToBePayed.clerktId, storeLocation = cartToBePayed.storeLocation, goodID= good.GoodId, price= good.Price }
+                            new SellGoods { ClerkId = cartToBePayed.clerktId, StoreLocation = cartToBePayed.storeLocation, GoodId= good.GoodId, Price= good.Price }
                             );
                     }
                     
@@ -207,7 +207,7 @@ namespace TasksAPI.Services
                 }
                 await _goodsServices.SellItem(cartToBePayed.clientId, SellGoods);
                 if(returnGoodsIds.Count > 0) {
-                    await _goodsServices.ReturnItems(cartToBePayed.clientId, new ReturnGoods { clerkId = cartToBePayed.clerktId, returnLocation = cartToBePayed.storeLocation, goodID = returnGoodsIds });
+                    await _goodsServices.ReturnItems(cartToBePayed.clientId, new ReturnGoods { ClerkId = cartToBePayed.clerktId, ReturnLocation = cartToBePayed.storeLocation, GoodId = returnGoodsIds });
                 }
                 
             }

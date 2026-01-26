@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using TasksAPI.Entities;
-
+﻿using System.Text.Json.Serialization;
 namespace TasksAPI.Models
 {
     public class TasksModel : BaseModel
@@ -13,8 +11,8 @@ namespace TasksAPI.Models
         public TaskTypesStatus TaskStatus { get; set; }
 
         public string? Description { get; set; }
-
-        public int userID { get; set; }
+        [JsonRequired]
+        public int UserId { get; set; }
     }
 
     public class TasksModelWithProcurements : TasksModel
@@ -51,8 +49,8 @@ namespace TasksAPI.Models
     public class ProcurementsSubtaskModel
     {
         public int Id { get; set; }
-        public int TaskID { get; set; }
-        public int GoodTypeID { get; set; }
+        public int TaskId { get; set; }
+        public int GoodTypeId { get; set; }
         public int Location { get; set; }
         public int Quantity { get; set; }
         public int RemainingQuantity { get; set; }
@@ -62,7 +60,9 @@ namespace TasksAPI.Models
     public class ProcurementsSubtaskModelForUpdate
     {
         public int Id { get; set; }
-        public int GoodTypeID { get; set; }
+        [JsonRequired]
+        public int GoodTypeId { get; set; }
+        [JsonRequired]
         public int Location { get; set; }
         public int Quantity { get; set; }
         public int RemainingQuantity { get; set; }
@@ -72,9 +72,9 @@ namespace TasksAPI.Models
     public class TasksEntities_TransferModel
     {
         public int Id { get; set; }
-        public int TaskID { get; set; }
-        public int GoodID { get; set; }
-        public string serialNumber { get; set; } = default!;
+        public int TaskId { get; set; }
+        public int GoodId { get; set; }
+        public string SerialNumber { get; set; } = default!;
         public int FromLocation { get; set; }
         public int ToLocation { get; set; }
 
@@ -84,8 +84,8 @@ namespace TasksAPI.Models
     public class TransferSubtaskModelForUpdate
     {
         public int Id { get; set; }
-        public int GoodID { get; set; }
-        public string serialNumber { get; set; } = default!;
+        public int GoodId { get; set; }
+        public string SerialNumber { get; set; } = default!;
         public int FromLocation { get; set; }
         public int ToLocation { get; set; }
 
@@ -97,7 +97,7 @@ namespace TasksAPI.Models
     public class CreateTasksModel
     {
         public TaskTypes TaskType { get; set; }
-        public int userID { get; set; }
+        public int UserId { get; set; }
         public string Description { get; set; } = string.Empty;
     }
 
@@ -111,16 +111,18 @@ namespace TasksAPI.Models
 
     public class CreateProcurementModel
     {
-        public int UserID { get; set; }
+        [JsonRequired]
+        public int UserId { get; set; }
+        [JsonRequired]
         public string Description { get; set; }
-        public ICollection<GoodsOrder> GoodsOrder { get; set; } = new List<GoodsOrder>();
+        public ICollection<GoodsOrder>? GoodsOrder { get; set; } = new List<GoodsOrder>();
     }
 
 
 
     public class CreateTransferModel
     {
-        public int UserID { get; set; }
+        public int UserId { get; set; }
         public string? Description { get; set; }
         public GoodsTransfer? GoodsTransfer { get; set; }
 
@@ -133,14 +135,16 @@ namespace TasksAPI.Models
 
     public class GoodsOrder
     {
-        public int GoodTypeID { get; set; }
+        public int GoodTypeId { get; set; }
         public int Location { get; set; }
         public int Quantity { get; set; }
     }
 
     public class GoodsTransfer
     {
-        public ICollection<int> GoodID { get; set; }
+        [JsonRequired]
+        public ICollection<int> GoodId { get; set; }
+        [JsonRequired]
         public int ToLocation { get; set; }
 
     }
@@ -148,14 +152,14 @@ namespace TasksAPI.Models
     public class FulfillGoodsTransfer
     {
 
-        public string serialNumber { get; set; } = default!;
+        public string SerialNumber { get; set; } = default!;
 
     }
 
     public class RejectedGoodsTransfer
     {
-        public int GoodID { get; set; }
-        public string serialNumber { get; set; } = default!;
+        public int GoodId { get; set; }
+        public string SerialNumber { get; set; } = default!;
         public int FromLocation { get; set; }
         public int ToLocation { get; set; }
         public string Reason { get; set; } = String.Empty;
@@ -165,7 +169,7 @@ namespace TasksAPI.Models
     {
         public int Location { get; set; }
         public int Supplier { get; set; }
-        public int subTaskId { get; set; }
+        public int SubTaskId { get; set; }
         public string SerialNumber { get; set; } = String.Empty;
         public string Reason { get; set; } = String.Empty;
     }

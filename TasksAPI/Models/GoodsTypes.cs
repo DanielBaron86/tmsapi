@@ -1,4 +1,6 @@
-﻿namespace TasksAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace TasksAPI.Models
 {
     public class GoodsTypesModel : BaseModel
     {
@@ -7,14 +9,14 @@
         public int GoodModelId { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
-        public GoodBaseTypeModel GoodModelBaseType { get; set; }
+        public GoodBaseTypeModel? GoodModelBaseType { get; set; }
 
     }
 
 
-    public class CeateGoodsTypesModel
+    public class CreateGoodsTypesModel
     {
-        public int GoodModelId { get; set; }
+        [JsonRequired] public int GoodModelId { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
 

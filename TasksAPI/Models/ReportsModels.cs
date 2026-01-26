@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using TasksAPI.Entities;
-using System.Text;
-using System.Collections;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Serialization;
 
 namespace TasksAPI.Models
 {
@@ -37,7 +31,7 @@ namespace TasksAPI.Models
  
         public int Id { get; set; }
         
-        public string Descrption { get; set; } = String.Empty;
+        public string Description { get; set; } = String.Empty;
         public int ReportType { get; set; }
         public int ReportMode { get; set; }
         public string? Params { get;set; }
@@ -46,22 +40,26 @@ namespace TasksAPI.Models
 
     public struct GetReportsResults
     {
-        public int reportId { get; set; }
-        public DateTime date { get; set; }
+        public int ReportId { get; set; }
+        public DateTime Date { get; set; }
 
     }
 
     public class CreateReportsEntitiesModel
     {
-        public string Descrption { get; set; } = String.Empty;
+        [JsonRequired]
+        public string Description { get; set; } = String.Empty;
+        [JsonRequired]
         public int ReportMode { get; set; }
-        public ParamsModel Params { get; set; }
+        public ParamsModel? Params { get; set; }
     }
 
     public class CreateSalesReportsEntitiesModel
     {
-        public string Descrption { get; set; } = String.Empty;
+        [JsonRequired]
+        public string Description { get; set; } = String.Empty;
+        [JsonRequired]
         public int ReportMode { get; set; }
-        public SalesParamsModel Params { get; set; }
+        public SalesParamsModel? Params { get; set; }
     }
 }

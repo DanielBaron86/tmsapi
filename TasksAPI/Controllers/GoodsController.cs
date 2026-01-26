@@ -181,7 +181,7 @@ namespace TasksAPI.Controllers
         /// <param name="goodsModels"></param>
         /// <returns></returns>
         [HttpPost("goodtypes")]
-        public async Task<ActionResult<GoodsModels>> CreateGoodTypes(CeateGoodsTypesModel goodsModels)
+        public async Task<ActionResult<GoodsModels>> CreateGoodTypes(CreateGoodsTypesModel goodsModels)
         {
             if (goodsModels == null) { return NotFound(); }
 

@@ -177,7 +177,7 @@
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoodTypes(TasksAPI.Models.CeateGoodsTypesModel)">
+        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoodTypes(TasksAPI.Models.CreateGoodsTypesModel)">
             <summary>
             Create a new Good Type
             </summary>

@@ -87,7 +87,7 @@ namespace TasksAPI.Services
             var user = await _DBContext.Users
                 .FirstOrDefaultAsync(x => x.Username == resource.Username, cancellationToken) ?? throw new Exception("Username not found.");
 
-            if (user.Status == (int)DBEntityStatus.DISABLED || user.Status == (int)DBEntityStatus.MARK_FOR_DELETE)
+            if (user.Status == (int)DbEntityStatus.DISABLED || user.Status == (int)DbEntityStatus.MARK_FOR_DELETE)
                 throw new Exception("User disabled.");
 
             var passwordHash = PasswordHasher.ComputeHash(resource.Password, user.PasswordSalt, _pepper, _iteration);
@@ -101,7 +101,7 @@ namespace TasksAPI.Services
             {
                 Token = GenerateRefreshToken(),
                 Revoked = false,
-                userId = user.Id,
+                UserId = user.Id,
                 ExpiryDate = DateTime.Now.AddMinutes(15),
                     
             };
@@ -154,7 +154,7 @@ namespace TasksAPI.Services
 
             var user = await _DBContext.Users.FirstOrDefaultAsync(x => x.Id == userID, cancellationToken) ?? throw new ArgumentException($"User {userID} not found");
 
-            if (user.Status == (int)DBEntityStatus.MARK_FOR_DELETE && user.UserTypeId == (int)EnumTypes.CLIENT)
+            if (user.Status == (int)DbEntityStatus.MARK_FOR_DELETE && user.UserTypeId == (int)EnumTypes.CLIENT)
             {
                 _DBContext.Remove(user);
                 await _DBContext.SaveChangesAsync(cancellationToken);
@@ -214,7 +214,7 @@ namespace TasksAPI.Services
 
         private async Task<RefreshToken> UpdateRefreshToken(RefreshTokenForUpdate refreshToken)
         {   var tokenToBeUpdated = await _DBContext.RefreshTokenEntity
-                .FirstOrDefaultAsync(x => x.Id == refreshToken.userId);
+                .FirstOrDefaultAsync(x => x.Id == refreshToken.UserId);
             if (tokenToBeUpdated == null)
             {
                 throw new ArgumentException(nameof(refreshToken));

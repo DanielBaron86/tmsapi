@@ -1,25 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using TasksAPI.Entities;
-
+﻿using System.Text.Json.Serialization;
 namespace TasksAPI.Models
 {
     public struct CreateCashRegisterEntity
     {
-        public int LocationID { get; set; }
+        [JsonRequired]
+        public int LocationId { get; set; }
         public string[]? Notes { get; set; }
     }
 
     public class CashRegisterEntityModel : BaseModel
     {
         public int Id { get; set; }
-        public int LocationID { get; set; }
+        public int LocationId { get; set; }
         public string[]? Notes { get; set; }
     }
 
     public struct CreateCashRegisterSessionsEntityModel
     {
+        [JsonRequired]
         public int AssignedClerk { get; set; }
-        public int CashRegisterID { get; set; }
+        public int CashRegisterId { get; set; }
         public string[] Notes { get; set; }
     }
 
@@ -30,19 +30,19 @@ namespace TasksAPI.Models
 
         public int AssignedClerk { get; set; }
 
-        public int CashRegisterID { get; set; }        
+        public int CashRegisterId { get; set; }        
         public DateTime CloseHour { get; set; }
 
         public string[]? Notes { get; set; }
     }
 
-    public class CashRegisterEntity_SessionsModel : BaseModel {
+    public class CashRegisterEntitySessionsModel : BaseModel {
 
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
 
         public int AssignedClerk { get; set; }
 
-        public int CashRegisterID { get; set; }
+        public int CashRegisterId { get; set; }
 
         public DateTime OpenHour { get; set; }
         public DateTime CloseHour { get; set; }
@@ -53,13 +53,16 @@ namespace TasksAPI.Models
     public struct CreateRegisterOperationsModel
     {
 
+        [JsonRequired]
         public int OperationType { get; set; } // 1- Sale , 2 - Return
+        [JsonRequired]
         public int GoodId { get; set; }
+        [JsonRequired]
         public Decimal Price { get; set; }
         public string[]? Notes { get; set; }
     }
 
-    public class StoreCartsEntity_DetailsModel : BaseModel
+    public class StoreCartsEntityDetailsModel : BaseModel
     {
         public int Id { get; set; }
         public int CartId { get; set; }
@@ -72,17 +75,17 @@ namespace TasksAPI.Models
 
     public struct CreateGoodsCartEntityModel
     {
-        public int SessionID { get; set; }
-        public int clientId { get; set; }
+        public int SessionId { get; set; }
+        public int ClientId { get; set; }
         public int Status { get; set; }  // 1 - Open, 2 - Paid
     }
     public class StoreCartsEntityModel : BaseModel
     {        
         public int Id { get; set; }
-        public int clerktId { get; set; }
-        public int storeLocation { get; set; }
-        public int clientId { get; set; }
-        public int SessionID { get; set; }
+        public int ClerktId { get; set; }
+        public int StoreLocation { get; set; }
+        public int ClientId { get; set; }
+        public int SessionId { get; set; }
         public int Status { get; set; }  // 1 - Open, 2 - Paid
         public Decimal Total { get; set; }
         public Decimal Paid { get; set; }
@@ -92,13 +95,16 @@ namespace TasksAPI.Models
 
     public class StoreCartsEntityModelWithDetails : StoreCartsEntityModel
     {
-        public ICollection<StoreCartsEntity_DetailsModel> StoreCartsEntityDetails { get; set; } = new List<StoreCartsEntity_DetailsModel>();
+        public ICollection<StoreCartsEntityDetailsModel> StoreCartsEntityDetails { get; set; } = new List<StoreCartsEntityDetailsModel>();
     }
 
     public struct CreateNewCart { 
-        public int clerkId { get; set; } 
-        public int clientId { get; set; }
-        public int storeLocation { get; set; }
+        [JsonRequired]
+        public int ClerkId { get; set; } 
+        [JsonRequired]
+        public int ClientId { get; set; }
+        [JsonRequired]
+        public int StoreLocation { get; set; }
     }
 
 }

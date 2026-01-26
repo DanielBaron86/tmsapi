@@ -9,14 +9,14 @@
         public int Id { get; set; }
         public string Token { get; set; } = null!;
         public bool Revoked;
-        public int userId { get; set; }
+        public int UserId { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
     
     public class RefreshTokenForUpdate :  BaseModel{
         public string Token { get; set; } = null!;
         public bool Revoked;
-        public int userId { get; set; }
+        public int UserId { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
     public sealed record RefreshResource(string oldToken, string refreshToken,int userId);

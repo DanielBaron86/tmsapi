@@ -17,15 +17,15 @@ namespace TasksAPI.Profiles
             
 
             CreateMap<CreateGoodsModels, GoodsTypesInstances>()
-                .ForMember(dest => dest.serialNumber, opt => opt.MapFrom(src => src.serialNumber.ToUpper()));
+                .ForMember(dest => dest.serialNumber, opt => opt.MapFrom(src => src.SerialNumber.ToUpper()));
 
             CreateMap<UpdateGoodsModels, GoodsTypesInstances>()
-                            .ForMember(dest => dest.serialNumber, opt => opt.MapFrom(src => src.serialNumber.ToUpper()));
+                            .ForMember(dest => dest.serialNumber, opt => opt.MapFrom(src => src.SerialNumber.ToUpper()));
 
             CreateMap<GoodsModels, UpdateGoodsModels>();
 
             CreateMap<GoodsTypes, GoodsTypesModel>();
-            CreateMap<CeateGoodsTypesModel, GoodsTypes>();
+            CreateMap<CreateGoodsTypesModel, GoodsTypes>();
             CreateMap<UpdateGoodsTypesModel, GoodsTypes>();
             
 

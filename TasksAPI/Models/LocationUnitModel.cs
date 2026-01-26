@@ -1,26 +1,29 @@
-﻿using TasksAPI.Entities;
+﻿using System.Text.Json.Serialization;
 
 namespace TasksAPI.Models
 {
     public class LocationUnitModel : BaseModel
     {
         public int Id { get; set; }
-        public int LocationTypeID { get; set; }
-        public string Adress { get; set; } = default!;
+        [JsonRequired]
+        public int LocationTypeId { get; set; }
+        public string Address { get; set; } = default!;
         public string Description { get; set; } = default!;
     }
 
     public class LocationUnitForCreate
     {
-        public int LocationTypeID { get; set; }
-        public string Adress { get; set; } = default!;
+        [JsonRequired]
+        public int LocationTypeId { get; set; }
+        public string Address { get; set; } = default!;
         public string Description { get; set; } = default!;
     }
 
     public class LocationUnitForUpdate
     {
-        public int LocationTypeID { get; set; }
-        public string Adress { get; set; } = default!;
+        [JsonRequired]
+        public int LocationTypeId { get; set; }
+        public string Address { get; set; } = default!;
         public string Description { get; set; } = default!;
     }
 

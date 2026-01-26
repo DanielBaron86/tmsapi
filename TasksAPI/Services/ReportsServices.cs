@@ -28,7 +28,7 @@ namespace TasksAPI.Services
         {
            
 
-            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 1,ReportMode= InventoryReportsModel.ReportMode,Descrption = InventoryReportsModel.Descrption, Params = JsonConvert.SerializeObject(InventoryReportsModel.Params)  });
+            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 1,ReportMode= InventoryReportsModel.ReportMode,Description = InventoryReportsModel.Description, Params = JsonConvert.SerializeObject(InventoryReportsModel.Params)  });
             _DBContext.Add(newReportTask);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
 
@@ -38,7 +38,7 @@ namespace TasksAPI.Services
         public async Task<ReportsEntitiesModel> CreateSalesReport(CreateSalesReportsEntitiesModel salesReportsMode)
         {
 
-            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 2, ReportMode= salesReportsMode.ReportMode,Descrption = salesReportsMode.Descrption, Params = JsonConvert.SerializeObject(salesReportsMode.Params) });
+            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 2, ReportMode= salesReportsMode.ReportMode,Description = salesReportsMode.Description, Params = JsonConvert.SerializeObject(salesReportsMode.Params) });
             _DBContext.Add(newReportTask);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
 

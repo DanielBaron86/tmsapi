@@ -62,17 +62,17 @@ namespace TasksAPI.Services
         public async Task<TasksModelWithProcurements> CreateProcurement(CreateProcurementModel taskModel)
         {
             _= _DBContext.Users
-                .Where( t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DBEntityStatus.ACTIVE)
-                .FirstOrDefault( t => t.Id == taskModel.UserID) ?? throw new ArgumentException($"User {taskModel.UserID} not found or inactive");
+                .Where( t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
+                .FirstOrDefault( t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
 
-            var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, userID = taskModel.UserID };
+            var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.UserId };
             var createdTask = await CreateTask(newTaskToCreate);
 
 
             foreach (var singleGood in taskModel.GoodsOrder)
             {
 
-                var newProcurementTask = new TasksEntitiesProcurements { TaskID = createdTask.Id, GoodTypeID = singleGood.GoodTypeID, Quantity = singleGood.Quantity, RemainingQuantity = singleGood.Quantity, Location = singleGood.Location };
+                var newProcurementTask = new TasksEntitiesProcurements { TaskID = createdTask.Id, GoodTypeID = singleGood.GoodTypeId, Quantity = singleGood.Quantity, RemainingQuantity = singleGood.Quantity, Location = singleGood.Location };
 
                 await _DBContext.TasksEntitiesProcurements.AddAsync(newProcurementTask);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -83,7 +83,7 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> CreateTask(CreateTasksModel newTask)
         {
-            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, userID = newTask.userID };
+            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, userID = newTask.UserId };
 
             await _DBContext.TasksEntities.AddAsync(createEntity);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -121,7 +121,7 @@ namespace TasksAPI.Services
 
             foreach (var order in GoodsOrder)
             {
-                await _DBContext.TasksEntitiesProcurements.AddAsync(new TasksEntitiesProcurements { TaskID = taskID, GoodTypeID = order.GoodTypeID, Quantity = order.Quantity, RemainingQuantity = order.Quantity, Location=order.Location});
+                await _DBContext.TasksEntitiesProcurements.AddAsync(new TasksEntitiesProcurements { TaskID = taskID, GoodTypeID = order.GoodTypeId, Quantity = order.Quantity, RemainingQuantity = order.Quantity, Location=order.Location});
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
             }
 
@@ -131,10 +131,10 @@ namespace TasksAPI.Services
         public async Task<ReturnTransferTask> CreateTransfer(CreateTransferModel taskModel)
         {
             _ = _DBContext.Users
-                .Where(t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DBEntityStatus.ACTIVE)
-                .FirstOrDefault(t => t.Id == taskModel.UserID) ?? throw new ArgumentException($"User {taskModel.UserID} not found or inactive");
+                .Where(t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
+                .FirstOrDefault(t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
 
-            var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, userID = taskModel.UserID, Description = taskModel.Description };
+            var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, UserId = taskModel.UserId, Description = taskModel.Description };
             var createdTask = await CreateTask(newTaskToCreate);
             var returnValue = await AddItemsToTransferTask(createdTask.Id, taskModel.GoodsTransfer, false);
             return returnValue;
@@ -148,30 +148,30 @@ namespace TasksAPI.Services
             var taskToUpdate = await _DBContext.TasksEntities.Where(t => t.TaskType == TaskTypes.TRANSFER)
                     .FirstOrDefaultAsync(t => t.Id == taskID)??throw new ArgumentException("Task not found");
 
-            var existingTransfers = _DBContext.TasksEntitiesTransfer.Where(t => GoodsOrder.GoodID.Contains(t.GoodID))
+            var existingTransfers = _DBContext.TasksEntitiesTransfer.Where(t => GoodsOrder.GoodId.Contains(t.GoodID))
                                                         .Where(t => t.TaskStatus == TaskTypesStatus.OPEN || t.TaskStatus == TaskTypesStatus.PENDING)
                                                         .Select(t => t.GoodID).Distinct()
                                                         .ToList();
 
             foreach (var exists in existingTransfers)
             {
-                rejected.Add(new RejectedGoodsTransfer { GoodID = exists, ToLocation = GoodsOrder.ToLocation, Reason = "A transfer task for that items already exists" });
+                rejected.Add(new RejectedGoodsTransfer { GoodId = exists, ToLocation = GoodsOrder.ToLocation, Reason = "A transfer task for that items already exists" });
             }
-            foreach (var order in GoodsOrder.GoodID.Except(existingTransfers))
+            foreach (var order in GoodsOrder.GoodId.Except(existingTransfers))
             {
                 var transferedItem = await _goodsService.GetGoodById(order);
 
 
                 if (transferedItem == null)
                 {
-                    rejected.Add(new RejectedGoodsTransfer { GoodID = order, ToLocation = GoodsOrder.ToLocation, Reason = "Item not found" });
+                    rejected.Add(new RejectedGoodsTransfer { GoodId = order, ToLocation = GoodsOrder.ToLocation, Reason = "Item not found" });
                 }
                 else
                 {
                     var allowedStatus = new[] { GoodsStatus.AVAILABLE, GoodsStatus.PENDING, GoodsStatus.IN_TRANSIT };
                     if (!allowedStatus.Contains(transferedItem.Status))
                     {
-                        rejected.Add(new RejectedGoodsTransfer { GoodID = order, serialNumber = transferedItem.serialNumber, ToLocation = GoodsOrder.ToLocation, Reason = "Item In wrong status" });
+                        rejected.Add(new RejectedGoodsTransfer { GoodId = order, SerialNumber = transferedItem.SerialNumber, ToLocation = GoodsOrder.ToLocation, Reason = "Item In wrong status" });
                     }
                     else
                     {
@@ -182,7 +182,7 @@ namespace TasksAPI.Services
                         markForTransfer.Replace("Status", (int)GoodsStatus.IN_TRANSIT);
                         await _goodsService.PatchGood(order, markForTransfer);
                         
-                        await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.serialNumber });
+                        await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.SerialNumber });
                         await _DBContext.SaveChangesAsync(CancellationToken.None);
                     }
                 }
@@ -261,7 +261,7 @@ namespace TasksAPI.Services
             {
                 foreach (var item in fulfilment.FulfillGoodsModels)
                 {
-                    existingItems.Add(item.serialNumber.ToUpper());
+                    existingItems.Add(item.SerialNumber.ToUpper());
                 }
             }
 
@@ -283,17 +283,17 @@ namespace TasksAPI.Services
             {
                 var subTask = await _DBContext.TasksEntitiesProcurements
                     .Where(t => t.TaskID == taskID)
-                    .FirstOrDefaultAsync(t => t.Id == fulfilment.subTaskId);
+                    .FirstOrDefaultAsync(t => t.Id == fulfilment.SubTaskId);
 
                 if (subTask == null)
                 {
-                    rejected.Add(HandleRejectedProcurementTransfer(0, fulfilment.Supplier, fulfilment.subTaskId, "", $"Procurement substask {fulfilment.subTaskId} not found"));
+                    rejected.Add(HandleRejectedProcurementTransfer(0, fulfilment.Supplier, fulfilment.SubTaskId, "", $"Procurement substask {fulfilment.SubTaskId} not found"));
                 }
 
 
                 if (subTask != null && (fulfilment.FulfillGoodsModels.Count > (subTask.RemainingQuantity)))
                 {
-                    rejected.Add(HandleRejectedProcurementTransfer(subTask.Location, fulfilment.Supplier, fulfilment.subTaskId, "", $"List of items is larger than requested quantity"));
+                    rejected.Add(HandleRejectedProcurementTransfer(subTask.Location, fulfilment.Supplier, fulfilment.SubTaskId, "", $"List of items is larger than requested quantity"));
                 }
                 else if (subTask != null)
                 {
@@ -301,7 +301,7 @@ namespace TasksAPI.Services
                     countAddedItems = await AddNewProccesedItems(rejected, itemList, SNL, existingTransfers, fulfilment, subTask, countAddedItems);
                     if (countAddedItems > 0)
                     {
-                        var updateTask = new ProcurementsSubtaskModelForUpdate { Id = subTask.Id, GoodTypeID = subTask.GoodTypeID, Location = subTask.Location, Quantity = subTask.Quantity, RemainingQuantity = subTask.RemainingQuantity - countAddedItems };
+                        var updateTask = new ProcurementsSubtaskModelForUpdate { Id = subTask.Id, GoodTypeId = subTask.GoodTypeID, Location = subTask.Location, Quantity = subTask.Quantity, RemainingQuantity = subTask.RemainingQuantity - countAddedItems };
                         await UpdateProcurementTaskDetails(new[] { updateTask });
                     }
                 }
@@ -312,7 +312,7 @@ namespace TasksAPI.Services
         {
             foreach (var item in fulfilment.FulfillGoodsModels)
             {
-                if (!SNL.Contains(item.serialNumber.ToUpper()) && !existingTransfers.Contains(item.serialNumber.ToUpper()))
+                if (!SNL.Contains(item.SerialNumber.ToUpper()) && !existingTransfers.Contains(item.SerialNumber.ToUpper()))
                 {
                     try
                     {
@@ -320,24 +320,24 @@ namespace TasksAPI.Services
                         {
                             GoodModelId = subTask.GoodTypeID,
                             Price = item.Price,
-                            serialNumber = item.serialNumber.ToUpper(),
+                            SerialNumber = item.SerialNumber.ToUpper(),
                             LocationId = subTask.Location,
                             Status = GoodsStatus.AVAILABLE
                         });
 
-                        await _goodsService.CreateMovementHistory(addedItem.Id, fulfilment.Supplier, addedItem.LocationId, (int)GoodsStatus.AVAILABLE, fulfilment.userId);
-                        SNL.Add(item.serialNumber.ToUpper());
+                        await _goodsService.CreateMovementHistory(addedItem.Id, fulfilment.Supplier, addedItem.LocationId, (int)GoodsStatus.AVAILABLE, fulfilment.UserId);
+                        SNL.Add(item.SerialNumber.ToUpper());
                         itemList.Add(addedItem);
                         countAddedItems++;
                     }
                     catch (Exception ex)
                     {
-                        rejected.Add(HandleRejectedProcurementTransfer(subTask.Location, fulfilment.Supplier, fulfilment.subTaskId, item.serialNumber.ToUpper(), ex.Message));
+                        rejected.Add(HandleRejectedProcurementTransfer(subTask.Location, fulfilment.Supplier, fulfilment.SubTaskId, item.SerialNumber.ToUpper(), ex.Message));
                     }
                 }
                 else
                 {
-                    rejected.Add(HandleRejectedProcurementTransfer(subTask.Location, fulfilment.Supplier, fulfilment.subTaskId, item.serialNumber.ToUpper(), "Duplicate serial number"));
+                    rejected.Add(HandleRejectedProcurementTransfer(subTask.Location, fulfilment.Supplier, fulfilment.SubTaskId, item.SerialNumber.ToUpper(), "Duplicate serial number"));
                 }
 
 
@@ -373,7 +373,7 @@ namespace TasksAPI.Services
                     patchItem.Replace("Status", (int)GoodsStatus.AVAILABLE);
 
                     var itemToPatch = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == item.GoodID) ??throw new ArgumentException("Item not found");
-                    await _goodsService.CreateMovementHistory(itemToPatch.Id, itemToPatch.LocationId, item.ToLocation, (int)GoodsStatus.AVAILABLE, fulfillGoodsTransfer.userID);
+                    await _goodsService.CreateMovementHistory(itemToPatch.Id, itemToPatch.LocationId, item.ToLocation, (int)GoodsStatus.AVAILABLE, fulfillGoodsTransfer.UserId);
 
                     patchItem.ApplyTo(itemToPatch);
                     existing.Add(item.serialNumber);
@@ -444,7 +444,7 @@ namespace TasksAPI.Services
             {
                 Location = location,
                 Supplier = Supplier,
-                subTaskId = subTaskId,
+                SubTaskId = subTaskId,
                 SerialNumber = SN,
                 Reason = Reason
             };

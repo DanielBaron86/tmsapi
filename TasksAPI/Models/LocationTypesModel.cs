@@ -1,8 +1,11 @@
-﻿namespace TasksAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace TasksAPI.Models
 {
     public class LocationTypesModel : BaseModel
     {
         public int Id { get; set; }
+        [JsonRequired]
         public LocationTypesList LocationType { get; set; }
         public string? Description { get; set; }
     }

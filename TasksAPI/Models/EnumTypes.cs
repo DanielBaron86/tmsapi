@@ -12,7 +12,7 @@
     public enum LocationTypesList
     {
         NONE,
-        WAREHOUES,
+        WAREHOUSE,
         STORE,
         CLIENT,
         SUPPLIER
@@ -49,7 +49,7 @@
         COMPLETE
     }
 
-    public enum DBEntityStatus
+    public enum DbEntityStatus
     {
         NONE,
         ACTIVE,

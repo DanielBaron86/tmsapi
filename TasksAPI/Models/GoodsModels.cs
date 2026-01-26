@@ -1,4 +1,6 @@
-﻿namespace TasksAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace TasksAPI.Models
 {
     
     public class GoodBaseTypeModel : BaseModel
@@ -15,40 +17,43 @@
         public int Id { get; set; }
         public int GoodModelId { get; set; }
         public Decimal Price { get; set; }
-        public string serialNumber { get; set; } = default!;
+        public string SerialNumber { get; set; } = default!;
         public int LocationId { get; set; }
 
         public GoodsStatus Status { get; set; }
-        public GoodsTypesModel GoodsTypes { get; set; }
-        public LocationUnitModel LocationTypesInstances { get; set; }
+        public GoodsTypesModel? GoodsTypes { get; set; }
+        public LocationUnitModel? LocationTypesInstances { get; set; }
     }
 
 
     public class FulfillModel
     {
+        [JsonRequired]
         public int Supplier { get; set; }
-        public int subTaskId { get; set; }
-        public int userId { get; set; }
-        public ICollection<FulfillGoodsModels> FulfillGoodsModels { get; set; } = new List<FulfillGoodsModels>();
+        [JsonRequired]
+        public int SubTaskId { get; set; }
+        [JsonRequired]
+        public int UserId { get; set; }
+        public ICollection<FulfillGoodsModels>? FulfillGoodsModels { get; set; } = new List<FulfillGoodsModels>();
     }
 
     public class TransferModel
     {
-        public int subTaskId { get; set; }
-        public int userId { get; set; }
+        public int SubTaskId { get; set; }
+        public int UserId { get; set; }
         public int GoodModelId { get; set; }
-        public ICollection<FulfillGoodsModels> FulfillGoodsModels { get; set; } = new List<FulfillGoodsModels>();
+        public ICollection<FulfillGoodsModels>? FulfillGoodsModels { get; set; } = new List<FulfillGoodsModels>();
     }
 
     public class FulfillGoodsModels
     {
         public Decimal Price { get; set; }
-        public string serialNumber { get; set; } = default!;
+        public string SerialNumber { get; set; } = default!;
     }
 
     public class FulfillTransferTask
     {
-        public int userID { get; set; }
+        public int UserId { get; set; }
         public ICollection<string>? fulfillGoodsTransfer { get; set; }
     }
 
@@ -57,39 +62,44 @@
 
         public int GoodModelId { get; set; }
         public Decimal Price { get; set; }
-        public string serialNumber { get; set; } = default!;
+        public string SerialNumber { get; set; } = default!;
         public int LocationId { get; set; }
         public GoodsStatus Status { get; set; } = GoodsStatus.AVAILABLE;
     }
 
     public class UpdateGoodsModels
     {
+        [JsonRequired]
         public int GoodModelId { get; set; }
+        [JsonRequired]
         public Decimal Price { get; set; }
-        public string serialNumber { get; set; } = default!;
+        [JsonRequired]
+        public string SerialNumber { get; set; } = default!;
+        [JsonRequired]
         public int LocationId { get; set; }
+        [JsonRequired]
         public GoodsStatus Status { get; set; }
     }
 
     public struct ReturnGoods
     {
-        public int clerkId { get; set; }
-        public int returnLocation { get; set; }
-        public ICollection<int> goodID { get; set; }
+        public int ClerkId { get; set; }
+        public int ReturnLocation { get; set; }
+        public ICollection<int> GoodId { get; set; }
     }
 
     public class SellGoods
     {
-        public int clerkId { get; set; }
-        public int storeLocation { get; set; }
-        public int goodID { get; set; }
-        public Decimal price { get; set; }
+        public int ClerkId { get; set; }
+        public int StoreLocation { get; set; }
+        public int GoodId { get; set; }
+        public Decimal Price { get; set; }
     }
     public class CreateSellGoods
     {
         public int AccountId { get; set; }
         public int GoodId { get; set; }
-        public Decimal price { get; set; }
+        public Decimal Price { get; set; }
 
         public GoodsStatus Status { get; set; }
     }

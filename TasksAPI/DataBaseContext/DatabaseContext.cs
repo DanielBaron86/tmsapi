@@ -142,7 +142,7 @@ namespace TasksAPI.DataBaseContext
                   );
 
             modelBuilder.Entity<LocationTypes>().HasData(
-                new LocationTypes() { Id = 1, LocationType = (int)LocationTypesList.WAREHOUES, Description = "Warehouse" },
+                new LocationTypes() { Id = 1, LocationType = (int)LocationTypesList.WAREHOUSE, Description = "Warehouse" },
                 new LocationTypes() { Id = 2, LocationType = (int)LocationTypesList.STORE, Description = "STORE" },
                 new LocationTypes() { Id = 3, LocationType = (int)LocationTypesList.CLIENT, Description = "CLIENT" },
                 new LocationTypes() { Id = 4, LocationType = (int)LocationTypesList.SUPPLIER, Description = "SUPPLIER" }

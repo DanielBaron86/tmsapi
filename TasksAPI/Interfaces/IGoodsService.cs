@@ -15,7 +15,7 @@ namespace TasksAPI.Interfaces
         Task<GoodsTypesModel> GetGoodTypeById(int goodId);
 
         Task<GoodsModels> CreateGood(CreateGoodsModels goodUnitModel);
-        Task<GoodsTypesModel> CreateGoodType(CeateGoodsTypesModel goodtypeModel);
+        Task<GoodsTypesModel> CreateGoodType(CreateGoodsTypesModel goodtypeModel);
         Task<GoodsModels> UpdateGood(int goodId, UpdateGoodsModels good);
         Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel goodType);
         Task<GoodsModels> PatchGood(int goodId, JsonPatchDocument patchGood);

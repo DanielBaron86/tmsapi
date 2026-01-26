@@ -11,13 +11,13 @@ namespace TasksAPI.Profiles
             CreateMap<CashRegisterEntity, CashRegisterEntityModel>();
             CreateMap<CashRegisterEntityModel,CashRegisterEntity>();
 
-            CreateMap<CashRegisterEntitySessions, CashRegisterEntity_SessionsModel>();
-            CreateMap<CashRegisterEntity_SessionsModel, CashRegisterEntitySessions>();
+            CreateMap<CashRegisterEntitySessions, CashRegisterEntitySessionsModel>();
+            CreateMap<CashRegisterEntitySessionsModel, CashRegisterEntitySessions>();
 
             
 
-            CreateMap<StoreCartsEntityDetails, StoreCartsEntity_DetailsModel>();
-            CreateMap<StoreCartsEntity_DetailsModel, StoreCartsEntityDetails>();
+            CreateMap<StoreCartsEntityDetails, StoreCartsEntityDetailsModel>();
+            CreateMap<StoreCartsEntityDetailsModel, StoreCartsEntityDetails>();
 
 
 

@@ -150,7 +150,7 @@ namespace TasksAPI.Controllers
         /// <param name="args"></param>
         /// <returns></returns>
         [HttpPost("open_session")]
-        public async Task<ActionResult<CashRegisterEntity_SessionsModel>> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
+        public async Task<ActionResult<CashRegisterEntitySessionsModel>> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
         {
             try
             {
@@ -169,7 +169,7 @@ namespace TasksAPI.Controllers
         /// <param name="sessionId"></param>
         /// <returns></returns>
         [HttpPost("close_session/{sessionId}")]
-        public async Task<ActionResult<CashRegisterEntity_SessionsModel>> CloseSession(int sessionId)
+        public async Task<ActionResult<CashRegisterEntitySessionsModel>> CloseSession(int sessionId)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace TasksAPI.Controllers
         [HttpPost("create_cart")]
         public async Task<ActionResult<bool>> CreateNewCart(CreateNewCart CreateNewCart)
         {
-            if (CreateNewCart.clientId <= 0) return BadRequest("Invalid client ID");
+            if (CreateNewCart.ClientId <= 0) return BadRequest("Invalid client ID");
             try
             {
                 return Ok(await _storeServices.CreateNewCart(CreateNewCart));
@@ -209,7 +209,7 @@ namespace TasksAPI.Controllers
         /// <param name="operationModel"></param>
         /// <returns></returns>
         [HttpPost("addto_cart/{cartId}")]
-        public async Task<ActionResult<StoreCartsEntity_DetailsModel>> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
+        public async Task<ActionResult<StoreCartsEntityDetailsModel>> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
         {
             try
             {
