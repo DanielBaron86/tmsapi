@@ -13,6 +13,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+        with:
+        fetch-depth: 0
       - run: "dotnet-sonarscanner begin /k:\"tmsapi\" /d:sonar.token=\"${{ secrets.SONAR_TOKEN }}\" /d:\"sonar.host.url=${{ secrets.SONAR_HOST_URL }}\" "
       - run: "dotnet build"
       - run: "dotnet-sonarscanner end /d:sonar.token=\"${{ secrets.SONAR_TOKEN }}\""
