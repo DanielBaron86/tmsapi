@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    name: Test PR
+    runs-on: host
+    
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+      - run: echo Incoming Branch ${{ github.head_ref }}
+      - run: echo BASE branch ${{ github.base_ref }}    
+      - run: echo PR ID ${{ github.event.number }}    
+      - run: "dotnet-sonarscanner begin /k:\"tmsapi\" /d:sonar.token=\"${{ secrets.SONAR_TOKEN }}\" /d:sonar.pullrequest.base=\"${{ github.base_ref }}\" /d:sonar.pullrequest.key=\"${{ github.event.number }}\" /d:sonar.pullrequest.branch=\"${{ github.head_ref }}\"  /d:\"sonar.host.url=${{ secrets.SONAR_HOST_URL }}\" "
+      - run: "dotnet build"
+      - run: "dotnet-sonarscanner end /d:sonar.token=\"${{ secrets.SONAR_TOKEN }}\""
