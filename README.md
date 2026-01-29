@@ -1,6 +1,14 @@
 Task Management System
 https://tmsapi.danielsplaygrounds.com/swagger/index.html
 
+[![Maintainability Rating](https://sonarqube.danielsplaygrounds.com/api/project_badges/measure?project=tmsapi&metric=software_quality_maintainability_rating&token=sqb_5932c205d52426707013b41f6b947aa0b03d865d)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsapi)
+
+[![Reliability Rating](https://sonarqube.danielsplaygrounds.com/api/project_badges/measure?project=tmsapi&metric=software_quality_reliability_rating&token=sqb_5932c205d52426707013b41f6b947aa0b03d865d)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsapi)
+
+[![Security Rating](https://sonarqube.danielsplaygrounds.com/api/project_badges/measure?project=tmsapi&metric=software_quality_security_rating&token=sqb_5932c205d52426707013b41f6b947aa0b03d865d)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsapi)
+
+[![Quality gate](https://sonarqube.danielsplaygrounds.com/api/project_badges/quality_gate?project=tmsapi&token=sqb_5932c205d52426707013b41f6b947aa0b03d865d)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsapi)
+
 Create and run Inventory and Sales Report Tasks
 
 1. InventoryTasksBuilderController - Supervisor Roles only
