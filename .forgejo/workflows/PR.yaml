@@ -1,14 +1,15 @@
-name: Test
+name: TestPR
 
 on:
   push:
     branches:
       - master
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   test:
-    name: Test PR
+    name: Test and analyze
     runs-on: host
-    
     steps:
       - uses: actions/checkout@v4
         with: 
