@@ -59,7 +59,7 @@ namespace TasksAPI.Controllers
         {
             try
             {
-                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                if (pageSize > 1000) pageSize = 1000;
                 var (baseItems, paginationMetadata) = await _goodsService.GetBaseGoodTypes(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
