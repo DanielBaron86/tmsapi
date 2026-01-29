@@ -7,7 +7,7 @@ https://tmsapi.danielsplaygrounds.com/swagger/index.html
 
 [![Security Rating](https://sonarqube.danielsplaygrounds.com/api/project_badges/measure?project=tmsapi&metric=software_quality_security_rating&token=sqb_5932c205d52426707013b41f6b947aa0b03d865d)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsapi)
 
-[![Quality gate](https://sonarqube.danielsplaygrounds.com/api/project_badges/quality_gate?project=tmsweb&token=sqb_b1571393176ecc9b03c4be1951d60afc6b04f140)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsweb)
+[![Quality gate](https://sonarqube.danielsplaygrounds.com/api/project_badges/quality_gate?project=tmsapi&token=sqb_5932c205d52426707013b41f6b947aa0b03d865d)](https://sonarqube.danielsplaygrounds.com/dashboard?id=tmsapi)
 
 Create and run Inventory and Sales Report Tasks
 
