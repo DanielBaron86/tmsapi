@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TasksAPI.DataBaseContext;
 using TasksAPI.Entities;
@@ -26,20 +27,41 @@ namespace TasksAPI.Services
 
             if (taskType != null && taskStatus == null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskType == taskType).ToListAsync());
+                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
+                    .Include( t => t.UserEntity)
+                    .Where(t => (int)t.TaskType == taskType).AsSplitQuery().ToListAsync());
             }
 
             if (taskStatus != null && taskType == null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskStatus == taskStatus).ToListAsync());
+                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
+                    .Include( t => t.UserEntity)
+                    .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
             }
 
             if (taskStatus != null && taskType != null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskType == taskType).Where(t => (int)t.TaskStatus == taskStatus).ToListAsync());
+                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskType == taskType)
+                    .Include( t => t.UserEntity)
+                    .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
             }
 
-            return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.ToListAsync());
+            var q = await _DBContext.TasksEntities
+                .Include(t => t.UserEntity)
+                .Select( t => new TasksModel
+                {
+                 Id = t.Id,
+                 TaskType = t.TaskType,
+                 TaskStatus = t.TaskStatus,
+                 Description = t.Description,
+                 UserId = t.UserId,
+                 UserName = t.UserEntity.Username,
+                 CreatedDate = t.CreatedDate,
+                 UpdatedDate = t.UpdatedDate,
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<TasksModel>>(q);
         }
 
         public async Task<TasksModel> GetTasksByID(int taskID)
@@ -83,7 +105,7 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> CreateTask(CreateTasksModel newTask)
         {
-            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, userID = newTask.UserId };
+            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, UserId = newTask.UserId };
 
             await _DBContext.TasksEntities.AddAsync(createEntity);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -176,7 +198,7 @@ namespace TasksAPI.Services
                     else
                     {
 
-                        await _goodsService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.userID); 
+                        await _goodsService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.UserId); 
                         
                         var markForTransfer = new JsonPatchDocument();
                         markForTransfer.Replace("Status", (int)GoodsStatus.IN_TRANSIT);

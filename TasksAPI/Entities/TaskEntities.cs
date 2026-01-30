@@ -16,9 +16,9 @@ namespace TasksAPI.Entities
         public TaskTypesStatus TaskStatus { get; set; } = TaskTypesStatus.PENDING;
 
         [ForeignKey("userID")]
-        public UserEntity? User { get; set; }
+        public UserEntity? UserEntity { get; set; }
         [Required]
-        public int userID { get; set; }
+        public int UserId { get; set; }
         [Required]
         public string Description { get; set; } =string.Empty;
 
