@@ -13,6 +13,7 @@ namespace TasksAPI.Models
         public string? Description { get; set; }
         [JsonRequired]
         public int UserId { get; set; }
+        public string? UserName { get; set; }
     }
 
     public class TasksModelWithProcurements : TasksModel
