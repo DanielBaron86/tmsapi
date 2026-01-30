@@ -61,9 +61,9 @@ namespace TasksAPI.Services
 
         public async Task<TasksModelWithProcurements> CreateProcurement(CreateProcurementModel taskModel)
         {
-            _= _DBContext.Users
+            _= await _DBContext.Users
                 .Where( t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
-                .FirstOrDefault( t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
+                .FirstOrDefaultAsync( t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
 
             var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.UserId };
             var createdTask = await CreateTask(newTaskToCreate);
@@ -130,9 +130,9 @@ namespace TasksAPI.Services
 
         public async Task<ReturnTransferTask> CreateTransfer(CreateTransferModel taskModel)
         {
-            _ = _DBContext.Users
+            _ = await _DBContext.Users
                 .Where(t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
-                .FirstOrDefault(t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
+                .FirstOrDefaultAsync(t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
 
             var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, UserId = taskModel.UserId, Description = taskModel.Description };
             var createdTask = await CreateTask(newTaskToCreate);
@@ -148,10 +148,10 @@ namespace TasksAPI.Services
             var taskToUpdate = await _DBContext.TasksEntities.Where(t => t.TaskType == TaskTypes.TRANSFER)
                     .FirstOrDefaultAsync(t => t.Id == taskID)??throw new ArgumentException("Task not found");
 
-            var existingTransfers = _DBContext.TasksEntitiesTransfer.Where(t => GoodsOrder.GoodId.Contains(t.GoodID))
+            var existingTransfers = await _DBContext.TasksEntitiesTransfer.Where(t => GoodsOrder.GoodId.Contains(t.GoodID))
                                                         .Where(t => t.TaskStatus == TaskTypesStatus.OPEN || t.TaskStatus == TaskTypesStatus.PENDING)
                                                         .Select(t => t.GoodID).Distinct()
-                                                        .ToList();
+                                                        .ToListAsync();
 
             foreach (var exists in existingTransfers)
             {
@@ -251,7 +251,7 @@ namespace TasksAPI.Services
         {
             var task = await _DBContext.TasksEntities
                             .Where(t => t.TaskStatus == TaskTypesStatus.OPEN || t.TaskStatus == TaskTypesStatus.PENDING)
-                            .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found"); ;
+                            .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found"); 
             var rejected = new List<RejectedProcurementTransfer>();
             var itemList = new List<GoodsModels>();
             var SNL = new List<string>();
@@ -265,10 +265,10 @@ namespace TasksAPI.Services
                 }
             }
 
-            var existingTransfers = _DBContext.GoodsTypesInstances.Where(t => existingItems.Contains(t.serialNumber))
+            var existingTransfers =await _DBContext.GoodsTypesInstances.Where(t => existingItems.Contains(t.serialNumber))
                                                     .Where(t => t.Status != (int)GoodsStatus.DELETED || t.Status != (int)GoodsStatus.LOST)
                                                     .Select(t => t.serialNumber).Distinct()
-                                                    .ToList();
+                                                    .ToListAsync();
 
             await ProcessItemToAdd(taskID, FulfilProcurements, rejected, itemList, SNL, existingTransfers);
 
@@ -348,7 +348,7 @@ namespace TasksAPI.Services
 
         public async Task<ReturnFulfillTransferTask> FulfillTranfer(int taskID, FulfillTransferTask fulfillGoodsTransfer)
         {
-            var transferTask = _DBContext.TasksEntities.FirstOrDefault(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
+            var transferTask =await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
             if (transferTask.TaskStatus != TaskTypesStatus.OPEN && transferTask.TaskStatus != TaskTypesStatus.PENDING)
             {
                throw new ArgumentException($"Task status {transferTask.TaskStatus} - already proccessed");
@@ -366,7 +366,7 @@ namespace TasksAPI.Services
             foreach (var item in itemList)
             {
 
-                if (fulfillGoodsTransfer.fulfillGoodsTransfer.Contains(item.serialNumber))
+                if (fulfillGoodsTransfer.fulfillGoodsTransfer != null && fulfillGoodsTransfer.fulfillGoodsTransfer.Contains(item.serialNumber))
                 {
                     var patchItem = new JsonPatchDocument();
                     patchItem.Replace("locationId", item.ToLocation);
@@ -381,7 +381,7 @@ namespace TasksAPI.Services
 
                     var patchTranfer = new JsonPatchDocument();
                     patchTranfer.Replace("TaskStatus", TaskTypesStatus.COMPLETE);
-                    var task = _DBContext.TasksEntitiesTransfer.FirstOrDefault(t => t.Id == item.Id);
+                    var task = await _DBContext.TasksEntitiesTransfer.FirstOrDefaultAsync(t => t.Id == item.Id);
                     patchTranfer.ApplyTo(task);
 
 
@@ -390,7 +390,7 @@ namespace TasksAPI.Services
                 }
             }
             CheckAndUpdateTransferTaskStatus(taskID);
-            var movedItems = _mapper.Map<IEnumerable<GoodsModels>>(_DBContext.GoodsTypesInstances.Where(t => existing.Contains(t.serialNumber)).Where(t => t.Status == (int)GoodsStatus.AVAILABLE).ToList());
+            var movedItems = _mapper.Map<IEnumerable<GoodsModels>>(await _DBContext.GoodsTypesInstances.Where(t => existing.Contains(t.serialNumber)).Where(t => t.Status == (int)GoodsStatus.AVAILABLE).ToListAsync());
             rejected = fulfillGoodsTransfer.fulfillGoodsTransfer.Except(existing).ToList();
             return new ReturnFulfillTransferTask { GoodsModels = (ICollection<GoodsModels>)movedItems, RejectedProcurementTransfer = rejected };
 
@@ -453,15 +453,15 @@ namespace TasksAPI.Services
 
         public async  Task<int> DeleteInventoryTask(int taskID)
         {
-            var task = _DBContext.TasksEntities.Where( t => t.TaskStatus == TaskTypesStatus.PENDING).FirstOrDefault(t => t.Id == taskID) ?? throw new ArgumentException($"Task not found {nameof(taskID)}, or started procesing");
+            var task = await _DBContext.TasksEntities.Where( t => t.TaskStatus == TaskTypesStatus.PENDING).FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException($"Task not found {nameof(taskID)}, or started procesing");
             if(task.TaskType == TaskTypes.PROCUREMENT)
             {
-                var subtasks =_DBContext.TasksEntitiesProcurements.Where(t => t.TaskID == task.Id).ToList();
+                var subtasks = await _DBContext.TasksEntitiesProcurements.Where(t => t.TaskID == task.Id).ToListAsync();
                 await DeleteProcurementSubtask(subtasks);
             }
             if (task.TaskType == TaskTypes.TRANSFER)
             {
-                var subtasks = _DBContext.TasksEntitiesTransfer.Where(t => t.TaskID == task.Id).ToList();
+                var subtasks = await _DBContext.TasksEntitiesTransfer.Where(t => t.TaskID == task.Id).ToListAsync();
                 await DeleteTransferSubtask(subtasks);
 
             }

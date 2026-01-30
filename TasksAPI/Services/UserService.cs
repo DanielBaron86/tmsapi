@@ -47,7 +47,7 @@ namespace TasksAPI.Services
 
         public async Task<UserResource> Register(RegisterResource resource, CancellationToken cancellationToken)
         {
-            var checkUser = _DBContext.Users.FirstOrDefault(u => u.Username == resource.Username || u.Email == resource.Email);
+            var checkUser = await _DBContext.Users.FirstOrDefaultAsync(u => u.Username == resource.Username || u.Email == resource.Email);
             if (checkUser != null)
             {
                 throw new ArgumentException("Username or Email already exists.");
@@ -126,7 +126,7 @@ namespace TasksAPI.Services
         public async Task<RefreshToken> GetRefreshToken(RefreshResource resource, CancellationToken cancellationToken)
         {
             var refreshToken = await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync( r => r.Token == resource.refreshToken && r.userId == resource.userId ,cancellationToken);
-            return  _mapper.Map<RefreshToken>(refreshToken);;
+            return  _mapper.Map<RefreshToken>(refreshToken);
         }
 
         public async Task<UserResource> UpdateUser(int userID, UserResourceForUpdate userResource, CancellationToken cancellationToken)
@@ -224,7 +224,7 @@ namespace TasksAPI.Services
             return _mapper.Map<RefreshToken>(await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync(r => r.Token == tokenToBeUpdated.Token));
         }
         
-        List<Claim> GenerateClaimsForToken(UserEntity userEntity)
+       static List<Claim> GenerateClaimsForToken(UserEntity userEntity)
         {
             var claims = new List<Claim>
             {

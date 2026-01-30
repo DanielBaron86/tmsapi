@@ -24,17 +24,17 @@ namespace TasksAPI.Services
         public async Task<StoreCartsEntityDetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
         {
             
-            var checkCart = _DBContext.StoreCartsEntity.Where(t => t.Status == 1).FirstOrDefault(t => t.Id == cartId) ??throw new ArgumentException("Cart not found or already closed");
+            var checkCart = await _DBContext.StoreCartsEntity.Where(t => t.Status == 1).FirstOrDefaultAsync(t => t.Id == cartId) ??throw new ArgumentException("Cart not found or already closed");
 
-            var items = _DBContext.StoreCartsEntityDetails.Where(t => t.CartId == checkCart.Id).Where(t => t.GoodId == operationModel.GoodId).FirstOrDefault();
+            var items =await _DBContext.StoreCartsEntityDetails.Where(t => t.CartId == checkCart.Id).Where(t => t.GoodId == operationModel.GoodId).FirstOrDefaultAsync();
             if(operationModel.OperationType ==1)
             {
-                _= _DBContext.GoodsTypesInstances.Where(t => t.Id == operationModel.GoodId && t.LocationId == checkCart.storeLocation).FirstOrDefault() ?? throw new Exception("Item not found in this location");
+                _=await _DBContext.GoodsTypesInstances.Where(t => t.Id == operationModel.GoodId && t.LocationId == checkCart.storeLocation).FirstOrDefaultAsync() ?? throw new Exception("Item not found in this location");
             }
             
             if (items == null)
             {
-                var checkItem = _DBContext.GoodsTypesInstances.First(t => t.Id == operationModel.GoodId) ?? throw new Exception($"Item with id {operationModel.GoodId} not found ");
+                var checkItem = await _DBContext.GoodsTypesInstances.FirstAsync(t => t.Id == operationModel.GoodId) ?? throw new Exception($"Item with id {operationModel.GoodId} not found ");
 
                 ValidateCartItem(operationModel, checkCart, checkItem);
 
@@ -96,7 +96,7 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntitySessionsModel> CloseSession(int sessionId)
         {
-            var session = _DBContext.CashRegisterEntitySessions.FirstOrDefault(t => t.Id == sessionId) ??throw new ArgumentException("Session not found");  
+            var session = await _DBContext.CashRegisterEntitySessions.FirstOrDefaultAsync(t => t.Id == sessionId) ??throw new ArgumentException("Session not found");  
 
             var patcher = new JsonPatchDocument();
             patcher.Replace("SessionStatus", 2);
@@ -110,7 +110,7 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity)
         {
-            var location = _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefault(t => t.Id == cashRegisterEntity.LocationId);
+            var location =await _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefaultAsync(t => t.Id == cashRegisterEntity.LocationId);
             if(location == null || location.LocationTypeID != 2) {
                throw new ArgumentException("Location doesn't exists or wrong type");
             }
@@ -126,7 +126,7 @@ namespace TasksAPI.Services
 
         public async Task<StoreCartsEntityModel> CreateNewCart(CreateNewCart CreateNewCart)
         {
-            var session = _DBContext.CashRegisterEntitySessions.Where( t => t.SessionStatus == 1).FirstOrDefault( t => t.AssignedClerk == CreateNewCart.ClerkId) ??throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
+            var session = await _DBContext.CashRegisterEntitySessions.Where( t => t.SessionStatus == 1).FirstOrDefaultAsync( t => t.AssignedClerk == CreateNewCart.ClerkId) ??throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
             
             var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionId = session.Id, Status = 1 ,ClientId = CreateNewCart.ClientId, ClerktId = CreateNewCart.ClerkId, StoreLocation= CreateNewCart.StoreLocation });
 
@@ -152,9 +152,9 @@ namespace TasksAPI.Services
 
         public async  Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
         {
-            _= _DBContext.CashRegisterEntity.FirstOrDefault( t => t.Id ==args.CashRegisterId) ??throw new ArgumentException("Register not found");
+            _=await _DBContext.CashRegisterEntity.FirstOrDefaultAsync( t => t.Id ==args.CashRegisterId) ??throw new ArgumentException("Register not found");
 
-            var checkClerk = _DBContext.CashRegisterEntitySessions.Where( t=> t.AssignedClerk == args.AssignedClerk && t.SessionStatus == 1).FirstOrDefault();
+            var checkClerk = await _DBContext.CashRegisterEntitySessions.Where( t=> t.AssignedClerk == args.AssignedClerk && t.SessionStatus == 1).FirstOrDefaultAsync();
             if(checkClerk != null ) {
                throw new ArgumentException("Clerk is already assigned to register. Please close session with id " + checkClerk.Id);
             }
@@ -169,7 +169,7 @@ namespace TasksAPI.Services
 
         public async Task<StoreCartsEntityModelWithDetails> PayForCartByID(int cartId,Decimal money)
         {
-            var cartToBePayed = _DBContext.StoreCartsEntity.FirstOrDefault(t => t.Id == cartId) ??throw new ArgumentException("Cart not found");
+            var cartToBePayed =await _DBContext.StoreCartsEntity.FirstOrDefaultAsync(t => t.Id == cartId) ??throw new ArgumentException("Cart not found");
             
             if(cartToBePayed.Status == 2) {throw new ArgumentException("Cart already paid and closed"); }
 
@@ -191,7 +191,7 @@ namespace TasksAPI.Services
 
                 var SellGoods = new List<SellGoods>();
                 var returnGoodsIds = new List<int>();
-                var goods = _DBContext.StoreCartsEntityDetails.Where( t => t.CartId == cartToBePayed.Id).ToList();
+                var goods =await _DBContext.StoreCartsEntityDetails.Where( t => t.CartId == cartToBePayed.Id).ToListAsync();
                 foreach (var good in goods) { 
                     if(good.OperationType == 1)
                     {
@@ -218,10 +218,10 @@ namespace TasksAPI.Services
 
         public async Task<int> RemoveCart(int cartId)
         {
-            var cartItem = _DBContext.StoreCartsEntity
+            var cartItem =await _DBContext.StoreCartsEntity
                 .Include(t => t.StoreCartsEntityDetails)
                 .Where(t => t.Status == 1)
-                .FirstOrDefault(t => t.Id == cartId) ?? throw new ArgumentException($"{nameof(cartId)} not found");
+                .FirstOrDefaultAsync(t => t.Id == cartId) ?? throw new ArgumentException($"{nameof(cartId)} not found");
 
             foreach (var item in cartItem.StoreCartsEntityDetails)
             {
@@ -237,13 +237,13 @@ namespace TasksAPI.Services
 
         public async Task<int> RemoveCartDetail(int cartDetailsId)
         {
-            var cartItem = _DBContext.StoreCartsEntityDetails.FirstOrDefault( t => t.Id == cartDetailsId) ??throw new ArgumentException("Cart item not found");
+            var cartItem = await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync( t => t.Id == cartDetailsId) ??throw new ArgumentException("Cart item not found");
             _DBContext.Remove(cartItem);
             var patchJson = new JsonPatchDocument();
             patchJson.Replace("Status",(int) GoodsStatus.AVAILABLE);
             await _goodsServices.PatchGood(cartItem.GoodId, patchJson);
 
-            var updateCart = _DBContext.StoreCartsEntity.FirstOrDefault(t => t.Id == cartItem.CartId);
+            var updateCart = await _DBContext.StoreCartsEntity.FirstOrDefaultAsync(t => t.Id == cartItem.CartId);
             var patchCart =new JsonPatchDocument();
             
             patchCart.Replace("Total",Decimal.Subtract(updateCart.Total, cartItem.Price));

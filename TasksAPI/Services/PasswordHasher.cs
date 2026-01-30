@@ -41,7 +41,7 @@ namespace TasksAPI.Services
                 ValidIssuer = conf[0],
                 ValidAudience = conf[1],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf[2])) // The same key as the one that generate the token
-            };;
+            };
 
             SecurityToken validatedToken;
             IPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out validatedToken);
