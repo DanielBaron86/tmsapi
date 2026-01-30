@@ -13,12 +13,15 @@ namespace TasksAPI.Models
 
     public class CreateLocationTypesModel
     {
+        [JsonRequired]
         public LocationTypesList LocationType { get; set; }
+        [JsonRequired]
         public string Description { get; set; } = string.Empty;
     }
 
     public class EditLocationTypesModel
     {
+        [JsonRequired]
         public string Description { get; set; } = string.Empty;
     }
 }

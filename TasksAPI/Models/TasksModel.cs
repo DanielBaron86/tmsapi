@@ -5,9 +5,9 @@ namespace TasksAPI.Models
     {
 
         public int Id { get; set; }
-
+        [JsonRequired]
         public TaskTypes TaskType { get; set; }
-
+        [JsonRequired]
         public TaskTypesStatus TaskStatus { get; set; }
 
         public string? Description { get; set; }
@@ -17,43 +17,51 @@ namespace TasksAPI.Models
 
     public class TasksModelWithProcurements : TasksModel
     {
-        public ICollection<ProcurementsSubtaskModel> TasksEntitiesProcurements { get; set; } = new List<ProcurementsSubtaskModel>();
+        public ICollection<ProcurementsSubtaskModel>? TasksEntitiesProcurements { get; set; } = new List<ProcurementsSubtaskModel>();
     }
 
     public class TasksModelWithTransfer : TasksModel
     {
-        public ICollection<TasksEntities_TransferModel> TasksEntitiesTransfer { get; set; } = new List<TasksEntities_TransferModel>();
+        public ICollection<TasksEntities_TransferModel>? TasksEntitiesTransfer { get; set; } = new List<TasksEntities_TransferModel>();
 
     }
 
     public class ReturnTransferTask
     {
 
+        [JsonRequired]
         public TasksModelWithTransfer TasksModelWithTransfer { get; set; } = default!;
-        public ICollection<RejectedGoodsTransfer> RejectedGoodsTransfer { get; set; } = new List<RejectedGoodsTransfer>();
+        public ICollection<RejectedGoodsTransfer>? RejectedGoodsTransfer { get; set; } = new List<RejectedGoodsTransfer>();
     }
 
     public class ReturnFulfillTask
     {
+        [JsonRequired]
         public ICollection<GoodsModels> GoodsModels { get; set; } = new List<GoodsModels>();
-        public ICollection<RejectedProcurementTransfer> RejectedProcurementTransfer { get; set; } = new List<RejectedProcurementTransfer>();
+        public ICollection<RejectedProcurementTransfer>? RejectedProcurementTransfer { get; set; } = new List<RejectedProcurementTransfer>();
     }
 
     public class ReturnFulfillTransferTask
     {
+        [JsonRequired]
         public ICollection<GoodsModels> GoodsModels { get; set; } = new List<GoodsModels>();
-        public ICollection<string> RejectedProcurementTransfer { get; set; } = new List<string>();
+        public ICollection<string>? RejectedProcurementTransfer { get; set; } = new List<string>();
     }
 
 
     public class ProcurementsSubtaskModel
     {
         public int Id { get; set; }
+        [JsonRequired]
         public int TaskId { get; set; }
+        [JsonRequired]
         public int GoodTypeId { get; set; }
+        [JsonRequired]
         public int Location { get; set; }
+        [JsonRequired]
         public int Quantity { get; set; }
-        public int RemainingQuantity { get; set; }
+        [JsonRequired]
+        public int? RemainingQuantity { get; set; }
     }
 
 
@@ -64,47 +72,62 @@ namespace TasksAPI.Models
         public int GoodTypeId { get; set; }
         [JsonRequired]
         public int Location { get; set; }
+        [JsonRequired]
         public int Quantity { get; set; }
-        public int RemainingQuantity { get; set; }
+        public int? RemainingQuantity { get; set; }
     }
 
 
     public class TasksEntities_TransferModel
     {
         public int Id { get; set; }
+        [JsonRequired]
         public int TaskId { get; set; }
+        [JsonRequired]
         public int GoodId { get; set; }
+        [JsonRequired]
         public string SerialNumber { get; set; } = default!;
+        [JsonRequired]
         public int FromLocation { get; set; }
+        [JsonRequired]
         public int ToLocation { get; set; }
 
-        public TaskTypesStatus TaskStatus { get; set; }
+        public TaskTypesStatus? TaskStatus { get; set; }
     }
 
     public class TransferSubtaskModelForUpdate
     {
         public int Id { get; set; }
+        [JsonRequired]
         public int GoodId { get; set; }
+        [JsonRequired]
         public string SerialNumber { get; set; } = default!;
+        [JsonRequired]
         public int FromLocation { get; set; }
+        [JsonRequired]
         public int ToLocation { get; set; }
 
-        public TaskTypesStatus TaskStatus { get; set; }
+        public TaskTypesStatus? TaskStatus { get; set; }
     }
 
     ///// Creation Models ////
 
     public class CreateTasksModel
     {
+        [JsonRequired]
         public TaskTypes TaskType { get; set; }
+        [JsonRequired]
         public int UserId { get; set; }
+        [JsonRequired]
         public string Description { get; set; } = string.Empty;
     }
 
 
     public class UpdateTasksModel
     {
+        [JsonRequired]
         public TaskTypesStatus TaskStatus { get; set; }
+        [JsonRequired]
         public string Description { get; set; } = string.Empty;
     }
 
@@ -122,7 +145,9 @@ namespace TasksAPI.Models
 
     public class CreateTransferModel
     {
+        [JsonRequired]
         public int UserId { get; set; }
+        [JsonRequired]
         public string? Description { get; set; }
         public GoodsTransfer? GoodsTransfer { get; set; }
 
@@ -135,8 +160,11 @@ namespace TasksAPI.Models
 
     public class GoodsOrder
     {
+        [JsonRequired]
         public int GoodTypeId { get; set; }
+        [JsonRequired]
         public int Location { get; set; }
+        [JsonRequired]
         public int Quantity { get; set; }
     }
 

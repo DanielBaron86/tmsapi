@@ -11,6 +11,7 @@ namespace TasksAPI.Models
     public class CashRegisterEntityModel : BaseModel
     {
         public int Id { get; set; }
+        [JsonRequired]
         public int LocationId { get; set; }
         public string[]? Notes { get; set; }
     }
@@ -19,33 +20,34 @@ namespace TasksAPI.Models
     {
         [JsonRequired]
         public int AssignedClerk { get; set; }
+        [JsonRequired]
         public int CashRegisterId { get; set; }
-        public string[] Notes { get; set; }
+        public string[]? Notes { get; set; }
     }
 
     public class UpdateSessionsEntityModel 
     {
-
+        [JsonRequired]
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
-
+        [JsonRequired]
         public int AssignedClerk { get; set; }
-
+        [JsonRequired]
         public int CashRegisterId { get; set; }        
-        public DateTime CloseHour { get; set; }
+        public DateTime? CloseHour { get; set; }
 
         public string[]? Notes { get; set; }
     }
 
     public class CashRegisterEntitySessionsModel : BaseModel {
-
+        [JsonRequired]
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
-
+        [JsonRequired]
         public int AssignedClerk { get; set; }
-
+        [JsonRequired]
         public int CashRegisterId { get; set; }
 
-        public DateTime OpenHour { get; set; }
-        public DateTime CloseHour { get; set; }
+        public DateTime? OpenHour { get; set; }
+        public DateTime? CloseHour { get; set; }
 
         public string[]? Notes { get; set; }
     }
