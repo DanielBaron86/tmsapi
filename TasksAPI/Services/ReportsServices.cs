@@ -48,13 +48,13 @@ namespace TasksAPI.Services
         public async Task<ReportsEntitiesResults> RetrieveReportResults(int reportResultsTaskId)
         {
             var result = await _DBContext.ReportsEntitiesResults
-                .FirstOrDefaultAsync( t => t.Id == reportResultsTaskId) ??throw new ArgumentException("Task not found"); ;
+                .FirstOrDefaultAsync( t => t.Id == reportResultsTaskId) ??throw new ArgumentException("Task not found"); 
             return result;
         }
 
         public async Task<int> RunReport(int reportTaskId)
         {
-            var TaskToRun = _DBContext.ReportsEntities.FirstOrDefault(t => t.Id == reportTaskId) ??throw new ArgumentException("Task not found");
+            var TaskToRun =await _DBContext.ReportsEntities.FirstOrDefaultAsync(t => t.Id == reportTaskId) ??throw new ArgumentException("Task not found");
             if(TaskToRun.ReportType == 1)
             {
                 return await RunInventoryReport(reportTaskId, TaskToRun);
@@ -262,14 +262,14 @@ namespace TasksAPI.Services
 
         public async Task<int> DeleteReport(int reportId)
         {
-            var report = _DBContext.ReportsEntities.FirstOrDefault(t => t.Id == reportId) ?? throw new ArgumentException($"Report {reportId} not found");
+            var report = await _DBContext.ReportsEntities.FirstOrDefaultAsync(t => t.Id == reportId) ?? throw new ArgumentException($"Report {reportId} not found");
             _DBContext.Remove(report);
             return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }
 
         public async Task<int> DeleteReportResults(int resultsId)
         {
-            var reportResults = _DBContext.ReportsEntitiesResults.FirstOrDefault(t => t.Id == resultsId) ?? throw new ArgumentException($"Report results {resultsId} not found");
+            var reportResults =await _DBContext.ReportsEntitiesResults.FirstOrDefaultAsync(t => t.Id == resultsId) ?? throw new ArgumentException($"Report results {resultsId} not found");
             _DBContext.Remove(reportResults);
             return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }

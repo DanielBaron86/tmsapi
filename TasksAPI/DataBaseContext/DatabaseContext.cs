@@ -136,7 +136,7 @@ namespace TasksAPI.DataBaseContext
 
 
             modelBuilder.Entity<UserTypes>().HasData(
-                      new UserTypes() { Id = 1, UserTypeId = (int)EnumTypes.CLIENT, Description = "Client",CreatedDate= DateTime.Parse("Aug 9, 2025") },
+                      new UserTypes() { Id = 1, UserTypeId = (int)EnumTypes.CLIENT, Description = "Client" },
                       new UserTypes() { Id = 2, UserTypeId = (int)EnumTypes.CLERK, Description = "Clerk" },
                       new UserTypes() { Id = 3, UserTypeId = (int)EnumTypes.SUPERVISOR, Description = "Supervisor" }
                   );
@@ -178,7 +178,7 @@ namespace TasksAPI.DataBaseContext
 
 
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
 
             var entries = ChangeTracker

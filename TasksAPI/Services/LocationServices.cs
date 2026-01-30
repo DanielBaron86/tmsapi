@@ -16,7 +16,7 @@ namespace TasksAPI.Services
         public LocationServices(DatabaseConnectContext context, IMapper mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _DBContext = context ?? throw new ArgumentNullException(nameof(context)); ;
+            _DBContext = context ?? throw new ArgumentNullException(nameof(context)); 
         }
 
 
@@ -34,7 +34,7 @@ namespace TasksAPI.Services
 
         public async Task<LocationUnitModel> UpdateLocation(int locationID, LocationUnitForUpdate location)
         {
-            var locationToBeUpdated = _DBContext.LocationTypesInstances.FirstOrDefault(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
+            var locationToBeUpdated =await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
 
             _mapper.Map(location, locationToBeUpdated);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -55,7 +55,7 @@ namespace TasksAPI.Services
 
         public async Task<bool> DeleteLocation(int locationID)
         {
-            var location = _DBContext.LocationTypesInstances.FirstOrDefault(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
+            var location = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
 
             _DBContext.Remove(location);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -97,7 +97,7 @@ namespace TasksAPI.Services
 
         public async Task<LocationTypesModel> UpdateLocationType(int locationID, EditLocationTypesModel location)
         {
-            var locationToBeUpdated = _DBContext.LocationEntity.FirstOrDefault(l => l.Id == locationID) ?? throw new ArgumentException("Location type not found");
+            var locationToBeUpdated =await _DBContext.LocationEntity.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location type not found");
 
             _mapper.Map(location, locationToBeUpdated);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -107,8 +107,8 @@ namespace TasksAPI.Services
 
         public async Task<int> DeleteLocationType(int locationID)
         {
-            var location = _DBContext.LocationEntity.FirstOrDefault(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
-            var count = _DBContext.LocationTypesInstances.Where( t=> t.LocationTypeID == locationID).Count();
+            var location =await _DBContext.LocationEntity.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
+            var count = await _DBContext.LocationTypesInstances.Where( t=> t.LocationTypeID == locationID).CountAsync();
 
             if (count <= 0)
             {

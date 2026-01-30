@@ -211,12 +211,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.AddHttpsRedirection(options =>
-//{
-//    options.RedirectStatusCode = 307;
-//    options.HttpsPort = 8443;
-//});
-
 var app = builder.Build();
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 

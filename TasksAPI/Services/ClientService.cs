@@ -38,7 +38,7 @@ namespace TasksAPI.Services
 
         public async Task<UserResource> Register(ClientResource resource, CancellationToken cancellationToken)
         {
-            var checkUser = _DBContext.Accounts.FirstOrDefault(u => u.Username == resource.Username || u.Email == resource.Email);
+            var checkUser = await _DBContext.Accounts.FirstOrDefaultAsync(u => u.Username == resource.Username || u.Email == resource.Email);
             if (checkUser != null)
             {
                 throw new Exception("Username or Email already exists.");
@@ -76,7 +76,7 @@ namespace TasksAPI.Services
             if (user.PasswordHash != passwordHash)
                 throw new Exception("Username or password did not match.");
 
-            //    return new UserResource(user.Id, user.Username, user.Email,user.FirstName,user.LastName,user.UserTypeId);
+         
             var key = _configuration["Authentification:SecretForkey"];
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
