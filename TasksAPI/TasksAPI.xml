@@ -129,14 +129,35 @@
             <param name="clientID"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoods(TasksAPI.Models.CreateGoodsModels)">
+        <member name="M:TasksAPI.Controllers.GoodBaseController.GetBaseGoods(System.Int32,System.Int32)">
+            <summary>
+            Returs a list of base good types
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodBaseController.CreateBaseModel(TasksAPI.Models.CreateGoodBaseTypeModel)">
+            <summary>
+            Create Base Model
+            </summary>
+            <param name="goodBaseModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodBaseController.UpdateBaseGoods(System.Int32,TasksAPI.Models.CreateGoodBaseTypeModel)">
+            <summary>
+            Update Existing Good Base Good
+            </summary>
+            <param name="baseGoodId"></param>
+            <param name="goodBaseModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.CreateGoods(TasksAPI.Models.CreateGoodsModels)">
             <summary>
             Create a new Goods instance
             </summary>
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.UpdateGoods(System.Int32,TasksAPI.Models.UpdateGoodsModels)">
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.UpdateGoods(System.Int32,TasksAPI.Models.UpdateGoodsModels)">
             <summary>
             Update Existing Good Instance
             </summary>
@@ -144,14 +165,14 @@
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodsById(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.GetGoodsById(System.Int32)">
             <summary>
             Returns goods instance by ID
             </summary>
             <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoods(System.Int32,System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.GelAllGoods(System.Int32,System.Int32)">
             <summary>
             Returns a list of all goods instances
             </summary>
@@ -159,40 +180,49 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetBaseGoods(System.Int32,System.Int32)">
-            <summary>
-            Returs a list of base good types
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoodTypes(System.Int32,System.Int32)">
-            <summary>
-            Returs a list of good types
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodTypesById(System.Int32)">
-            <summary>
-            Get Good Type by Id
-            </summary>
-            <param name="goodId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodHistorysById(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.GetGoodHistorysById(System.Int32)">
             <summary>
             Get the movement history of an item
             </summary>
             <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoodTypes(TasksAPI.Models.CreateGoodsTypesModel)">
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.PatchGoods(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Patch Good Instance values
+            </summary>
+            <param name="goodId"></param>
+            <param name="patchGood"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.DeleteGoods(System.Int32)">
+            <summary>
+            Delete Goods by ID
+            </summary>
+            <param name="goodId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodTypesController.GelAllGoodTypes(System.Int32,System.Int32)">
+            <summary>
+            Returs a list of good types
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodTypesController.GetGoodTypesById(System.Int32)">
+            <summary>
+            Get Good Type by Id
+            </summary>
+            <param name="goodId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodTypesController.CreateGoodTypes(TasksAPI.Models.CreateGoodsTypesModel)">
             <summary>
             Create a new Good Type
             </summary>
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.UpdateGoodTypes(System.Int32,TasksAPI.Models.UpdateGoodsTypesModel)">
+        <member name="M:TasksAPI.Controllers.GoodTypesController.UpdateGoodTypes(System.Int32,TasksAPI.Models.UpdateGoodsTypesModel)">
             <summary>
             Update a good type
             </summary>
@@ -200,41 +230,11 @@
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.PatchGoods(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
-            <summary>
-            Patch user values
-            </summary>
-            <param name="goodId"></param>
-            <param name="patchGood"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.DeleteGoods(System.Int32)">
-            <summary>
-            Delete Goods by ID
-            </summary>
-            <param name="goodId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.DeleteGoodTypess(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodTypesController.DeleteGoodTypess(System.Int32)">
             <summary>
             Delete Good Types by ID
             </summary>
             <param name="goodId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.CreateBaseModel(TasksAPI.Models.CreateGoodBaseTypeModel)">
-            <summary>
-            Create Base Model
-            </summary>
-            <param name="goodBaseModel"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.UpdateBaseGoods(System.Int32,TasksAPI.Models.CreateGoodBaseTypeModel)">
-            <summary>
-            Update Existing Good Base Good
-            </summary>
-            <param name="baseGoodId"></param>
-            <param name="goodBaseModel"></param>
             <returns></returns>
         </member>
         <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32})">
