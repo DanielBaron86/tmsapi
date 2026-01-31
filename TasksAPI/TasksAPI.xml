@@ -129,9 +129,31 @@
             <param name="clientID"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoods(TasksAPI.Models.CreateGoodsModels)">
+            <summary>
+            Create a new Goods instance
+            </summary>
+            <param name="goodsModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.UpdateGoods(System.Int32,TasksAPI.Models.UpdateGoodsModels)">
+            <summary>
+            Update Existing Good Instance
+            </summary>
+            <param name="goodId"></param>
+            <param name="goodsModels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodsById(System.Int32)">
+            <summary>
+            Returns goods instance by ID
+            </summary>
+            <param name="goodId"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.GoodsController.GelAllGoods(System.Int32,System.Int32)">
             <summary>
-            Returns a list of all goods
+            Returns a list of all goods instances
             </summary>
             <param name="pageNumber"></param>
             <param name="pageSize"></param>
@@ -149,13 +171,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.GetGoodsById(System.Int32)">
-            <summary>
-            Returns goods by ID
-            </summary>
-            <param name="goodId"></param>
-            <returns></returns>
-        </member>
         <member name="M:TasksAPI.Controllers.GoodsController.GetGoodTypesById(System.Int32)">
             <summary>
             Get Good Type by Id
@@ -170,25 +185,10 @@
             <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.CreateGoods(TasksAPI.Models.CreateGoodsModels)">
-            <summary>
-            Create a new Goods instance
-            </summary>
-            <param name="goodsModels"></param>
-            <returns></returns>
-        </member>
         <member name="M:TasksAPI.Controllers.GoodsController.CreateGoodTypes(TasksAPI.Models.CreateGoodsTypesModel)">
             <summary>
             Create a new Good Type
             </summary>
-            <param name="goodsModels"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TasksAPI.Controllers.GoodsController.UpdateGoods(System.Int32,TasksAPI.Models.UpdateGoodsModels)">
-            <summary>
-            Update Existing Good
-            </summary>
-            <param name="goodId"></param>
             <param name="goodsModels"></param>
             <returns></returns>
         </member>

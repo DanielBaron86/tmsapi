@@ -235,10 +235,10 @@ namespace TasksAPI.Services
         }
         
 
-        public async Task<GoodsTypesModel> GetGoodTypeById(int goodId)
+        public async Task<v_GoodsTypesModel> GetGoodTypeById(int goodId)
         {
-            var good = await _dbContext.GoodsTypes.FirstOrDefaultAsync(i => i.Id == goodId);
-            return _mapper.Map<GoodsTypesModel>(good);
+            var good = await _dbContext.v_GoodsTypes.FirstOrDefaultAsync(i => i.Id == goodId);
+            return _mapper.Map<v_GoodsTypesModel>(good);
         }
 
         public async Task<GoodsTypesModel> CreateGoodType(CreateGoodsTypesModel goodtypeModel)

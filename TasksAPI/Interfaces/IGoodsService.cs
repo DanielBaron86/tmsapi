@@ -12,7 +12,7 @@ namespace TasksAPI.Interfaces
         Task< (IEnumerable<GoodBaseTypeModel>, PaginationMetadata)>  GetBaseGoodTypes(int pageNumber, int pageSize);
         
         Task<GoodsModels> GetGoodById(int goodId);
-        Task<GoodsTypesModel> GetGoodTypeById(int goodId);
+        Task<v_GoodsTypesModel> GetGoodTypeById(int goodId);
 
         Task<GoodsModels> CreateGood(CreateGoodsModels goodUnitModel);
         Task<GoodsTypesModel> CreateGoodType(CreateGoodsTypesModel goodtypeModel);
