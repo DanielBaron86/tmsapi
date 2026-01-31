@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasksAPI.Interfaces;
 using TasksAPI.Models;
-using ControllerBase = Microsoft.AspNetCore.Mvc.ControllerBase;
 
 namespace TasksAPI.Controllers;
 
-[Microsoft.AspNetCore.Mvc.Route("api/v{version:apiVersion}/goods_type")]
+[Route("api/v{version:apiVersion}/goods_type")]
 [ApiController]
 [Authorize(Roles = "clerk")]
 
@@ -22,7 +21,7 @@ public class GoodTypesController : ControllerBase
     }
     
     /// <summary>
-    /// Returs a list of good types
+    /// Returns a list of good types
     /// </summary>
     /// <returns></returns>
     [HttpGet()]
@@ -113,11 +112,11 @@ public class GoodTypesController : ControllerBase
     /// <returns></returns>
     [HttpDelete("{goodId}")]
     [Authorize(Policy = "Supervisor")]
-    public async Task<ActionResult<bool>> DeleteGoodTypess(int goodId)
+    public async Task<ActionResult<bool>> DeleteGoodTypes(int goodId)
     {
         try
         {
-            return Ok(await _goodsInstancesService.DeleteGoodTypess(goodId));
+            return Ok(await _goodsInstancesService.DeleteGoodTypes(goodId));
         }
         catch (Exception ex)
         {

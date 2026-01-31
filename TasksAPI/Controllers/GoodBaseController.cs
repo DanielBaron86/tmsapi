@@ -1,8 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using TasksAPI.Entities;
 using TasksAPI.Interfaces;
 using TasksAPI.Models;
 

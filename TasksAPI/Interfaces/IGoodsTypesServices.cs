@@ -9,5 +9,5 @@ public interface IGoodsTypesServices
     Task<v_GoodsTypesModel> GetGoodTypeById(int goodId);
     Task<GoodsTypesModel> CreateGoodType(CreateGoodsTypesModel goodtypeModel);
     Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel goodType);
-    Task<bool> DeleteGoodTypess(int goodId);
+    Task<bool> DeleteGoodTypes(int goodId);
 }

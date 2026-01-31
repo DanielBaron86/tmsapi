@@ -64,7 +64,7 @@ public class GoodsTypesServices : IGoodsTypesServices
         return _mapper.Map<GoodsTypesModel>(updatedItem);
             
     }
-    public async Task<bool> DeleteGoodTypess(int goodId)
+    public async Task<bool> DeleteGoodTypes(int goodId)
     {
         var item = await _dbContext.GoodsTypes.FirstOrDefaultAsync(i => i.Id == goodId) ?? throw new ArgumentException("Item not found");
         var countItems = await _dbContext.GoodsTypesInstances.Where( t => t.GoodModelId == goodId).CountAsync();
