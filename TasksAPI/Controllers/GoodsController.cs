@@ -23,9 +23,70 @@ namespace TasksAPI.Controllers
         {
             _goodsService = goodsServices ?? throw new ArgumentNullException(nameof(goodsServices));
         }
-
+        
+        
         /// <summary>
-        /// Returns a list of all goods
+        /// Create a new Goods instance
+        /// </summary>
+        /// <param name="goodsModels"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<GoodsModels>> CreateGoods(CreateGoodsModels goodsModels)
+        {
+            if (goodsModels == null) { return NotFound(); }
+
+            if (!ModelState.IsValid) { return BadRequest(); }
+
+            try
+            {
+                return Ok(await _goodsService.CreateGood(goodsModels));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Update Existing Good Instance
+        /// </summary>
+        /// <param name="goodId"></param>
+        /// <param name="goodsModels"></param>
+        /// <returns></returns>
+        [HttpPut("{goodId}")]
+        public async Task<ActionResult<GoodsModels>> UpdateGoods(int goodId, UpdateGoodsModels goodsModels)
+        {
+            try
+            {
+                return Ok(await _goodsService.UpdateGood(goodId, goodsModels));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        
+        /// <summary>
+        /// Returns goods instance by ID
+        /// </summary>
+        /// <param name="goodId"></param>
+        /// <returns></returns>
+        [HttpGet("{goodId}")]
+        public async Task<ActionResult<GoodsModels>> GetGoodsById(int goodId)
+        {
+            var good = await _goodsService.GetGoodById(goodId);
+            if (good == null)
+            {
+                return NotFound();
+            }
+            return Ok(good);
+
+
+        }
+        
+        /// <summary>
+        /// Returns a list of all goods instances
         /// </summary>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
@@ -78,7 +139,7 @@ namespace TasksAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("goodtypes")]
-        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<v_GoodsTypesModel>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
         {   
             try
             {
@@ -95,34 +156,14 @@ namespace TasksAPI.Controllers
             }
             
         }
-
-
-        /// <summary>
-        /// Returns goods by ID
-        /// </summary>
-        /// <param name="goodId"></param>
-        /// <returns></returns>
-        [HttpGet("{goodId}")]
-        public async Task<ActionResult<GoodsModels>> GetGoodsById(int goodId)
-        {
-            var good = await _goodsService.GetGoodById(goodId);
-            if (good == null)
-            {
-                return NotFound();
-            }
-            return Ok(good);
-
-
-        }
-
-
+        
         /// <summary>
         /// Get Good Type by Id
         /// </summary>
         /// <param name="goodId"></param>
         /// <returns></returns>
         [HttpGet("goodtypes/{goodId}")]
-        public async Task<ActionResult<GoodsTypesModel>> GetGoodTypesById(int goodId)
+        public async Task<ActionResult<v_GoodsTypesModel>> GetGoodTypesById(int goodId)
         {
             var good = await _goodsService.GetGoodTypeById(goodId);
             if (good == null)
@@ -153,27 +194,7 @@ namespace TasksAPI.Controllers
         }
 
 
-        /// <summary>
-        /// Create a new Goods instance
-        /// </summary>
-        /// <param name="goodsModels"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<GoodsModels>> CreateGoods(CreateGoodsModels goodsModels)
-        {
-            if (goodsModels == null) { return NotFound(); }
-
-            if (!ModelState.IsValid) { return BadRequest(); }
-
-            try
-            {
-                return Ok(await _goodsService.CreateGood(goodsModels));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+       
 
         /// <summary>
         /// Create a new Good Type
@@ -197,25 +218,7 @@ namespace TasksAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Update Existing Good
-        /// </summary>
-        /// <param name="goodId"></param>
-        /// <param name="goodsModels"></param>
-        /// <returns></returns>
-        [HttpPut("{goodId}")]
-        public async Task<ActionResult<GoodsModels>> UpdateGoods(int goodId, UpdateGoodsModels goodsModels)
-        {
-            try
-            {
-                return Ok(await _goodsService.UpdateGood(goodId, goodsModels));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
+  
 
 
         /// <summary>
