@@ -38,13 +38,26 @@ namespace TasksAPI.DataBaseContext
         public DbSet<ReportsEntities> ReportsEntities { get; set; }
         public DbSet<ReportsEntitiesResults> ReportsEntitiesResults { get; set; }
         public DbSet<RefreshTokenEntity> RefreshTokenEntity { get; set; }
-
+        public virtual DbSet<v_GoodsTypes> v_GoodsTypes { get; set; }
 
 
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<v_GoodsTypes>(eb =>
+                {
+                    eb.HasNoKey();
+                    eb.ToView("v_GoodsTypes");
+                    eb.Property(e => e.Id).HasColumnName("id");
+                    eb.Property(e => e.GoodModelId).HasColumnName("goodModelId");
+                    eb.Property(e => e.Name).HasColumnName("name");
+                    eb.Property(e => e.Description).HasColumnName("description");
+                    eb.Property(e => e.Type).HasColumnName("type");
+                    eb.Property(e => e.Manufacturer).HasColumnName("manufacturer");
+                });
+            
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Email).IsUnique());
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Username).IsUnique());
 
@@ -159,21 +172,6 @@ namespace TasksAPI.DataBaseContext
                 new LocationTypesInstances() { Id = 6, LocationTypeID = 4, Address = "Iasi", Description = "Item Supplier" }
 
                 );
-            
-            modelBuilder.Entity<GoodModelBaseType>().HasData(
-                new GoodModelBaseType() {Id = 1,Description ="Smartphone", Manufacturer = "Samsung"}    ,
-                new GoodModelBaseType() {Id = 2,Description ="Smartphone", Manufacturer = "Apple"} 
-                );
-            
-                
-            modelBuilder.Entity<GoodsTypes>().HasData(
-                new GoodsTypes() { Id = 1, GoodModelId = 1, Name = "A53", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 2, GoodModelId = 1, Name = "ZFLIP", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 3, GoodModelId = 1, Name = "M14", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 4, GoodModelId = 1, Name = "S21", Description = "Samsung Smartphone" },
-                new GoodsTypes() { Id = 5, GoodModelId = 2, Name = "Apple 15", Description = "Apple Smartphone" }
-                );
-
         }
 
 

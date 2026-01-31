@@ -48,7 +48,7 @@ namespace TasksAPI.Services
             
             
             
-            var collection = _dbContext.GoodModelBaseType as IQueryable<GoodModelBaseType>;
+            var collection = _dbContext.GoodModelBaseType.AsEnumerable() as IQueryable<GoodModelBaseType>;
             
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
@@ -64,20 +64,21 @@ namespace TasksAPI.Services
         }
         
 
-        public async Task < (IEnumerable<GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
+        public async Task < (IEnumerable<v_GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
         {
             
-            var collection = _dbContext.GoodsTypes.Include( b => b.GoodModelBaseType) as IQueryable<GoodsTypes>;
+            var collection = _dbContext.v_GoodsTypes as IQueryable<v_GoodsTypes>;
             
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
-            var collectionReturn = await collection.OrderBy(c => c.Id)
+            var collectionReturn = await collection
+                .OrderBy(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
             
-            var returnCollection = _mapper.Map<IEnumerable<GoodsTypesModel>>(collectionReturn);
+            var returnCollection = _mapper.Map<IEnumerable<v_GoodsTypesModel>>(collectionReturn);
 
             return (returnCollection,paginationMetadata);
         }
@@ -90,7 +91,7 @@ namespace TasksAPI.Services
 
         public async Task<GoodsModels> CreateGood(CreateGoodsModels goodUnitModel)
         {
-            _ = await _dbContext.GoodsTypes.FirstOrDefaultAsync(t => t.GoodModelId == goodUnitModel.GoodModelId) ??throw new ArgumentException("Item model not found");
+            _ = await _dbContext.GoodsTypes.FirstOrDefaultAsync(t => t.Id == goodUnitModel.GoodModelId) ??throw new ArgumentException("Item model not found");
             _ = await _dbContext.LocationTypesInstances.FirstOrDefaultAsync(t => t.Id == goodUnitModel.LocationId) ??throw new ArgumentException("Location not found");
 
 

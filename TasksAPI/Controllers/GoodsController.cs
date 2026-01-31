@@ -78,7 +78,7 @@ namespace TasksAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("goodtypes")]
-        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<v_GoodsTypesModel>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
         {   
             try
             {
