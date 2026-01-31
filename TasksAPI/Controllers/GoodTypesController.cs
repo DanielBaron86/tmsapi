@@ -14,11 +14,11 @@ namespace TasksAPI.Controllers;
 public class GoodTypesController : ControllerBase
 {
     const int MaxCitiesPagesSize = 20;
-    private readonly IGoodsServices _goodsService;
+    private readonly IGoodsInstancesServices _goodsInstancesService;
     
-    public GoodTypesController(IConfiguration configuration, IGoodsServices goodsServices)
+    public GoodTypesController(IConfiguration configuration, IGoodsInstancesServices goodsInstancesServices)
     {
-        _goodsService = goodsServices ?? throw new ArgumentNullException(nameof(goodsServices));
+        _goodsInstancesService = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
     }
     
     /// <summary>
@@ -31,7 +31,7 @@ public class GoodTypesController : ControllerBase
         try
         {
             if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
-            var (goodTypes, paginationMetadata) = await _goodsService.GetGoodTypes(pageNumber, pageSize);
+            var (goodTypes, paginationMetadata) = await _goodsInstancesService.GetGoodTypes(pageNumber, pageSize);
 
             Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
             return Ok(goodTypes);
@@ -53,7 +53,7 @@ public class GoodTypesController : ControllerBase
     [HttpGet("goodtypes/{goodId}")]
     public async Task<ActionResult<v_GoodsTypesModel>> GetGoodTypesById(int goodId)
     {
-        var good = await _goodsService.GetGoodTypeById(goodId);
+        var good = await _goodsInstancesService.GetGoodTypeById(goodId);
         if (good == null)
         {
             return NotFound();
@@ -78,7 +78,7 @@ public class GoodTypesController : ControllerBase
 
         try
         {
-            return Ok(await _goodsService.CreateGoodType(goodsModels));
+            return Ok(await _goodsInstancesService.CreateGoodType(goodsModels));
         }
         catch (Exception ex)
         {
@@ -97,7 +97,7 @@ public class GoodTypesController : ControllerBase
     {
         try
         {
-            return Ok(await _goodsService.UpdateGoodType(goodId, goodsModels));
+            return Ok(await _goodsInstancesService.UpdateGoodType(goodId, goodsModels));
         }
         catch (Exception ex)
         {
@@ -117,7 +117,7 @@ public class GoodTypesController : ControllerBase
     {
         try
         {
-            return Ok(await _goodsService.DeleteGoodTypess(goodId));
+            return Ok(await _goodsInstancesService.DeleteGoodTypess(goodId));
         }
         catch (Exception ex)
         {

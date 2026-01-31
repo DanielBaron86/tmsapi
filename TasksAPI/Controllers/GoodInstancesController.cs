@@ -15,11 +15,11 @@ namespace TasksAPI.Controllers;
 public class GoodInstancesController : ControllerBase
 {
     const int MaxCitiesPagesSize = 20;
-    private readonly IGoodsServices _goodsService;
+    private readonly IGoodsInstancesServices _goodsInstancesService;
     
-    public GoodInstancesController(IConfiguration configuration, IGoodsServices goodsServices)
+    public GoodInstancesController(IConfiguration configuration, IGoodsInstancesServices goodsInstancesServices)
     {
-        _goodsService = goodsServices ?? throw new ArgumentNullException(nameof(goodsServices));
+        _goodsInstancesService = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
     }
     
     /// <summary>
@@ -36,7 +36,7 @@ public class GoodInstancesController : ControllerBase
 
             try
             {
-                return Ok(await _goodsService.CreateGood(goodsModels));
+                return Ok(await _goodsInstancesService.CreateGood(goodsModels));
             }
             catch (Exception ex)
             {
@@ -55,7 +55,7 @@ public class GoodInstancesController : ControllerBase
         {
             try
             {
-                return Ok(await _goodsService.UpdateGood(goodId, goodsModels));
+                return Ok(await _goodsInstancesService.UpdateGood(goodId, goodsModels));
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ public class GoodInstancesController : ControllerBase
         [HttpGet("{goodId}")]
         public async Task<ActionResult<GoodsModels>> GetGoodsById(int goodId)
         {
-            var good = await _goodsService.GetGoodById(goodId);
+            var good = await _goodsInstancesService.GetGoodById(goodId);
             if (good == null)
             {
                 return NotFound();
@@ -95,7 +95,7 @@ public class GoodInstancesController : ControllerBase
             try
             {
                 if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
-                var (itemInstances, paginationMetadata) = await _goodsService.GetGoods(pageNumber, pageSize);
+                var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoods(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
                 return Ok(itemInstances);
@@ -116,7 +116,7 @@ public class GoodInstancesController : ControllerBase
         [HttpGet("history/{goodId}")]
         public async Task<ActionResult<ICollection<ItemMovementEntity>>> GetGoodHistorysById(int goodId)
         {
-            var good = await _goodsService.GetGoodHistorysById(goodId);
+            var good = await _goodsInstancesService.GetGoodHistorysById(goodId);
             if (good == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ public class GoodInstancesController : ControllerBase
         {
             try
             {
-                return Ok(await _goodsService.PatchGood(goodId, patchGood));
+                return Ok(await _goodsInstancesService.PatchGood(goodId, patchGood));
             }
             catch (Exception ex)
             {
@@ -156,7 +156,7 @@ public class GoodInstancesController : ControllerBase
         {
             try
             {
-                return Ok(await _goodsService.DeleteGoods(goodId));
+                return Ok(await _goodsInstancesService.DeleteGoods(goodId));
             }
             catch (Exception ex)
             {

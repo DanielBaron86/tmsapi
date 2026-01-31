@@ -12,13 +12,13 @@ namespace TasksAPI.Services
     public class StoresOperationsService: IStoresOperationsService
     {
         private readonly DatabaseConnectContext _DBContext;
-        private readonly IGoodsServices _goodsServices;
+        private readonly IGoodsInstancesServices _goodsInstancesServices;
         private readonly IMapper _mapper;
 
-        public StoresOperationsService(DatabaseConnectContext context, IMapper mapper, IGoodsServices goodsServices) {
+        public StoresOperationsService(DatabaseConnectContext context, IMapper mapper, IGoodsInstancesServices goodsInstancesServices) {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _DBContext = context ?? throw new ArgumentNullException(nameof(context));
-            _goodsServices = goodsServices ?? throw new ArgumentNullException(nameof(goodsServices));
+            _goodsInstancesServices = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
         }
 
         public async Task<StoreCartsEntityDetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
@@ -43,7 +43,7 @@ namespace TasksAPI.Services
                 {
                     Finalprice = Decimal.Multiply(Finalprice, -1);
                 }
-                await _goodsServices.CreateMovementHistory(operationModel.GoodId, 0, 0, (int)GoodsStatus.RESERVED, checkCart.clerktId);
+                await _goodsInstancesServices.CreateMovementHistory(operationModel.GoodId, 0, 0, (int)GoodsStatus.RESERVED, checkCart.clerktId);
                 var patchResevered = new JsonPatchDocument();
                 patchResevered.Replace("Status", GoodsStatus.RESERVED);
                 patchResevered.ApplyTo(checkItem);
@@ -205,9 +205,9 @@ namespace TasksAPI.Services
                         returnGoodsIds.Add(good.GoodId);
                     }
                 }
-                await _goodsServices.SellItem(cartToBePayed.clientId, SellGoods);
+                await _goodsInstancesServices.SellItem(cartToBePayed.clientId, SellGoods);
                 if(returnGoodsIds.Count > 0) {
-                    await _goodsServices.ReturnItems(cartToBePayed.clientId, new ReturnGoods { ClerkId = cartToBePayed.clerktId, ReturnLocation = cartToBePayed.storeLocation, GoodId = returnGoodsIds });
+                    await _goodsInstancesServices.ReturnItems(cartToBePayed.clientId, new ReturnGoods { ClerkId = cartToBePayed.clerktId, ReturnLocation = cartToBePayed.storeLocation, GoodId = returnGoodsIds });
                 }
                 
             }
@@ -241,7 +241,7 @@ namespace TasksAPI.Services
             _DBContext.Remove(cartItem);
             var patchJson = new JsonPatchDocument();
             patchJson.Replace("Status",(int) GoodsStatus.AVAILABLE);
-            await _goodsServices.PatchGood(cartItem.GoodId, patchJson);
+            await _goodsInstancesServices.PatchGood(cartItem.GoodId, patchJson);
 
             var updateCart = await _DBContext.StoreCartsEntity.FirstOrDefaultAsync(t => t.Id == cartItem.CartId);
             var patchCart =new JsonPatchDocument();

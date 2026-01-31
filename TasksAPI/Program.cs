@@ -161,7 +161,8 @@ builder.Services.AddVersionedApiExplorer(o =>
 //Add Custom Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILocationService, LocationServices>();
-builder.Services.AddScoped<IGoodsServices, GoodsServices>();
+builder.Services.AddScoped<IGoodsInstancesServices, GoodsInstancesInstancesServices>();
+builder.Services.AddScoped<IGoodsBaseServices, GoodsBaseServices>();
 builder.Services.AddScoped<ITasksService, TasksServices>();
 builder.Services.AddScoped<IStoresOperationsService, StoresOperationsService>();
 builder.Services.AddScoped<IReportsServices, ReportsServices>();

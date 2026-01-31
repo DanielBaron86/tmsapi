@@ -16,12 +16,12 @@ namespace TasksAPI.Controllers
     public class GoodBaseController : ControllerBase
     {
 
-        const int MaxCitiesPagesSize = 20;
-        private readonly IGoodsServices _goodsService;
+        const int MaxCitiesPagesSize = 1000;
+        private readonly IGoodsBaseServices _goodsBaseService;
 
-        public GoodBaseController(IConfiguration configuration, IGoodsServices goodsServices)
+        public GoodBaseController(IConfiguration configuration, IGoodsBaseServices goodsInstancesServices)
         {
-            _goodsService = goodsServices ?? throw new ArgumentNullException(nameof(goodsServices));
+            _goodsBaseService = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
         }
         
         
@@ -36,8 +36,8 @@ namespace TasksAPI.Controllers
         {
             try
             {
-                if (pageSize > 1000) pageSize = 1000;
-                var (baseItems, paginationMetadata) = await _goodsService.GetBaseGoodTypes(pageNumber, pageSize);
+                if (pageSize > MaxCitiesPagesSize) pageSize = 1000;
+                var (baseItems, paginationMetadata) = await _goodsBaseService.GetBaseGoodTypes(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
                 return Ok(baseItems);
@@ -63,7 +63,7 @@ namespace TasksAPI.Controllers
 
             try
             {
-                return Ok(await _goodsService.CreateBaseType(goodBaseModel));
+                return Ok(await _goodsBaseService.CreateBaseType(goodBaseModel));
             }
             catch (Exception ex)
             {
@@ -82,7 +82,7 @@ namespace TasksAPI.Controllers
         {
             try
             {
-                return Ok(await _goodsService.UpdateBaseType(baseGoodId, goodBaseModel));
+                return Ok(await _goodsBaseService.UpdateBaseType(baseGoodId, goodBaseModel));
             }
             catch (Exception ex)
             {

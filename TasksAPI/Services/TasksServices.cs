@@ -13,13 +13,13 @@ namespace TasksAPI.Services
     {
         private readonly DatabaseConnectContext _DBContext;
         private readonly IMapper _mapper;
-        private readonly IGoodsServices _goodsService;
+        private readonly IGoodsInstancesServices _goodsInstancesService;
 
-        public TasksServices(DatabaseConnectContext context, IMapper mapper, IGoodsServices goodsService)
+        public TasksServices(DatabaseConnectContext context, IMapper mapper, IGoodsInstancesServices goodsInstancesService)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _DBContext = context ?? throw new ArgumentNullException(nameof(context));
-            _goodsService = goodsService ?? throw new ArgumentNullException(nameof(goodsService));
+            _goodsInstancesService = goodsInstancesService ?? throw new ArgumentNullException(nameof(goodsInstancesService));
         }
 
         public async Task<IEnumerable<TasksModel>> GetAllTasks(int? taskType, int? taskStatus)
@@ -181,7 +181,7 @@ namespace TasksAPI.Services
             }
             foreach (var order in GoodsOrder.GoodId.Except(existingTransfers))
             {
-                var transferedItem = await _goodsService.GetGoodById(order);
+                var transferedItem = await _goodsInstancesService.GetGoodById(order);
 
 
                 if (transferedItem == null)
@@ -198,11 +198,11 @@ namespace TasksAPI.Services
                     else
                     {
 
-                        await _goodsService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.UserId); 
+                        await _goodsInstancesService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.UserId); 
                         
                         var markForTransfer = new JsonPatchDocument();
                         markForTransfer.Replace("Status", (int)GoodsStatus.IN_TRANSIT);
-                        await _goodsService.PatchGood(order, markForTransfer);
+                        await _goodsInstancesService.PatchGood(order, markForTransfer);
                         
                         await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.SerialNumber });
                         await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -338,7 +338,7 @@ namespace TasksAPI.Services
                 {
                     try
                     {
-                        var addedItem = await _goodsService.CreateGood(new CreateGoodsModels
+                        var addedItem = await _goodsInstancesService.CreateGood(new CreateGoodsModels
                         {
                             GoodModelId = subTask.GoodTypeID,
                             Price = item.Price,
@@ -347,7 +347,7 @@ namespace TasksAPI.Services
                             Status = GoodsStatus.AVAILABLE
                         });
 
-                        await _goodsService.CreateMovementHistory(addedItem.Id, fulfilment.Supplier, addedItem.LocationId, (int)GoodsStatus.AVAILABLE, fulfilment.UserId);
+                        await _goodsInstancesService.CreateMovementHistory(addedItem.Id, fulfilment.Supplier, addedItem.LocationId, (int)GoodsStatus.AVAILABLE, fulfilment.UserId);
                         SNL.Add(item.SerialNumber.ToUpper());
                         itemList.Add(addedItem);
                         countAddedItems++;
@@ -395,7 +395,7 @@ namespace TasksAPI.Services
                     patchItem.Replace("Status", (int)GoodsStatus.AVAILABLE);
 
                     var itemToPatch = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == item.GoodID) ??throw new ArgumentException("Item not found");
-                    await _goodsService.CreateMovementHistory(itemToPatch.Id, itemToPatch.LocationId, item.ToLocation, (int)GoodsStatus.AVAILABLE, fulfillGoodsTransfer.UserId);
+                    await _goodsInstancesService.CreateMovementHistory(itemToPatch.Id, itemToPatch.LocationId, item.ToLocation, (int)GoodsStatus.AVAILABLE, fulfillGoodsTransfer.UserId);
 
                     patchItem.ApplyTo(itemToPatch);
                     existing.Add(item.serialNumber);
@@ -504,8 +504,8 @@ namespace TasksAPI.Services
             {
                 var patchDocument = new JsonPatchDocument();
                 patchDocument.Replace("Status",(int)GoodsStatus.AVAILABLE);
-                await _goodsService.PatchGood(item.GoodID, patchDocument);
-                await _goodsService.CreateMovementHistory(item.GoodID,0,0,(int)GoodsStatus.AVAILABLE,0);
+                await _goodsInstancesService.PatchGood(item.GoodID, patchDocument);
+                await _goodsInstancesService.CreateMovementHistory(item.GoodID,0,0,(int)GoodsStatus.AVAILABLE,0);
                 _DBContext.Remove(item);
             }
            return await _DBContext.SaveChangesAsync(CancellationToken.None);

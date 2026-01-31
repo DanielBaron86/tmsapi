@@ -5,11 +5,11 @@ using TasksAPI.Services;
 
 namespace TasksAPI.Interfaces
 {
-    public interface IGoodsServices
+    public interface IGoodsInstancesServices
     {
         Task< (IEnumerable<GoodsModels>, PaginationMetadata)>GetGoods(int pageNumber, int pageSize);
         Task< (IEnumerable<v_GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize);
-        Task< (IEnumerable<GoodBaseTypeModel>, PaginationMetadata)>  GetBaseGoodTypes(int pageNumber, int pageSize);
+        
         
         Task<GoodsModels> GetGoodById(int goodId);
         Task<v_GoodsTypesModel> GetGoodTypeById(int goodId);
@@ -27,8 +27,8 @@ namespace TasksAPI.Interfaces
         Task<IEnumerable<AccountsGoodsEntity>> ReturnItems(int userId, ReturnGoods returnGoods);
 
         Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodId);
-        Task<GoodBaseTypeModel> CreateBaseType(CreateGoodBaseTypeModel goodBaseModel);
-        Task<GoodBaseTypeModel> UpdateBaseType(int goodId,CreateGoodBaseTypeModel goodBaseModel);
+        
+        
         
 
     }
