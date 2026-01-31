@@ -8,7 +8,7 @@ using TasksAPI.Models;
 
 namespace TasksAPI.Controllers;
 
-[Route("api/v{version:apiVersion}/goods")]
+[Route("api/v{version:apiVersion}/goods_instance")]
 [ApiController]
 [Authorize(Roles = "clerk")]
 

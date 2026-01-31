@@ -7,16 +7,16 @@ using ControllerBase = Microsoft.AspNetCore.Mvc.ControllerBase;
 
 namespace TasksAPI.Controllers;
 
-[Microsoft.AspNetCore.Mvc.Route("api/v{version:apiVersion}/goods")]
+[Microsoft.AspNetCore.Mvc.Route("api/v{version:apiVersion}/goods_type")]
 [ApiController]
 [Authorize(Roles = "clerk")]
 
 public class GoodTypesController : ControllerBase
 {
     const int MaxCitiesPagesSize = 20;
-    private readonly IGoodsInstancesServices _goodsInstancesService;
+    private readonly IGoodsTypesServices _goodsInstancesService;
     
-    public GoodTypesController(IConfiguration configuration, IGoodsInstancesServices goodsInstancesServices)
+    public GoodTypesController(IConfiguration configuration, IGoodsTypesServices goodsInstancesServices)
     {
         _goodsInstancesService = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
     }
@@ -25,7 +25,7 @@ public class GoodTypesController : ControllerBase
     /// Returs a list of good types
     /// </summary>
     /// <returns></returns>
-    [HttpGet("goodtypes")]
+    [HttpGet()]
     public async Task<ActionResult<IEnumerable<v_GoodsTypesModel>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
     {   
         try
@@ -50,7 +50,7 @@ public class GoodTypesController : ControllerBase
     /// </summary>
     /// <param name="goodId"></param>
     /// <returns></returns>
-    [HttpGet("goodtypes/{goodId}")]
+    [HttpGet("{goodId}")]
     public async Task<ActionResult<v_GoodsTypesModel>> GetGoodTypesById(int goodId)
     {
         var good = await _goodsInstancesService.GetGoodTypeById(goodId);
@@ -69,7 +69,7 @@ public class GoodTypesController : ControllerBase
     /// </summary>
     /// <param name="goodsModels"></param>
     /// <returns></returns>
-    [HttpPost("goodtypes")]
+    [HttpPost()]
     public async Task<ActionResult<GoodsModels>> CreateGoodTypes(CreateGoodsTypesModel goodsModels)
     {
         if (goodsModels == null) { return NotFound(); }
@@ -92,7 +92,7 @@ public class GoodTypesController : ControllerBase
     /// <param name="goodId"></param>
     /// <param name="goodsModels"></param>
     /// <returns></returns>
-    [HttpPut("goodtypes/{goodId}")]
+    [HttpPut("{goodId}")]
     public async Task<ActionResult<GoodsModels>> UpdateGoodTypes(int goodId, UpdateGoodsTypesModel goodsModels)
     {
         try
@@ -111,7 +111,7 @@ public class GoodTypesController : ControllerBase
     /// </summary>
     /// <param name="goodId"></param>
     /// <returns></returns>
-    [HttpDelete("goodtypes/{goodId}")]
+    [HttpDelete("{goodId}")]
     [Authorize(Policy = "Supervisor")]
     public async Task<ActionResult<bool>> DeleteGoodTypess(int goodId)
     {

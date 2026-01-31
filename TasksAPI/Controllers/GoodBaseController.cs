@@ -8,7 +8,7 @@ using TasksAPI.Models;
 
 namespace TasksAPI.Controllers
 {
-    [Route("api/v{version:apiVersion}/goods")]
+    [Route("api/v{version:apiVersion}/goods_base")]
     [ApiController]
     [Authorize(Roles = "clerk")]
 
@@ -31,7 +31,7 @@ namespace TasksAPI.Controllers
         /// Returs a list of base good types
         /// </summary>
         /// <returns></returns>
-        [HttpGet("base_goods")]
+        [HttpGet()]
         public async Task<ActionResult<IEnumerable<GoodBaseTypeModel>>> GetBaseGoods(int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -54,7 +54,7 @@ namespace TasksAPI.Controllers
         /// </summary>
         /// <param name="goodBaseModel"></param>
         /// <returns></returns>
-        [HttpPost("base_goods")]
+        [HttpPost()]
         public async Task<ActionResult<GoodBaseTypeModel>> CreateBaseModel(CreateGoodBaseTypeModel goodBaseModel)
         {
             if (goodBaseModel == null) { return NotFound(); }
@@ -77,7 +77,7 @@ namespace TasksAPI.Controllers
         /// <param name="baseGoodId"></param>
         /// <param name="goodBaseModel"></param>
         /// <returns></returns>
-        [HttpPut("base_goods/{baseGoodId}")]
+        [HttpPut("{baseGoodId}")]
         public async Task<ActionResult<GoodsModels>> UpdateBaseGoods(int baseGoodId, CreateGoodBaseTypeModel goodBaseModel)
         {
             try
