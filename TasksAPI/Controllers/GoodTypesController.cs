@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TasksAPI.Entities;
 using TasksAPI.Interfaces;
 using TasksAPI.Models;
 
@@ -25,7 +26,7 @@ public class GoodTypesController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<v_GoodsTypesModel>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<v_GoodsTypes>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
     {   
         try
         {
@@ -50,7 +51,7 @@ public class GoodTypesController : ControllerBase
     /// <param name="goodId"></param>
     /// <returns></returns>
     [HttpGet("{goodId}")]
-    public async Task<ActionResult<v_GoodsTypesModel>> GetGoodTypesById(int goodId)
+    public async Task<ActionResult<v_GoodsTypes>> GetGoodTypesById(int goodId)
     {
         var good = await _goodsInstancesService.GetGoodTypeById(goodId);
         if (good == null)

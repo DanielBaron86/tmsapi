@@ -204,7 +204,7 @@
         </member>
         <member name="M:TasksAPI.Controllers.GoodTypesController.GelAllGoodTypes(System.Int32,System.Int32)">
             <summary>
-            Returs a list of good types
+            Returns a list of good types
             </summary>
             <returns></returns>
         </member>
@@ -230,7 +230,7 @@
             <param name="goodsModels"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodTypesController.DeleteGoodTypess(System.Int32)">
+        <member name="M:TasksAPI.Controllers.GoodTypesController.DeleteGoodTypes(System.Int32)">
             <summary>
             Delete Good Types by ID
             </summary>

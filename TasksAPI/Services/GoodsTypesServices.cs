@@ -21,7 +21,7 @@ public class GoodsTypesServices : IGoodsTypesServices
         _dbContext = context ?? throw new ArgumentNullException(nameof(context));
     }
     
-    public async Task < (IEnumerable<v_GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
+    public async Task < (IEnumerable<v_GoodsTypes>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
     {
             
         var collection = _dbContext.v_GoodsTypes as IQueryable<v_GoodsTypes>;
@@ -34,24 +34,32 @@ public class GoodsTypesServices : IGoodsTypesServices
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize)
             .ToListAsync();
-            
-        var returnCollection = _mapper.Map<IEnumerable<v_GoodsTypesModel>>(collectionReturn);
-
-        return (returnCollection,paginationMetadata);
+        return (collectionReturn,paginationMetadata);
     }
     
-    public async Task<v_GoodsTypesModel> GetGoodTypeById(int goodId)
+    public async Task<v_GoodsTypes> GetGoodTypeById(int goodId)
     {
         var good = await _dbContext.v_GoodsTypes.FirstOrDefaultAsync(i => i.Id == goodId);
-        return _mapper.Map<v_GoodsTypesModel>(good);
+        if (good == null)
+        {
+            throw new ArgumentException("Item not found");
+        }
+        return good;
     }
-    public async Task<GoodsTypesModel> CreateGoodType(CreateGoodsTypesModel goodtypeModel)
+    
+    public async Task<v_GoodsTypes> CreateGoodType(CreateGoodsTypesModel goodtypeModel)
     {
         var goodToBeCreated = _mapper.Map<GoodsTypes>(goodtypeModel);
         _dbContext.Add(goodToBeCreated);
         await _dbContext.SaveChangesAsync(CancellationToken.None);
-
-        return _mapper.Map<GoodsTypesModel>(goodToBeCreated);
+        try
+        {
+            return await _dbContext.v_GoodsTypes.Where(item => item.Id == goodToBeCreated.Id).FirstOrDefaultAsync();
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentException("Unable to create good type",e);
+        }
     }
     public async Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel goodType)
     {

@@ -28,7 +28,6 @@ namespace TasksAPI.Profiles
             CreateMap<UpdateGoodBaseTypeModel, GoodModelBaseType>();
             CreateMap<CreateGoodBaseTypeModel, GoodModelBaseType>();
             CreateMap<CreateGoodBaseTypeModel, GoodBaseTypeModel>();
-            CreateMap<v_GoodsTypes, v_GoodsTypesModel>();
 
         }
     }
