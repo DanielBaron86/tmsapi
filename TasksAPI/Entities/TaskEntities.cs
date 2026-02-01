@@ -14,16 +14,14 @@ namespace TasksAPI.Entities
         public TaskTypes TaskType { get; set; }
         [Required]
         public TaskTypesStatus TaskStatus { get; set; } = TaskTypesStatus.PENDING;
-
-        [ForeignKey("userID")]
-        public UserEntity? UserEntity { get; set; }
         [Required]
-        public int UserId { get; set; }
+        public int CreatorId { get; set; }
         [Required]
         public string Description { get; set; } =string.Empty;
 
         public ICollection<TasksEntitiesProcurements>? TasksEntitiesProcurements { get; set; }
         public ICollection<TasksEntitiesTransfer>? TasksEntitiesTransfer { get; set; }
+        public UserEntity? Creator { get; set; }
 
     }
 

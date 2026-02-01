@@ -12,7 +12,7 @@ namespace TasksAPI.Models
 
         public string? Description { get; set; }
         [JsonRequired]
-        public int UserId { get; set; }
+        public int CreatorId { get; set; }
         public string? UserName { get; set; }
     }
 
@@ -136,7 +136,7 @@ namespace TasksAPI.Models
     public class CreateProcurementModel
     {
         [JsonRequired]
-        public int UserId { get; set; }
+        public int CreatorId { get; set; }
         [JsonRequired]
         public string Description { get; set; }
         public ICollection<GoodsOrder>? GoodsOrder { get; set; } = new List<GoodsOrder>();
@@ -147,7 +147,7 @@ namespace TasksAPI.Models
     public class CreateTransferModel
     {
         [JsonRequired]
-        public int UserId { get; set; }
+        public int CreatorId { get; set; }
         [JsonRequired]
         public string? Description { get; set; }
         public GoodsTransfer? GoodsTransfer { get; set; }

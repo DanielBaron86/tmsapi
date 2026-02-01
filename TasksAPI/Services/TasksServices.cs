@@ -28,34 +28,34 @@ namespace TasksAPI.Services
             if (taskType != null && taskStatus == null)
             {
                 return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
-                    .Include( t => t.UserEntity)
+                    .Include( t => t.Creator)
                     .Where(t => (int)t.TaskType == taskType).AsSplitQuery().ToListAsync());
             }
 
             if (taskStatus != null && taskType == null)
             {
                 return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
-                    .Include( t => t.UserEntity)
+                    .Include( t => t.Creator)
                     .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
             }
 
             if (taskStatus != null && taskType != null)
             {
                 return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskType == taskType)
-                    .Include( t => t.UserEntity)
+                    .Include( t => t.Creator)
                     .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
             }
 
             var q = await _DBContext.TasksEntities
-                .Include(t => t.UserEntity)
+                .Include(t => t.Creator)
                 .Select( t => new TasksModel
                 {
                  Id = t.Id,
                  TaskType = t.TaskType,
                  TaskStatus = t.TaskStatus,
                  Description = t.Description,
-                 UserId = t.UserId,
-                 UserName = t.UserEntity.Username,
+                 CreatorId = t.CreatorId,
+                 UserName = t.Creator.Username,
                  CreatedDate = t.CreatedDate,
                  UpdatedDate = t.UpdatedDate,
                 })
@@ -85,9 +85,9 @@ namespace TasksAPI.Services
         {
             _= await _DBContext.Users
                 .Where( t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
-                .FirstOrDefaultAsync( t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
+                .FirstOrDefaultAsync( t => t.Id == taskModel.CreatorId) ?? throw new ArgumentException($"User {taskModel.CreatorId} not found or inactive");
 
-            var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.UserId };
+            var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.CreatorId };
             var createdTask = await CreateTask(newTaskToCreate);
 
 
@@ -105,12 +105,19 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> CreateTask(CreateTasksModel newTask)
         {
-            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, UserId = newTask.UserId };
+            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, CreatorId = newTask.UserId };
 
             await _DBContext.TasksEntities.AddAsync(createEntity);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
-
-            return _mapper.Map<TasksModel>(createEntity);
+            try
+            {
+                return _mapper.Map<TasksModel>(createEntity);
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException("Error",e);
+            }
+            
         }
 
         public async Task<TasksModelWithProcurements> GetTasksModelWithProcurementsTasksByID(int taskID)
@@ -154,9 +161,9 @@ namespace TasksAPI.Services
         {
             _ = await _DBContext.Users
                 .Where(t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
-                .FirstOrDefaultAsync(t => t.Id == taskModel.UserId) ?? throw new ArgumentException($"User {taskModel.UserId} not found or inactive");
+                .FirstOrDefaultAsync(t => t.Id == taskModel.CreatorId) ?? throw new ArgumentException($"User {taskModel.CreatorId} not found or inactive");
 
-            var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, UserId = taskModel.UserId, Description = taskModel.Description };
+            var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, UserId = taskModel.CreatorId, Description = taskModel.Description };
             var createdTask = await CreateTask(newTaskToCreate);
             var returnValue = await AddItemsToTransferTask(createdTask.Id, taskModel.GoodsTransfer, false);
             return returnValue;
@@ -198,7 +205,7 @@ namespace TasksAPI.Services
                     else
                     {
 
-                        await _goodsInstancesService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.UserId); 
+                        await _goodsInstancesService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.CreatorId); 
                         
                         var markForTransfer = new JsonPatchDocument();
                         markForTransfer.Replace("Status", (int)GoodsStatus.IN_TRANSIT);

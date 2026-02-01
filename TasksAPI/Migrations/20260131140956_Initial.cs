@@ -381,7 +381,7 @@ namespace TasksAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TaskType = table.Column<int>(type: "int", nullable: false),
                     TaskStatus = table.Column<int>(type: "int", nullable: false),
-                    userID = table.Column<int>(type: "int", nullable: true),
+                    CreatorId = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -391,7 +391,7 @@ namespace TasksAPI.Migrations
                     table.PrimaryKey("PK_TasksEntities", x => x.Id);
                     table.ForeignKey(
                         name: "FK_TasksEntities_Users_userID",
-                        column: x => x.userID,
+                        column: x => x.CreatorId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
