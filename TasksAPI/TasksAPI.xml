@@ -684,5 +684,17 @@
         <member name="M:TasksAPI.Migrations.Tables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:TasksAPI.Migrations.GoodsView">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodsView.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodsView.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodsView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
