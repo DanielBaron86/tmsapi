@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TasksAPI.DataBaseContext;
 using TasksAPI.Entities;
@@ -24,26 +24,20 @@ namespace TasksAPI.Services
 
         public async Task<IEnumerable<TasksModel>> GetAllTasks(int? taskType, int? taskStatus)
         {
-
+            Expression<Func<TasksModel, bool>> processingFunc  = p => 1 ==1;
             if (taskType != null && taskStatus == null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
-                    .Include( t => t.Creator)
-                    .Where(t => (int)t.TaskType == taskType).AsSplitQuery().ToListAsync());
+               processingFunc  = p => (int)p.TaskType == taskType;
             }
 
             if (taskStatus != null && taskType == null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
-                    .Include( t => t.Creator)
-                    .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
+                 processingFunc  = p => (int)p.TaskStatus == taskStatus;
             }
 
             if (taskStatus != null && taskType != null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskType == taskType)
-                    .Include( t => t.Creator)
-                    .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
+                processingFunc  = p => (int)p.TaskStatus == taskStatus && (int)p.TaskType == taskType;
             }
 
             var q = await _DBContext.TasksEntities
@@ -59,6 +53,7 @@ namespace TasksAPI.Services
                  CreatedDate = t.CreatedDate,
                  UpdatedDate = t.UpdatedDate,
                 })
+                .Where(processingFunc)
                 .AsSplitQuery()
                 .ToListAsync();
             return _mapper.Map<IEnumerable<TasksModel>>(q);
@@ -66,7 +61,19 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> GetTasksByID(int taskID)
         {
-            var t = await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
+            var t = await _DBContext.TasksEntities
+                .Select( t => new TasksModel
+                {
+                    Id = t.Id,
+                    TaskType = t.TaskType,
+                    TaskStatus = t.TaskStatus,
+                    Description = t.Description,
+                    CreatorId = t.CreatorId,
+                    UserName = t.Creator.Username,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedDate = t.UpdatedDate,
+                })
+                .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
 
             return _mapper.Map<TasksModel>(t);
         }
@@ -252,7 +259,17 @@ namespace TasksAPI.Services
 
         public async Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks()
         {
-            return _mapper.Map<IEnumerable<TasksModelWithTransfer>>(await _DBContext.TasksEntities.Where(t => t.TaskType == TaskTypes.TRANSFER).Include(t => t.TasksEntitiesTransfer).ToListAsync());
+     
+            var tasks =  _mapper.Map<IEnumerable<TasksModelWithTransfer>>(await _DBContext.TasksEntities
+                .Include(t => t.TasksEntitiesTransfer)
+                .Where( task => task.TaskType==TaskTypes.TRANSFER).ToListAsync());
+            foreach (var task in tasks)
+            {
+                var user = await _DBContext.Users.FirstOrDefaultAsync(x => x.Id == task.CreatorId);
+                task.UserName = user.Username;
+            }
+
+            return tasks;
         }
 
         public async Task<IEnumerable<TasksEntities_TransferModel>> UpdateTransferSubTasks(IEnumerable<TransferSubtaskModelForUpdate> taskModel)
