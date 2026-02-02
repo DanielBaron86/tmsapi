@@ -99,7 +99,7 @@ builder.Services.AddSwaggerGen(swaggerOptions =>
 //Add Database Connection
 
 var DBServer = builder.Configuration["DataBaseType"] ?? "MySql";
-var HOST = builder.Configuration["DBHost"];
+var HOST = "192.168.1.222";
 var USER = builder.Configuration["DBUser"];
 var PASSWORD = builder.Configuration["DBPassword"];
 var DATABASE = builder.Configuration["DBName"];

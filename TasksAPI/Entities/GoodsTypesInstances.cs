@@ -23,8 +23,9 @@ namespace TasksAPI.Entities
         public string serialNumber { get; set; } = default!;
         [Required]
         public int Status { get; set; }
+        public int Quantity { get; set; }
 
-        public GoodsTypes? GoodsTypes { get; set; }
+        public GoodsTypesEntity? GoodsTypes { get; set; }
         public TasksEntitiesTransfer? TasksEntitiesTransfer { get; }
 
     }

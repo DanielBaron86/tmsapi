@@ -87,7 +87,7 @@ namespace TasksAPI.Services
 
         public async Task<LocationTypesModel> CreateLocationType(CreateLocationTypesModel locationUnitModel)
         {
-            var location = _mapper.Map<LocationTypes>(locationUnitModel);
+            var location = _mapper.Map<LocationTypesEntity>(locationUnitModel);
 
             await _DBContext.LocationEntity.AddAsync(location, CancellationToken.None);
             await _DBContext.SaveChangesAsync(CancellationToken.None);

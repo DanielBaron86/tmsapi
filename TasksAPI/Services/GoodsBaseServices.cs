@@ -25,7 +25,7 @@ public class GoodsBaseServices : IGoodsBaseServices
             
             
             
-        var collection = _dbContext.GoodModelBaseType.AsEnumerable() as IQueryable<GoodModelBaseType>;
+        var collection = _dbContext.GoodModelBaseType.AsEnumerable() as IQueryable<GoodModelBaseTypeEntity>;
             
         var totalItemCount = await collection.CountAsync();
         var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
@@ -42,13 +42,13 @@ public class GoodsBaseServices : IGoodsBaseServices
     
     public  async Task<GoodBaseTypeModel> CreateBaseType(CreateGoodBaseTypeModel goodBaseModel)
     {
-        var goodBaseToBeCreated = _mapper.Map<GoodModelBaseType>(goodBaseModel);
+        var goodBaseToBeCreated = _mapper.Map<GoodModelBaseTypeEntity>(goodBaseModel);
         _dbContext.Add(goodBaseToBeCreated);
         await _dbContext.SaveChangesAsync(CancellationToken.None);
 
         return _mapper.Map<GoodBaseTypeModel>(goodBaseToBeCreated);
     }
-    public async Task<GoodBaseTypeModel> UpdateBaseType(int goodId, CreateGoodBaseTypeModel goodBaseModel)
+    public async Task<GoodBaseTypeModel> UpdateBaseType(int goodId, UpdateGoodBaseTypeModel goodBaseModel)
     {
         var itemToBeUpdated = await _dbContext.GoodModelBaseType.FirstOrDefaultAsync(g => g.Id == goodId) ?? throw new ArgumentException("Item not found");
             

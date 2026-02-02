@@ -9,6 +9,7 @@ namespace TasksAPI.Models
         public int Id { get; set; }
         public string Description { get; set; } = default!;
         public string Manufacturer { get; set; } = default!;
+        public int InventoryKey { get; set; }
         
     }
 
@@ -18,6 +19,8 @@ namespace TasksAPI.Models
         public string Description { get; set; } = default!;
         [JsonRequired]
         public string Manufacturer { get; set; } = default!;
+        [JsonRequired]
+        public int InventoryKey { get; set; }
     }
     
     public class UpdateGoodBaseTypeModel
@@ -30,12 +33,12 @@ namespace TasksAPI.Models
 
     public class GoodsModels : BaseModel
     {
-
         public int Id { get; set; }
         public int GoodModelId { get; set; }
         public Decimal Price { get; set; }
         public string SerialNumber { get; set; } = default!;
         public int LocationId { get; set; }
+        public int Quantity { get; set; }
 
         public GoodsStatus Status { get; set; }
         public GoodsTypesModel? GoodsTypes { get; set; }
@@ -62,6 +65,7 @@ namespace TasksAPI.Models
         public int UserId { get; set; }
         [JsonRequired]
         public int GoodModelId { get; set; }
+        public int Quantity { get; set; }
         public ICollection<FulfillGoodsModels>? FulfillGoodsModels { get; set; } = new List<FulfillGoodsModels>();
     }
 
@@ -71,6 +75,7 @@ namespace TasksAPI.Models
         public Decimal Price { get; set; }
         [JsonRequired]
         public string SerialNumber { get; set; } = default!;
+        public int Quantity { get; set; }
     }
 
     public class FulfillTransferTask
@@ -91,6 +96,7 @@ namespace TasksAPI.Models
         public string SerialNumber { get; set; } = default!;
         [JsonRequired]
         public int LocationId { get; set; }
+        public int Quantity { get; set; }
         public GoodsStatus Status { get; set; } = GoodsStatus.AVAILABLE;
     }
 
@@ -104,6 +110,7 @@ namespace TasksAPI.Models
         public string SerialNumber { get; set; } = default!;
         [JsonRequired]
         public int LocationId { get; set; }
+        public int Quantity { get; set; }
         [JsonRequired]
         public GoodsStatus Status { get; set; }
     }
@@ -114,6 +121,7 @@ namespace TasksAPI.Models
         public int ClerkId { get; set; }
         [JsonRequired]
         public int ReturnLocation { get; set; }
+        public int Quantity { get; set; }
         [JsonRequired]
         public ICollection<int> GoodId { get; set; }
     }
@@ -126,6 +134,7 @@ namespace TasksAPI.Models
         public int StoreLocation { get; set; }
         [JsonRequired]
         public int GoodId { get; set; }
+        public int Quantity { get; set; }
         [JsonRequired]
         public Decimal Price { get; set; }
     }
@@ -137,6 +146,7 @@ namespace TasksAPI.Models
         public int GoodId { get; set; }
         [JsonRequired]
         public Decimal Price { get; set; }
+        public int Quantity { get; set; }
         [JsonRequired]
         public GoodsStatus Status { get; set; }
     }

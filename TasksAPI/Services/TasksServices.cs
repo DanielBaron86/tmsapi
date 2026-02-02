@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TasksAPI.DataBaseContext;
 using TasksAPI.Entities;
@@ -24,26 +24,20 @@ namespace TasksAPI.Services
 
         public async Task<IEnumerable<TasksModel>> GetAllTasks(int? taskType, int? taskStatus)
         {
-
+            Expression<Func<TasksModel, bool>> processingFunc  = p => 1 ==1;
             if (taskType != null && taskStatus == null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
-                    .Include( t => t.Creator)
-                    .Where(t => (int)t.TaskType == taskType).AsSplitQuery().ToListAsync());
+               processingFunc  = p => (int)p.TaskType == taskType;
             }
 
             if (taskStatus != null && taskType == null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities
-                    .Include( t => t.Creator)
-                    .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
+                 processingFunc  = p => (int)p.TaskStatus == taskStatus;
             }
 
             if (taskStatus != null && taskType != null)
             {
-                return _mapper.Map<IEnumerable<TasksModel>>(await _DBContext.TasksEntities.Where(t => (int)t.TaskType == taskType)
-                    .Include( t => t.Creator)
-                    .Where(t => (int)t.TaskStatus == taskStatus).AsSplitQuery().ToListAsync());
+                processingFunc  = p => (int)p.TaskStatus == taskStatus && (int)p.TaskType == taskType;
             }
 
             var q = await _DBContext.TasksEntities
@@ -59,6 +53,7 @@ namespace TasksAPI.Services
                  CreatedDate = t.CreatedDate,
                  UpdatedDate = t.UpdatedDate,
                 })
+                .Where(processingFunc)
                 .AsSplitQuery()
                 .ToListAsync();
             return _mapper.Map<IEnumerable<TasksModel>>(q);
@@ -66,7 +61,19 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> GetTasksByID(int taskID)
         {
-            var t = await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
+            var t = await _DBContext.TasksEntities
+                .Select( t => new TasksModel
+                {
+                    Id = t.Id,
+                    TaskType = t.TaskType,
+                    TaskStatus = t.TaskStatus,
+                    Description = t.Description,
+                    CreatorId = t.CreatorId,
+                    UserName = t.Creator.Username,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedDate = t.UpdatedDate,
+                })
+                .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
 
             return _mapper.Map<TasksModel>(t);
         }
@@ -87,7 +94,7 @@ namespace TasksAPI.Services
                 .Where( t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
                 .FirstOrDefaultAsync( t => t.Id == taskModel.CreatorId) ?? throw new ArgumentException($"User {taskModel.CreatorId} not found or inactive");
 
-            var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.CreatorId };
+            var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.CreatorId, UserName = taskModel.UserName };
             var createdTask = await CreateTask(newTaskToCreate);
 
 
@@ -105,7 +112,7 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> CreateTask(CreateTasksModel newTask)
         {
-            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, CreatorId = newTask.UserId };
+            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, CreatorId = newTask.UserId ,UserName = newTask.UserName };
 
             await _DBContext.TasksEntities.AddAsync(createEntity);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -132,7 +139,7 @@ namespace TasksAPI.Services
 
         public async Task<TasksModelWithTransfer> GetTasksModelWithTransferTasksByID(int taskID)
         {
-            var t = await _DBContext.TasksEntities.Include(t => t.TasksEntitiesTransfer).FirstOrDefaultAsync(t => t.Id == taskID);
+            var t = await _DBContext.TasksEntities.Include(t => t.TasksEntitiesTransferList).FirstOrDefaultAsync(t => t.Id == taskID);
             if (t == null || t.TaskType != TaskTypes.TRANSFER)
             {
                throw new ArgumentException("Task not found");
@@ -163,7 +170,7 @@ namespace TasksAPI.Services
                 .Where(t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
                 .FirstOrDefaultAsync(t => t.Id == taskModel.CreatorId) ?? throw new ArgumentException($"User {taskModel.CreatorId} not found or inactive");
 
-            var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, UserId = taskModel.CreatorId, Description = taskModel.Description };
+            var newTaskToCreate = new CreateTasksModel { TaskType = TaskTypes.TRANSFER, UserId = taskModel.CreatorId, Description = taskModel.Description, UserName = taskModel.UserName };
             var createdTask = await CreateTask(newTaskToCreate);
             var returnValue = await AddItemsToTransferTask(createdTask.Id, taskModel.GoodsTransfer, false);
             return returnValue;
@@ -171,6 +178,7 @@ namespace TasksAPI.Services
 
         public async Task<ReturnTransferTask> AddItemsToTransferTask(int taskID, GoodsTransfer GoodsOrder, bool checkTask = true)
         {
+            
             var rejected = new List<RejectedGoodsTransfer>();
 
 
@@ -189,7 +197,15 @@ namespace TasksAPI.Services
             foreach (var order in GoodsOrder.GoodId.Except(existingTransfers))
             {
                 var transferedItem = await _goodsInstancesService.GetGoodById(order);
-
+                
+                var fromLocation = await _DBContext.LocationTypesInstances
+                    .Where(l => l.Id == transferedItem.LocationId).FirstAsync();
+                var toLocation = await _DBContext.LocationTypesInstances
+                    .Where(l => l.Id == GoodsOrder.ToLocation).FirstAsync();
+                if (toLocation == null)
+                {
+                    rejected.Add(new RejectedGoodsTransfer { GoodId = order, SerialNumber = transferedItem.SerialNumber, ToLocation = GoodsOrder.ToLocation, Reason = "Destination not found" });
+                }
 
                 if (transferedItem == null)
                 {
@@ -204,21 +220,20 @@ namespace TasksAPI.Services
                     }
                     else
                     {
-
                         await _goodsInstancesService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.CreatorId); 
                         
                         var markForTransfer = new JsonPatchDocument();
                         markForTransfer.Replace("Status", (int)GoodsStatus.IN_TRANSIT);
                         await _goodsInstancesService.PatchGood(order, markForTransfer);
                         
-                        await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.SerialNumber });
+                        await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.SerialNumber, FromLocationName = fromLocation.Description, ToLocationName = toLocation.Description});
                         await _DBContext.SaveChangesAsync(CancellationToken.None);
                     }
                 }
 
 
             }
-            var result = _mapper.Map<TasksModelWithTransfer>(await _DBContext.TasksEntities.Include(t => t.TasksEntitiesTransfer).FirstOrDefaultAsync(t => t.Id == taskID));
+            var result = _mapper.Map<TasksModelWithTransfer>(await _DBContext.TasksEntities.Include(t => t.TasksEntitiesTransferList).FirstOrDefaultAsync(t => t.Id == taskID));
             var returnValue = new ReturnTransferTask { TasksModelWithTransfer = result, RejectedGoodsTransfer = rejected };
 
             return returnValue;
@@ -247,12 +262,45 @@ namespace TasksAPI.Services
 
         public async Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks()
         {
-            return _mapper.Map<IEnumerable<TasksModelWithProcurements>>(await _DBContext.TasksEntities.Where(t => t.TaskType == TaskTypes.PROCUREMENT).Include(t => t.TasksEntitiesProcurements).ToListAsync());
+            var tasks = await _DBContext.TasksEntities
+                .Include(t => t.TasksEntitiesTransferList)
+                .Where(task => task.TaskType == TaskTypes.PROCUREMENT)
+                .Select( t => new TasksEntities {
+                    Id = t.Id,
+                    TaskType = t.TaskType,
+                    TaskStatus = t.TaskStatus,
+                    Description = t.Description,
+                    CreatorId = t.CreatorId,
+                    UserName = t.Creator.Username,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedDate = t.UpdatedDate,
+                    TasksEntitiesProcurements = t.TasksEntitiesProcurements.Where( r => r.TaskID == t.Id ).ToList(),
+                })
+                .ToListAsync();
+            
+            return _mapper.Map<IEnumerable<TasksModelWithProcurements>>(tasks);
         }
 
         public async Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks()
         {
-            return _mapper.Map<IEnumerable<TasksModelWithTransfer>>(await _DBContext.TasksEntities.Where(t => t.TaskType == TaskTypes.TRANSFER).Include(t => t.TasksEntitiesTransfer).ToListAsync());
+
+            var tasks = await _DBContext.TasksEntities
+                .Include(t => t.TasksEntitiesTransferList)
+                .Where(task => task.TaskType == TaskTypes.TRANSFER)
+                .Select( t => new TasksEntities {
+                    Id = t.Id,
+                    TaskType = t.TaskType,
+                    TaskStatus = t.TaskStatus,
+                    Description = t.Description,
+                    CreatorId = t.CreatorId,
+                    UserName = t.Creator.Username,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedDate = t.UpdatedDate,
+                    TasksEntitiesTransferList = t.TasksEntitiesTransferList.Where( r => r.TaskID == t.Id ).ToList(),
+                })
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<TasksModelWithTransfer>>(tasks);
         }
 
         public async Task<IEnumerable<TasksEntities_TransferModel>> UpdateTransferSubTasks(IEnumerable<TransferSubtaskModelForUpdate> taskModel)

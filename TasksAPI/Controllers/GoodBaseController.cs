@@ -76,7 +76,7 @@ namespace TasksAPI.Controllers
         /// <param name="goodBaseModel"></param>
         /// <returns></returns>
         [HttpPut("{baseGoodId}")]
-        public async Task<ActionResult<GoodsModels>> UpdateBaseGoods(int baseGoodId, CreateGoodBaseTypeModel goodBaseModel)
+        public async Task<ActionResult<GoodBaseTypeModel>> UpdateBaseGoods(int baseGoodId, UpdateGoodBaseTypeModel goodBaseModel)
         {
             try
             {

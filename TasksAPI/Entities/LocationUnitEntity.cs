@@ -18,7 +18,7 @@ namespace TasksAPI.Entities
         [Required]
         public string Description { get; set; } = default!;
 
-        public LocationTypes LocationTypes { get; set; } = default!;
+        public LocationTypesEntity LocationTypesEntity { get; set; } = default!;
 
         public ICollection<GoodsTypesInstances>? GoodsTypesInstances { get; }
         public ICollection<TasksEntitiesTransfer>? TasksEntitiesTransfer { get; set; }
