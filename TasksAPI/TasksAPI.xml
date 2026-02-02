@@ -142,7 +142,7 @@
             <param name="goodBaseModel"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodBaseController.UpdateBaseGoods(System.Int32,TasksAPI.Models.CreateGoodBaseTypeModel)">
+        <member name="M:TasksAPI.Controllers.GoodBaseController.UpdateBaseGoods(System.Int32,TasksAPI.Models.UpdateGoodBaseTypeModel)">
             <summary>
             Update Existing Good Base Good
             </summary>
@@ -615,16 +615,16 @@
             </summary>
             <param name="options"></param>
         </member>
-        <member name="T:TasksAPI.Migrations.Initial">
+        <member name="T:TasksAPI.Migrations.Init">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:TasksAPI.Migrations.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:TasksAPI.Migrations.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:TasksAPI.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:TasksAPI.Migrations.Views">
@@ -646,6 +646,42 @@
             <inheritdoc />
         </member>
         <member name="M:TasksAPI.Migrations.ItemsView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.InventoryKey">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.InventoryKey.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.InventoryKey.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.InventoryKey.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.Quantity">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Quantity.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Quantity.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Quantity.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.Tables">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Tables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Tables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.Tables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

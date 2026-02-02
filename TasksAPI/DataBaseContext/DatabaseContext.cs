@@ -18,13 +18,13 @@ namespace TasksAPI.DataBaseContext
         /// <param name="options"></param>
         public DatabaseConnectContext(DbContextOptions<DatabaseConnectContext> options) : base(options) { }
 
+        public DbSet<UserTypes> UserTypes { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<Accounts> Accounts { get; set; }
-        public DbSet<UserTypes> UserTypes { get; set; }
+        public DbSet<LocationTypesEntity> LocationEntity { get; set; }
         public DbSet<LocationTypesInstances> LocationTypesInstances { get; set; }
-        public DbSet<LocationTypes> LocationEntity { get; set; }
-        public DbSet<GoodsTypes> GoodsTypes { get; set; }
-        public DbSet<GoodModelBaseType> GoodModelBaseType { get; set; }
+        public DbSet<GoodModelBaseTypeEntity> GoodModelBaseType { get; set; }
+        public DbSet<GoodsTypesEntity> GoodsTypes { get; set; }
         public DbSet<GoodsTypesInstances> GoodsTypesInstances { get; set; }
         public DbSet<TasksEntities> TasksEntities { get; set; }
         public DbSet<TasksEntitiesProcurements> TasksEntitiesProcurements { get; set; }
@@ -51,7 +51,7 @@ namespace TasksAPI.DataBaseContext
                     eb.HasNoKey();
                     eb.ToView("v_GoodsTypes");
                     eb.Property(e => e.Id).HasColumnName("id");
-                    eb.Property(e => e.GoodModelId).HasColumnName("goodModelId");
+                    eb.Property(e => e.GoodBaseId).HasColumnName("GoodBaseId");
                     eb.Property(e => e.Name).HasColumnName("name");
                     eb.Property(e => e.Description).HasColumnName("description");
                     eb.Property(e => e.Type).HasColumnName("type");
@@ -61,16 +61,16 @@ namespace TasksAPI.DataBaseContext
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Email).IsUnique());
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Username).IsUnique());
 
-            modelBuilder.Entity<GoodsTypes>(ut => ut.HasIndex(i => i.GoodModelId ) );
+            modelBuilder.Entity<GoodsTypesEntity>(ut => ut.HasIndex(i => i.GoodBaseId ) );
 
-            modelBuilder.Entity<GoodsTypes>()
-                .HasOne(g => g.GoodModelBaseType)
+            modelBuilder.Entity<GoodsTypesEntity>()
+                .HasOne(g => g.GoodModelBaseTypeEntity)
                 .WithMany(g => g.GoodsTypesList)
-                .HasForeignKey(g => g.GoodModelId)
+                .HasForeignKey(g => g.GoodBaseId)
                 .HasPrincipalKey(g => g.Id);
                 
             
-            modelBuilder.Entity<LocationTypes>(ut => ut.HasIndex(i => i.LocationType).IsUnique());
+            modelBuilder.Entity<LocationTypesEntity>(ut => ut.HasIndex(i => i.LocationType).IsUnique());
             
 
             modelBuilder.Entity<UserEntity>()
@@ -93,7 +93,7 @@ namespace TasksAPI.DataBaseContext
                         .HasPrincipalKey(e => e.UserTypeId);
 
             modelBuilder.Entity<LocationTypesInstances>()
-                        .HasOne(e => e.LocationTypes)
+                        .HasOne(e => e.LocationTypesEntity)
                         .WithMany(e => e.LocationTypesInstances)
                         .HasForeignKey(e => e.LocationTypeID)
                         .HasPrincipalKey(e => e.LocationType);
@@ -105,7 +105,7 @@ namespace TasksAPI.DataBaseContext
 
             modelBuilder.Entity<GoodsTypesInstances>()
                         .Property(p => p.Price)
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<TasksEntitiesProcurements>()
                 .HasOne(e => e.GoodsTypes)
@@ -154,11 +154,11 @@ namespace TasksAPI.DataBaseContext
                       new UserTypes() { Id = 3, UserTypeId = (int)EnumTypes.SUPERVISOR, Description = "Supervisor" }
                   );
 
-            modelBuilder.Entity<LocationTypes>().HasData(
-                new LocationTypes() { Id = 1, LocationType = (int)LocationTypesList.WAREHOUSE, Description = "Warehouse" },
-                new LocationTypes() { Id = 2, LocationType = (int)LocationTypesList.STORE, Description = "STORE" },
-                new LocationTypes() { Id = 3, LocationType = (int)LocationTypesList.CLIENT, Description = "CLIENT" },
-                new LocationTypes() { Id = 4, LocationType = (int)LocationTypesList.SUPPLIER, Description = "SUPPLIER" }
+            modelBuilder.Entity<LocationTypesEntity>().HasData(
+                new LocationTypesEntity() { Id = 1, LocationType = (int)LocationTypesList.WAREHOUSE, Description = "Warehouse" },
+                new LocationTypesEntity() { Id = 2, LocationType = (int)LocationTypesList.STORE, Description = "STORE" },
+                new LocationTypesEntity() { Id = 3, LocationType = (int)LocationTypesList.CLIENT, Description = "CLIENT" },
+                new LocationTypesEntity() { Id = 4, LocationType = (int)LocationTypesList.SUPPLIER, Description = "SUPPLIER" }
                 );
 
 

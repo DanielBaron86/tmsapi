@@ -13,7 +13,8 @@ namespace TasksAPI.Models
         public string? Description { get; set; }
         [JsonRequired]
         public int CreatorId { get; set; }
-        public string? UserName { get; set; }
+        [JsonRequired]
+        public string UserName { get; set; }
     }
 
     public class TasksModelWithProcurements : TasksModel
@@ -23,7 +24,7 @@ namespace TasksAPI.Models
 
     public class TasksModelWithTransfer : TasksModel
     {
-        public ICollection<TasksEntities_TransferModel>? TasksEntitiesTransfer { get; set; } = new List<TasksEntities_TransferModel>();
+        public ICollection<TasksEntities_TransferModel>? TasksEntitiesTransferList { get; set; } = new List<TasksEntities_TransferModel>();
 
     }
 
@@ -91,7 +92,11 @@ namespace TasksAPI.Models
         [JsonRequired]
         public int FromLocation { get; set; }
         [JsonRequired]
+        public string FromLocationName { get; set; }
+        [JsonRequired]
         public int ToLocation { get; set; }
+        [JsonRequired]
+        public string ToLocationName { get; set; }
 
         public TaskTypesStatus? TaskStatus { get; set; }
     }
@@ -106,7 +111,11 @@ namespace TasksAPI.Models
         [JsonRequired]
         public int FromLocation { get; set; }
         [JsonRequired]
+        public string FromLocationName { get; set; }
+        [JsonRequired]
         public int ToLocation { get; set; }
+        [JsonRequired]
+        public string ToLocationName { get; set; }
 
         public TaskTypesStatus? TaskStatus { get; set; }
     }
@@ -119,6 +128,8 @@ namespace TasksAPI.Models
         public TaskTypes TaskType { get; set; }
         [JsonRequired]
         public int UserId { get; set; }
+        [JsonRequired]
+        public string UserName { get; set; }
         [JsonRequired]
         public string Description { get; set; } = string.Empty;
     }
@@ -138,6 +149,8 @@ namespace TasksAPI.Models
         [JsonRequired]
         public int CreatorId { get; set; }
         [JsonRequired]
+        public string UserName { get; set; }
+        [JsonRequired]
         public string Description { get; set; }
         public ICollection<GoodsOrder>? GoodsOrder { get; set; } = new List<GoodsOrder>();
     }
@@ -148,6 +161,8 @@ namespace TasksAPI.Models
     {
         [JsonRequired]
         public int CreatorId { get; set; }
+        [JsonRequired]
+        public string UserName { get; set; }
         [JsonRequired]
         public string? Description { get; set; }
         public GoodsTransfer? GoodsTransfer { get; set; }

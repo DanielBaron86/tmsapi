@@ -6,7 +6,7 @@ namespace TasksAPI.Models
     {
         public int Id { get; set; }
 
-        public int GoodModelId { get; set; }
+        public int GoodBaseId { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public GoodBaseTypeModel? GoodModelBaseType { get; set; }
@@ -17,7 +17,7 @@ namespace TasksAPI.Models
     public class CreateGoodsTypesModel
     {   
         [JsonRequired] 
-        public int GoodModelId { get; set; }
+        public int GoodBaseId { get; set; }
         [JsonRequired] 
         public string Name { get; set; } = default!;
         [JsonRequired] 

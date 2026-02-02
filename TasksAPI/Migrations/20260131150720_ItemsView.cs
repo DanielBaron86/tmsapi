@@ -12,7 +12,7 @@ namespace TasksAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             var sql = @"CREATE OR ALTER VIEW v_GoodsTypesInstances as
-                        select g.Id,g.GoodModelId,t.Name,g.Price,g.serialNumber,g.Status, g.LocationId,l.Description,g.CreatedDate,g.UpdatedDate
+                        select g.Id,g.GoodModelId,t.Name,g.Price,g.serialNumber,g.Status, g.LocationId,l.Description,g.Quantity, g.CreatedDate,g.UpdatedDate
                         from GoodsTypesInstances g
                         JOIN GoodsTypes t on g.GoodModelId = t.Id
                         JOIN LocationTypesInstances l on g.LocationId=l.Id";

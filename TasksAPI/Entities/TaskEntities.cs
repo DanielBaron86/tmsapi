@@ -20,8 +20,9 @@ namespace TasksAPI.Entities
         public string Description { get; set; } =string.Empty;
 
         public ICollection<TasksEntitiesProcurements>? TasksEntitiesProcurements { get; set; }
-        public ICollection<TasksEntitiesTransfer>? TasksEntitiesTransfer { get; set; }
+        public ICollection<TasksEntitiesTransfer>? TasksEntitiesTransferList { get; set; }
         public UserEntity? Creator { get; set; }
+        public string? UserName {get; set;}
 
     }
 
@@ -35,7 +36,7 @@ namespace TasksAPI.Entities
         public TasksEntities? TasksEntities { get; set; }
         public int TaskID { get; set; }
 
-        public GoodsTypes? GoodsTypes { get; set; }
+        public GoodsTypesEntity? GoodsTypes { get; set; }
 
         [ForeignKey("Location")]
         public ICollection<LocationTypesInstances>? LocationTypesInstances { get; set; }
@@ -67,7 +68,11 @@ namespace TasksAPI.Entities
         [Required]
         public int FromLocation { get; set; }
         [Required]
+        public string FromLocationName { get; set; }
+        [Required]
         public int ToLocation { get; set; }
+        [Required]
+        public string ToLocationName { get; set; }
         [Required]
         public TaskTypesStatus TaskStatus { get; set; } = TaskTypesStatus.PENDING;
     }

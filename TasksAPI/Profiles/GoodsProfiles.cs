@@ -20,13 +20,13 @@ namespace TasksAPI.Profiles
                             .ForMember(dest => dest.serialNumber, opt => opt.MapFrom(src => src.SerialNumber.ToUpper()));
 
             CreateMap<GoodsModels, UpdateGoodsModels>();
-            CreateMap<GoodsTypes, GoodsTypesModel>();
-            CreateMap<CreateGoodsTypesModel, GoodsTypes>();
-            CreateMap<UpdateGoodsTypesModel, GoodsTypes>();
+            CreateMap<GoodsTypesEntity, GoodsTypesModel>();
+            CreateMap<CreateGoodsTypesModel, GoodsTypesEntity>();
+            CreateMap<UpdateGoodsTypesModel, GoodsTypesEntity>();
             CreateMap<CreateSellGoods, AccountsGoodsEntity>();
-            CreateMap<GoodModelBaseType, GoodBaseTypeModel>();
-            CreateMap<UpdateGoodBaseTypeModel, GoodModelBaseType>();
-            CreateMap<CreateGoodBaseTypeModel, GoodModelBaseType>();
+            CreateMap<GoodModelBaseTypeEntity, GoodBaseTypeModel>();
+            CreateMap<UpdateGoodBaseTypeModel, GoodModelBaseTypeEntity>();
+            CreateMap<CreateGoodBaseTypeModel, GoodModelBaseTypeEntity>();
             CreateMap<CreateGoodBaseTypeModel, GoodBaseTypeModel>();
 
         }

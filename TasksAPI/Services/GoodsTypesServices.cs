@@ -49,7 +49,7 @@ public class GoodsTypesServices : IGoodsTypesServices
     
     public async Task<v_GoodsTypes> CreateGoodType(CreateGoodsTypesModel goodtypeModel)
     {
-        var goodToBeCreated = _mapper.Map<GoodsTypes>(goodtypeModel);
+        var goodToBeCreated = _mapper.Map<GoodsTypesEntity>(goodtypeModel);
         _dbContext.Add(goodToBeCreated);
         await _dbContext.SaveChangesAsync(CancellationToken.None);
         try

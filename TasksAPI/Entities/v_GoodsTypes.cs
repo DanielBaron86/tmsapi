@@ -5,7 +5,7 @@ namespace TasksAPI.Entities;
 public class v_GoodsTypes : BaseEntity
 {
     public int Id;
-    public int GoodModelId;
+    public int GoodBaseId;
     public string Name;
     public string Description;
     public string Type;

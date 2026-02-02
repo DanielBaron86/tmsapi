@@ -13,10 +13,10 @@ namespace TasksAPI.Profiles
             CreateMap<LocationUnitForCreate, LocationTypesInstances>();
             CreateMap<LocationUnitForUpdate, LocationTypesInstances>();
 
-            CreateMap<LocationTypesModel, LocationTypes>();
-            CreateMap<LocationTypes, LocationTypesModel>();
-            CreateMap<CreateLocationTypesModel, LocationTypes>();
-            CreateMap<EditLocationTypesModel, LocationTypes>();
+            CreateMap<LocationTypesModel, LocationTypesEntity>();
+            CreateMap<LocationTypesEntity, LocationTypesModel>();
+            CreateMap<CreateLocationTypesModel, LocationTypesEntity>();
+            CreateMap<EditLocationTypesModel, LocationTypesEntity>();
             
 
         }
