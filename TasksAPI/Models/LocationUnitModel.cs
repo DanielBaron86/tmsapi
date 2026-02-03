@@ -9,6 +9,7 @@ namespace TasksAPI.Models
         public int LocationTypeId { get; set; }
         public string Address { get; set; } = default!;
         public string Description { get; set; } = default!;
+        public LocationTypesModel LocationTypesEntity { get; set; }
     }
 
     public class LocationUnitForCreate

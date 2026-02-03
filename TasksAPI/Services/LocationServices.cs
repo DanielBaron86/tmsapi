@@ -22,7 +22,7 @@ namespace TasksAPI.Services
 
         public async Task<IEnumerable<LocationUnitModel>> GetLocations()
         {
-            var locations = await _DBContext.LocationTypesInstances.ToListAsync();
+            var locations = await _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity).ToListAsync();
             return _mapper.Map<IEnumerable<LocationUnitModel>>(locations);
         }
 

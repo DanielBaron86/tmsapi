@@ -27,7 +27,9 @@ namespace TasksAPI.Services
         {
            var collection =  _dbContext.GoodsTypesInstances
                .Include( i => i.GoodsTypes)
-               /*.Include( i => i.LocationTypesInstances)*/
+               .Include( i=> i.GoodsTypes.GoodModelBaseTypeEntity)
+               .Include( i => i.LocationTypesInstances)
+               .Include( i => i.LocationTypesInstances.LocationTypesEntity)
                as IQueryable<GoodsTypesInstances>;
 
             var totalItemCount = await collection.CountAsync();
@@ -51,8 +53,9 @@ namespace TasksAPI.Services
         public async Task<GoodsModels> GetGoodById(int goodId)
         {
             var good = await _dbContext.GoodsTypesInstances
-                .Include(i => i.GoodsTypes)
-                .Include( g => g.LocationTypesInstances).FirstOrDefaultAsync(i => i.Id == goodId);
+                .Include( g =>g.GoodsTypes)
+                .Include(g => g.LocationTypesInstances)
+                .FirstOrDefaultAsync(i => i.Id == goodId);
             return _mapper.Map<GoodsModels>(good);
         }
 
