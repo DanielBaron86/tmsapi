@@ -27,6 +27,7 @@ namespace TasksAPI.Interfaces
 
         Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodId);
         
+        Task< (IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)>GetGoodsByView(int pageNumber, int pageSize);
         
         
 

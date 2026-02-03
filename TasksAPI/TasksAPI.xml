@@ -202,6 +202,14 @@
             <param name="goodId"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.GelAllGoodsbyView(System.Int32,System.Int32)">
+            <summary>
+            Returns a list of all goods instances from a View
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.GoodTypesController.GelAllGoodTypes(System.Int32,System.Int32)">
             <summary>
             Returns a list of good types
@@ -694,6 +702,18 @@
             <inheritdoc />
         </member>
         <member name="M:TasksAPI.Migrations.GoodsView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.GoodsInstancesView">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodsInstancesView.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodsInstancesView.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.GoodsInstancesView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

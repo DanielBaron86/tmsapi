@@ -203,12 +203,20 @@ namespace TasksAPI.Services
         {
             return await _dbContext.ItemMovementEntity.Where(t => t.goodId == goodId).OrderBy(t => t.CreatedDate).ToListAsync();
         }
-        
 
+        public async Task<(IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)> GetGoodsByView(int pageNumber, int pageSize)
+        {
+            var collection = _dbContext.v_GoodsTypesInstances as IQueryable<v_GoodsTypesInstances>;
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
-        
-       
-
-        
+            var collectionReturn = await collection
+                .OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (collectionReturn,paginationMetadata);
+        }
     }
 }
