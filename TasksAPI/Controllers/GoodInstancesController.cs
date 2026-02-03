@@ -164,5 +164,31 @@ public class GoodInstancesController : ControllerBase
             }
 
         }
+        
+        /// <summary>
+        /// Returns a list of all goods instances from a View
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("view")]
+        public async Task<ActionResult<IEnumerable<v_GoodsTypesInstances>>> GelAllGoodsbyView(int pageNumber = 1, int pageSize = 10)
+        {
+            
+            try
+            {
+                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoodsByView(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                return Ok(itemInstances);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
+        }
     
 }

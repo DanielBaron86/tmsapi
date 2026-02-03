@@ -39,6 +39,9 @@ namespace TasksAPI.DataBaseContext
         public DbSet<ReportsEntitiesResults> ReportsEntitiesResults { get; set; }
         public DbSet<RefreshTokenEntity> RefreshTokenEntity { get; set; }
         public virtual DbSet<v_GoodsTypes> v_GoodsTypes { get; set; }
+        public virtual DbSet<v_GoodsTypesInstances> v_GoodsTypesInstances { get; set; }
+
+        
 
 
 
@@ -56,6 +59,25 @@ namespace TasksAPI.DataBaseContext
                     eb.Property(e => e.Description).HasColumnName("description");
                     eb.Property(e => e.Type).HasColumnName("type");
                     eb.Property(e => e.Manufacturer).HasColumnName("manufacturer");
+                });
+            
+            modelBuilder
+                .Entity<v_GoodsTypesInstances>(eb =>
+                {
+                    eb.HasNoKey();
+                    eb.ToView("v_GoodsTypesInstances");
+                    eb.Property(e => e.Id).HasColumnName("id");
+                    eb.Property(e => e.GoodModelId).HasColumnName("GoodModelId");
+                    eb.Property(e => e.GoodBaseId).HasColumnName("GoodBaseId");
+                    eb.Property(e => e.Price).HasColumnName("Price");
+                    eb.Property(e => e.LocationId).HasColumnName("LocationId");
+                    eb.Property(e => e.LocationName).HasColumnName("LocationName");
+                    eb.Property(e => e.SerialNumber).HasColumnName("SerialNumber");
+                    eb.Property(e => e.Name).HasColumnName("Name");
+                    eb.Property(e => e.Type).HasColumnName("Type");
+                    eb.Property(e => e.Manufacturer).HasColumnName("Manufacturer");
+                    eb.Property(e => e.Status).HasColumnName("Status");
+                    eb.Property(e => e.Quantity).HasColumnName("Quantity");
                 });
             
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Email).IsUnique());
