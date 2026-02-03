@@ -9,7 +9,7 @@ namespace TasksAPI.Models
         public int GoodBaseId { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
-        public GoodBaseTypeModel? GoodModelBaseType { get; set; }
+        public GoodBaseTypeModel? GoodModelBaseTypeEntity { get; set; }
 
     }
 

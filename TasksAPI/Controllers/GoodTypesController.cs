@@ -125,4 +125,25 @@ public class GoodTypesController : ControllerBase
         }
 
     }
+    
+    
+    /// <summary>
+    /// Returns a list of good types
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("entity")]
+    public async Task<ActionResult<IEnumerable<GoodsTypesModel>>> GelAllGoodTypesEntity(int pageNumber = 1, int pageSize = 10)
+    {   
+        try
+        {
+            
+            return Ok(await _goodsInstancesService.GetGoodTypesEntity());
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest(ex.Message);
+        }
+            
+    }
 }

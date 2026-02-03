@@ -11,4 +11,6 @@ public interface IGoodsTypesServices
     Task<v_GoodsTypes> CreateGoodType(CreateGoodsTypesModel goodtypeModel);
     Task<GoodsTypesModel> UpdateGoodType(int goodId, UpdateGoodsTypesModel goodType);
     Task<bool> DeleteGoodTypes(int goodId);
+    Task<IEnumerable<GoodsTypesModel>>GetGoodTypesEntity();
+    
 }

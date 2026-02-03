@@ -23,6 +23,8 @@ public class GoodsTypesServices : IGoodsTypesServices
     
     public async Task < (IEnumerable<v_GoodsTypes>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
     {
+        var tr = await _dbContext.GoodsTypes.Include( t => t.GoodModelBaseTypeEntity).ToListAsync();
+        return _mapper.Map<IEnumerable<GoodsTypesModel>>(tr);
             
         var collection = _dbContext.v_GoodsTypes as IQueryable<v_GoodsTypes>;
             
@@ -90,5 +92,11 @@ public class GoodsTypesServices : IGoodsTypesServices
             throw new ArgumentException("Unable to delete item type. Already has items instances associated");
         }
             
+    }
+
+    public async Task<IEnumerable<GoodsTypesModel>> GetGoodTypesEntity()
+    {
+        var tr = await _dbContext.GoodsTypes.Include( t => t.GoodModelBaseTypeEntity).ToListAsync();
+        return _mapper.Map<IEnumerable<GoodsTypesModel>>(tr);
     }
 }
