@@ -237,12 +237,6 @@
             <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.GoodTypesController.GelAllGoodTypesEntity(System.Int32,System.Int32)">
-            <summary>
-            Returns a list of good types
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Returns a list of existing tasks

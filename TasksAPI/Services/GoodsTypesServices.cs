@@ -21,13 +21,9 @@ public class GoodsTypesServices : IGoodsTypesServices
         _dbContext = context ?? throw new ArgumentNullException(nameof(context));
     }
     
-    public async Task < (IEnumerable<v_GoodsTypes>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
+    public async Task < (IEnumerable<GoodsTypesModel>, PaginationMetadata)>GetGoodTypes(int pageNumber, int pageSize)
     {
-        var tr = await _dbContext.GoodsTypes.Include( t => t.GoodModelBaseTypeEntity).ToListAsync();
-        return _mapper.Map<IEnumerable<GoodsTypesModel>>(tr);
-            
-        var collection = _dbContext.v_GoodsTypes as IQueryable<v_GoodsTypes>;
-            
+        var collection =  _dbContext.GoodsTypes.Include( t => t.GoodModelBaseTypeEntity)  as IQueryable<GoodsTypesEntity>;
         var totalItemCount = await collection.CountAsync();
         var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
@@ -36,7 +32,7 @@ public class GoodsTypesServices : IGoodsTypesServices
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize)
             .ToListAsync();
-        return (collectionReturn,paginationMetadata);
+        return (_mapper.Map<IEnumerable<GoodsTypesModel>>(collectionReturn),paginationMetadata);
     }
     
     public async Task<v_GoodsTypes> GetGoodTypeById(int goodId)
@@ -92,11 +88,5 @@ public class GoodsTypesServices : IGoodsTypesServices
             throw new ArgumentException("Unable to delete item type. Already has items instances associated");
         }
             
-    }
-
-    public async Task<IEnumerable<GoodsTypesModel>> GetGoodTypesEntity()
-    {
-        var tr = await _dbContext.GoodsTypes.Include( t => t.GoodModelBaseTypeEntity).ToListAsync();
-        return _mapper.Map<IEnumerable<GoodsTypesModel>>(tr);
     }
 }

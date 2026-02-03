@@ -26,7 +26,7 @@ public class GoodTypesController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<v_GoodsTypes>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<GoodsTypesModel>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
     {   
         try
         {
@@ -125,25 +125,5 @@ public class GoodTypesController : ControllerBase
         }
 
     }
-    
-    
-    /// <summary>
-    /// Returns a list of good types
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet("entity")]
-    public async Task<ActionResult<IEnumerable<GoodsTypesModel>>> GelAllGoodTypesEntity(int pageNumber = 1, int pageSize = 10)
-    {   
-        try
-        {
-            
-            return Ok(await _goodsInstancesService.GetGoodTypesEntity());
-        }
-        catch (Exception ex)
-        {
 
-            return BadRequest(ex.Message);
-        }
-            
-    }
 }
