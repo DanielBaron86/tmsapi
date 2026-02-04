@@ -55,6 +55,7 @@ namespace TasksAPI.DataBaseContext
                     eb.ToView("v_GoodsTypes");
                     eb.Property(e => e.Id).HasColumnName("id");
                     eb.Property(e => e.GoodBaseId).HasColumnName("GoodBaseId");
+                    eb.Property(e => e.InventoryKey).HasColumnName("InventoryKey");
                     eb.Property(e => e.Name).HasColumnName("name");
                     eb.Property(e => e.Description).HasColumnName("description");
                     eb.Property(e => e.Type).HasColumnName("type");

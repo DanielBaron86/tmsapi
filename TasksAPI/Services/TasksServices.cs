@@ -101,7 +101,7 @@ namespace TasksAPI.Services
             foreach (var singleGood in taskModel.GoodsOrder)
             {
 
-                var newProcurementTask = new TasksEntitiesProcurements { TaskID = createdTask.Id, GoodTypeID = singleGood.GoodTypeId, Quantity = singleGood.Quantity, RemainingQuantity = singleGood.Quantity, Location = singleGood.Location };
+                var newProcurementTask = new TasksEntitiesProcurements { TaskID = createdTask.Id, GoodTypeID = singleGood.GoodTypeId, GoodType=singleGood.GoodType, Quantity = singleGood.Quantity, RemainingQuantity = singleGood.Quantity, Location = singleGood.Location };
 
                 await _DBContext.TasksEntitiesProcurements.AddAsync(newProcurementTask);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -263,7 +263,6 @@ namespace TasksAPI.Services
         public async Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks()
         {
             var tasks = await _DBContext.TasksEntities
-                .Include(t => t.TasksEntitiesTransferList)
                 .Where(task => task.TaskType == TaskTypes.PROCUREMENT)
                 .Select( t => new TasksEntities {
                     Id = t.Id,
@@ -285,7 +284,6 @@ namespace TasksAPI.Services
         {
 
             var tasks = await _DBContext.TasksEntities
-                .Include(t => t.TasksEntitiesTransferList)
                 .Where(task => task.TaskType == TaskTypes.TRANSFER)
                 .Select( t => new TasksEntities {
                     Id = t.Id,

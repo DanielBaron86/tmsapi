@@ -59,6 +59,8 @@ namespace TasksAPI.Models
         [JsonRequired]
         public int GoodTypeId { get; set; }
         [JsonRequired]
+        public string GoodType { get; set; }
+        [JsonRequired]
         public int Location { get; set; }
         [JsonRequired]
         public int Quantity { get; set; }
@@ -72,6 +74,8 @@ namespace TasksAPI.Models
         public int Id { get; set; }
         [JsonRequired]
         public int GoodTypeId { get; set; }
+        [JsonRequired]
+        public string GoodType { get; set; }
         [JsonRequired]
         public int Location { get; set; }
         [JsonRequired]
@@ -178,6 +182,8 @@ namespace TasksAPI.Models
     {
         [JsonRequired]
         public int GoodTypeId { get; set; }
+        [JsonRequired]
+        public string GoodType { get; set; }
         [JsonRequired]
         public int Location { get; set; }
         [JsonRequired]

@@ -728,5 +728,17 @@
         <member name="M:TasksAPI.Migrations.MoveInventoryKey.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:TasksAPI.Migrations.ProcGoodType">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.ProcGoodType.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.ProcGoodType.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.ProcGoodType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

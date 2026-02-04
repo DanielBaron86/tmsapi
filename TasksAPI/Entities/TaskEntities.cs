@@ -45,6 +45,8 @@ namespace TasksAPI.Entities
         [Required]
         public int GoodTypeID { get; set; }
         [Required]
+        public string GoodType { get; set; }
+        [Required]
         public int Quantity { get; set; }
         public int RemainingQuantity { get; set; } = 0;
     }
