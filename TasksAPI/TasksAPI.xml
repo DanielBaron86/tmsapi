@@ -716,5 +716,17 @@
         <member name="M:TasksAPI.Migrations.GoodsInstancesView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:TasksAPI.Migrations.MoveInventoryKey">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.MoveInventoryKey.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.MoveInventoryKey.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.MoveInventoryKey.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

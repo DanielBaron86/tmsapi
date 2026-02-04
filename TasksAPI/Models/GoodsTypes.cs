@@ -10,6 +10,7 @@ namespace TasksAPI.Models
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public GoodBaseTypeModel? GoodModelBaseTypeEntity { get; set; }
+        public int InventoryKey { get; set; }
 
     }
 
@@ -22,6 +23,8 @@ namespace TasksAPI.Models
         public string Name { get; set; } = default!;
         [JsonRequired] 
         public string Description { get; set; } = default!;
+        [JsonRequired]
+        public int InventoryKey { get; set; }
 
     }
 

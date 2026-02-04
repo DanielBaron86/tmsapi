@@ -9,8 +9,6 @@ namespace TasksAPI.Models
         public int Id { get; set; }
         public string Description { get; set; } = default!;
         public string Manufacturer { get; set; } = default!;
-        public int InventoryKey { get; set; }
-        
     }
 
     public class CreateGoodBaseTypeModel
@@ -19,8 +17,7 @@ namespace TasksAPI.Models
         public string Description { get; set; } = default!;
         [JsonRequired]
         public string Manufacturer { get; set; } = default!;
-        [JsonRequired]
-        public int InventoryKey { get; set; }
+        
     }
     
     public class UpdateGoodBaseTypeModel
@@ -36,7 +33,7 @@ namespace TasksAPI.Models
         public int Id { get; set; }
         public int GoodModelId { get; set; }
         public Decimal Price { get; set; }
-        public string SerialNumber { get; set; } = default!;
+        public string? SerialNumber { get; set; } = default!;
         public int LocationId { get; set; }
         public int Quantity { get; set; }
 
@@ -73,8 +70,8 @@ namespace TasksAPI.Models
     {   
         [JsonRequired]
         public Decimal Price { get; set; }
+        public string? SerialNumber { get; set; } = default!;
         [JsonRequired]
-        public string SerialNumber { get; set; } = default!;
         public int Quantity { get; set; }
     }
 
@@ -93,7 +90,7 @@ namespace TasksAPI.Models
         [JsonRequired]
         public Decimal Price { get; set; }
         [JsonRequired]
-        public string SerialNumber { get; set; } = default!;
+        public string? SerialNumber { get; set; } = default!;
         [JsonRequired]
         public int LocationId { get; set; }
         public int Quantity { get; set; }
@@ -107,7 +104,7 @@ namespace TasksAPI.Models
         [JsonRequired]
         public Decimal Price { get; set; }
         [JsonRequired]
-        public string SerialNumber { get; set; } = default!;
+        public string? SerialNumber { get; set; } = default!;
         [JsonRequired]
         public int LocationId { get; set; }
         public int Quantity { get; set; }

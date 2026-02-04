@@ -19,8 +19,7 @@ namespace TasksAPI.Entities
         public LocationTypesInstances LocationTypesInstances { get; set; } = default!;
         [Required]
         public int LocationId { get; set; }
-        [Required]
-        public string serialNumber { get; set; } = default!;
+        public string? serialNumber { get; set; } = default!;
         [Required]
         public int Status { get; set; }
         public int Quantity { get; set; }

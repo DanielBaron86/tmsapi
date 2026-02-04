@@ -18,6 +18,7 @@ namespace TasksAPI.Entities
         public int GoodBaseId { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
+        public int InventoryKey { get; set; }
 
         public ICollection<GoodsTypesInstances> GoodsTypesInstances { get; set; } = default!;
         public ICollection<TasksEntitiesProcurements>? TasksEntitiesProcurements { get; set; } = default!;
@@ -31,7 +32,6 @@ namespace TasksAPI.Entities
         public int Id { get; set; }
         public string Description { get; set; } = default!;
         public string Manufacturer { get; set; } = default!;
-        public int InventoryKey { get; set; }
         public ICollection<GoodsTypesEntity> GoodsTypesList { get; set; } = default!;
     }
 }
