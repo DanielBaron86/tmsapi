@@ -38,6 +38,8 @@ namespace TasksAPI.Controllers
                 var (baseItems, paginationMetadata) = await _goodsBaseService.GetBaseGoodTypes(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+
                 return Ok(baseItems);
             }
             catch (Exception ex)

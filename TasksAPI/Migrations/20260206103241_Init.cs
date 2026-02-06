@@ -130,9 +130,10 @@ namespace TasksAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GoodModelId = table.Column<int>(type: "int", nullable: false),
+                    GoodBaseId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InventoryKey = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -140,8 +141,8 @@ namespace TasksAPI.Migrations
                 {
                     table.PrimaryKey("PK_GoodsTypes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GoodsTypes_GoodModelBaseType_GoodModelId",
-                        column: x => x.GoodModelId,
+                        name: "FK_GoodsTypes_GoodModelBaseType_GoodBaseId",
+                        column: x => x.GoodBaseId,
                         principalTable: "GoodModelBaseType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -301,10 +302,11 @@ namespace TasksAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GoodModelId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
-                    serialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    serialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -439,6 +441,7 @@ namespace TasksAPI.Migrations
                     TaskID = table.Column<int>(type: "int", nullable: false),
                     Location = table.Column<int>(type: "int", nullable: false),
                     GoodTypeID = table.Column<int>(type: "int", nullable: false),
+                    GoodType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     RemainingQuantity = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -471,7 +474,9 @@ namespace TasksAPI.Migrations
                     GoodID = table.Column<int>(type: "int", nullable: false),
                     serialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FromLocation = table.Column<int>(type: "int", nullable: false),
+                    FromLocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ToLocation = table.Column<int>(type: "int", nullable: false),
+                    ToLocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TaskStatus = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -528,10 +533,10 @@ namespace TasksAPI.Migrations
                 columns: new[] { "Id", "CreatedDate", "Description", "LocationType", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2350), "Warehouse", 1, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2350) },
-                    { 2, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2570), "STORE", 2, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2570) },
-                    { 3, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2571), "CLIENT", 3, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2572) },
-                    { 4, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2572), "SUPPLIER", 4, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2572) }
+                    { 1, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6619), "Warehouse", 1, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6620) },
+                    { 2, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6845), "STORE", 2, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6845) },
+                    { 3, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6846), "CLIENT", 3, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6846) },
+                    { 4, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6847), "SUPPLIER", 4, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(6847) }
                 });
 
             migrationBuilder.InsertData(
@@ -539,9 +544,9 @@ namespace TasksAPI.Migrations
                 columns: new[] { "Id", "CreatedDate", "Description", "UpdatedDate", "UserTypeId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 2, 17, 0, 32, 605, DateTimeKind.Utc).AddTicks(9311), "Client", new DateTime(2026, 2, 2, 17, 0, 32, 605, DateTimeKind.Utc).AddTicks(9429), 2 },
-                    { 2, new DateTime(2026, 2, 2, 17, 0, 32, 605, DateTimeKind.Utc).AddTicks(9684), "Clerk", new DateTime(2026, 2, 2, 17, 0, 32, 605, DateTimeKind.Utc).AddTicks(9684), 3 },
-                    { 3, new DateTime(2026, 2, 2, 17, 0, 32, 605, DateTimeKind.Utc).AddTicks(9685), "Supervisor", new DateTime(2026, 2, 2, 17, 0, 32, 605, DateTimeKind.Utc).AddTicks(9686), 4 }
+                    { 1, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(3516), "Client", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(3636), 2 },
+                    { 2, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(3889), "Clerk", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(3889), 3 },
+                    { 3, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(3891), "Supervisor", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(3891), 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -549,12 +554,12 @@ namespace TasksAPI.Migrations
                 columns: new[] { "Id", "Address", "CreatedDate", "Description", "LocationTypeID", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "Iasi", new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2771), "MAIN Warehouse", 1, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2772) },
-                    { 2, "Iasi", new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2986), "Iasi Mall", 2, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2986) },
-                    { 3, "Suceava", new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2987), "Suceava Mall", 2, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2987) },
-                    { 4, "Client", new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2988), "Goods Assigned to clients", 3, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2988) },
-                    { 5, "Iasi", new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2989), "Returned Items", 1, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2989) },
-                    { 6, "Iasi", new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2990), "Item Supplier", 4, new DateTime(2026, 2, 2, 17, 0, 32, 606, DateTimeKind.Utc).AddTicks(2990) }
+                    { 1, "Iasi", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7014), "MAIN Warehouse", 1, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7015) },
+                    { 2, "Iasi", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7229), "Iasi Mall", 2, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7229) },
+                    { 3, "Suceava", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7231), "Suceava Mall", 2, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7231) },
+                    { 4, "Client", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7232), "Goods Assigned to clients", 3, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7232) },
+                    { 5, "Iasi", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7233), "Returned Items", 1, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7233) },
+                    { 6, "Iasi", new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7234), "Item Supplier", 4, new DateTime(2026, 2, 6, 10, 32, 41, 608, DateTimeKind.Utc).AddTicks(7234) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -583,9 +588,9 @@ namespace TasksAPI.Migrations
                 column: "CashRegisterID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GoodsTypes_GoodModelId",
+                name: "IX_GoodsTypes_GoodBaseId",
                 table: "GoodsTypes",
-                column: "GoodModelId");
+                column: "GoodBaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GoodsTypesInstances_GoodModelId",

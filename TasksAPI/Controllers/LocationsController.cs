@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using TasksAPI.Interfaces;
@@ -14,23 +15,38 @@ namespace TasksAPI.Controllers
 
     public class LocationsController : ControllerBase
     {
+        const int MaxPagesSize = 100;
+        
         private readonly ILocationService _locationService;
         public LocationsController(ILocationService locationService)
         {
             _locationService = locationService;
         }
-        /// <summary>
-        /// Get a list of all locations
-        /// </summary>
-        ///<response code="200">return list of locations</response>
+
+        ///  <summary>
+        ///  Get a list of all locations
+        ///  </summary>
+        ///  <param name="pageNumber"></param>
+        ///  <param name="pageSize"></param>
+        ///  <response code="200">return list of locations</response>
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<LocationTypesModel>>> GetAll()
+        public async Task<ActionResult<IEnumerable<LocationTypesModel>>> GetAll(int pageNumber = 1, int pageSize = 10)
         {
+            try
+            {
+                if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
+                var (goodTypes, paginationMetadata) = await _locationService.GetLocations(pageNumber, pageSize);
 
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(goodTypes);
+            }
+            catch (Exception ex)
+            {
 
-            return Ok(await _locationService.GetLocations());
-
+                return BadRequest(ex.Message);
+            }
         }
 
 

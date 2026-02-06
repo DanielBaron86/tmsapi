@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using TasksAPI.Models;
+using TasksAPI.Services;
 
 namespace TasksAPI.Interfaces
 {
     public interface ILocationService
     {
-        Task<IEnumerable<LocationUnitModel>> GetLocations();
+  
+        Task< (IEnumerable<LocationUnitModel>, PaginationMetadata)>    GetLocations(int pageNumber, int pageSize);
         Task<IEnumerable<LocationTypesModel>> GetLocationTypess();
 
         Task<LocationUnitModel> GetLocationById(int locationID);

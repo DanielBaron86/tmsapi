@@ -13,7 +13,7 @@ namespace TasksAPI.Controllers;
 
 public class GoodTypesController : ControllerBase
 {
-    const int MaxCitiesPagesSize = 20;
+    const int MaxPagesSize = 100;
     private readonly IGoodsTypesServices _goodsInstancesService;
     
     public GoodTypesController(IConfiguration configuration, IGoodsTypesServices goodsInstancesServices)
@@ -30,10 +30,11 @@ public class GoodTypesController : ControllerBase
     {   
         try
         {
-            if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+            if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
             var (goodTypes, paginationMetadata) = await _goodsInstancesService.GetGoodTypes(pageNumber, pageSize);
 
             Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
             return Ok(goodTypes);
         }
         catch (Exception ex)

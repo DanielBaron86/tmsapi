@@ -343,11 +343,13 @@
             <param name="taskID"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.LocationsController.GetAll">
+        <member name="M:TasksAPI.Controllers.LocationsController.GetAll(System.Int32,System.Int32)">
              <summary>
              Get a list of all locations
              </summary>
-            <response code="200">return list of locations</response>
+             <param name="pageNumber"></param>
+             <param name="pageSize"></param>
+             <response code="200">return list of locations</response>
         </member>
         <member name="M:TasksAPI.Controllers.LocationsController.GetAllLocationType">
             <summary>
@@ -635,109 +637,22 @@
         <member name="M:TasksAPI.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:TasksAPI.Migrations.Views">
+        <member name="T:TasksAPI.Migrations.ItemTypeView">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.Views.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:TasksAPI.Migrations.ItemTypeView.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.Views.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:TasksAPI.Migrations.ItemTypeView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:TasksAPI.Migrations.ItemsView">
+        <member name="T:TasksAPI.Migrations.ItemInstanceView">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.ItemsView.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:TasksAPI.Migrations.ItemInstanceView.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:TasksAPI.Migrations.ItemsView.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.ItemsView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.InventoryKey">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.InventoryKey.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.InventoryKey.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.InventoryKey.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.Quantity">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.Quantity.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.Quantity.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.Quantity.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.Tables">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.Tables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.Tables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.Tables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.GoodsView">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodsView.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodsView.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodsView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.GoodsInstancesView">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodsInstancesView.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodsInstancesView.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.GoodsInstancesView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.MoveInventoryKey">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.MoveInventoryKey.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.MoveInventoryKey.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.MoveInventoryKey.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:TasksAPI.Migrations.ProcGoodType">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.ProcGoodType.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.ProcGoodType.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:TasksAPI.Migrations.ProcGoodType.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:TasksAPI.Migrations.ItemInstanceView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

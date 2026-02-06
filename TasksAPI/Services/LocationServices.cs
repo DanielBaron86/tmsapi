@@ -20,10 +20,18 @@ namespace TasksAPI.Services
         }
 
 
-        public async Task<IEnumerable<LocationUnitModel>> GetLocations()
+        public async Task < (IEnumerable<LocationUnitModel>, PaginationMetadata)> GetLocations(int pageNumber, int pageSize)
         {
-            var locations = await _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity).ToListAsync();
-            return _mapper.Map<IEnumerable<LocationUnitModel>>(locations);
+            var collection =  _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity) as IQueryable<LocationTypesInstances>;
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+            var collectionReturn = await collection
+                .OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn),paginationMetadata);
+            
         }
 
         public async Task<LocationUnitModel> GetLocationById(int locationID)

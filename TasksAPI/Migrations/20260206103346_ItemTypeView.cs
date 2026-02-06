@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TasksAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Views : Migration
+    public partial class ItemTypeView : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,5 @@ namespace TasksAPI.Migrations
         {
             migrationBuilder.Sql(@"DROP VIEW v_GoodsTypes");
         }
-
-        
     }
 }
