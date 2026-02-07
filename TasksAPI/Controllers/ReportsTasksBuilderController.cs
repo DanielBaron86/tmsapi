@@ -15,6 +15,7 @@ namespace TasksAPI.Controllers
     [SwaggerControllerOrder(2)]
     public class ReportsTasksBuilderController : ControllerBase
     {
+        const int MaxPagesSize = 100;
         private readonly IReportsServices _ReportsServices;
         
         public ReportsTasksBuilderController(IReportsServices reportsServices)

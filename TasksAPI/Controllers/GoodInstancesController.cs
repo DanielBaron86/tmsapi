@@ -14,7 +14,7 @@ namespace TasksAPI.Controllers;
 
 public class GoodInstancesController : ControllerBase
 {
-    const int MaxCitiesPagesSize = 20;
+    const int MaxPagesSize = 100;
     private readonly IGoodsInstancesServices _goodsInstancesService;
     
     public GoodInstancesController(IConfiguration configuration, IGoodsInstancesServices goodsInstancesServices)
@@ -94,7 +94,7 @@ public class GoodInstancesController : ControllerBase
             
             try
             {
-                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
                 var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoods(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
@@ -177,7 +177,7 @@ public class GoodInstancesController : ControllerBase
             
             try
             {
-                if (pageSize > MaxCitiesPagesSize) pageSize = MaxCitiesPagesSize;
+                if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
                 var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoodsByView(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));

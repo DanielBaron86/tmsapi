@@ -245,7 +245,7 @@
             <param name="goodId"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetAllTasks(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Int32)">
             <summary>
             Returns a list of existing tasks
             taskType 1 = PROCUREMENT, 2 = TRANSFER.

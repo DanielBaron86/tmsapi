@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasksAPI.Configuration;
 using TasksAPI.Interfaces;
@@ -15,7 +16,7 @@ namespace TasksAPI.Controllers
 
     public class InventoryTasksBuilderController : ControllerBase
     {
-
+        const int PagesSize = 100;
         private readonly ITasksService _tasksServices;
 
 
@@ -34,10 +35,23 @@ namespace TasksAPI.Controllers
         /// <returns></returns>
         /// <response code="200">return list of tasks</response>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TasksModel>>> GetAllTasks(int? taskType, int? taskStatus)
+        public async Task<ActionResult<IEnumerable<TasksModel>>> GetAllTasks(int? taskType, int? taskStatus,int pageNumber = 1, int pageSize = 10)
         {
+            try
+            {
+                if (pageSize > PagesSize) pageSize = PagesSize;
+                var (tasksModels, paginationMetadata) = await  _tasksServices.GetAllTasks(taskType, taskStatus,pageNumber, pageSize);
 
-            return Ok(await _tasksServices.GetAllTasks(taskType, taskStatus));
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(tasksModels);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+           
         }
 
         /** Generic Tasks **/

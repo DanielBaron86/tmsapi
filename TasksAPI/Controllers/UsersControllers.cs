@@ -17,6 +17,7 @@ namespace TasksAPI.Controllers
 
     public class UsersControllers : ControllerBase
     {
+        const int MaxPagesSize = 100;
 
         private readonly IUserService _userService;
 

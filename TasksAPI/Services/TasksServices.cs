@@ -22,41 +22,69 @@ namespace TasksAPI.Services
             _goodsInstancesService = goodsInstancesService ?? throw new ArgumentNullException(nameof(goodsInstancesService));
         }
 
-        public async Task<IEnumerable<TasksModel>> GetAllTasks(int? taskType, int? taskStatus)
+        public async  Task< (IEnumerable<TasksModel>, PaginationMetadata)>  GetAllTasks(int? taskType, int? taskStatus,int pageNumber, int pageSize)
         {
-            Expression<Func<TasksModel, bool>> processingFunc  = p => 1 ==1;
-            if (taskType != null && taskStatus == null)
-            {
-               processingFunc  = p => (int)p.TaskType == taskType;
-            }
-
-            if (taskStatus != null && taskType == null)
-            {
-                 processingFunc  = p => (int)p.TaskStatus == taskStatus;
-            }
-
-            if (taskStatus != null && taskType != null)
-            {
-                processingFunc  = p => (int)p.TaskStatus == taskStatus && (int)p.TaskType == taskType;
-            }
-
-            var q = await _DBContext.TasksEntities
+          
+            Expression<Func<TasksEntities, bool>> processingFunc = p =>
+                (taskType == null || (int)p.TaskType == taskType) &&
+                (taskStatus == null || (int)p.TaskStatus == taskStatus);
+            
+            var collection = _DBContext.TasksEntities.Where(processingFunc)
                 .Include(t => t.Creator)
-                .Select( t => new TasksModel
-                {
-                 Id = t.Id,
-                 TaskType = t.TaskType,
-                 TaskStatus = t.TaskStatus,
-                 Description = t.Description,
-                 CreatorId = t.CreatorId,
-                 UserName = t.Creator.Username,
-                 CreatedDate = t.CreatedDate,
-                 UpdatedDate = t.UpdatedDate,
-                })
-                .Where(processingFunc)
-                .AsSplitQuery()
+                as IQueryable<TasksEntities>;
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+            
+            var collectionReturn = await collection
+                .OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
                 .ToListAsync();
-            return _mapper.Map<IEnumerable<TasksModel>>(q);
+            
+            return (_mapper.Map<IEnumerable<TasksModel>>(collectionReturn),paginationMetadata);
+            
+        }
+        
+        public async Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks()
+        {
+            var tasks = await _DBContext.TasksEntities
+                .Where(task => task.TaskType == TaskTypes.PROCUREMENT)
+                .Select( t => new TasksEntities {
+                    Id = t.Id,
+                    TaskType = t.TaskType,
+                    TaskStatus = t.TaskStatus,
+                    Description = t.Description,
+                    CreatorId = t.CreatorId,
+                    UserName = t.Creator.Username,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedDate = t.UpdatedDate,
+                    TasksEntitiesProcurements = t.TasksEntitiesProcurements.Where( r => r.TaskID == t.Id ).ToList(),
+                })
+                .ToListAsync();
+            
+            return _mapper.Map<IEnumerable<TasksModelWithProcurements>>(tasks);
+        }
+        
+        public async Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks()
+        {
+
+            var tasks = await _DBContext.TasksEntities
+                .Where(task => task.TaskType == TaskTypes.TRANSFER)
+                .Select( t => new TasksEntities {
+                    Id = t.Id,
+                    TaskType = t.TaskType,
+                    TaskStatus = t.TaskStatus,
+                    Description = t.Description,
+                    CreatorId = t.CreatorId,
+                    UserName = t.Creator.Username,
+                    CreatedDate = t.CreatedDate,
+                    UpdatedDate = t.UpdatedDate,
+                    TasksEntitiesTransferList = t.TasksEntitiesTransferList.Where( r => r.TaskID == t.Id ).ToList(),
+                })
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<TasksModelWithTransfer>>(tasks);
         }
 
         public async Task<TasksModel> GetTasksByID(int taskID)
@@ -259,47 +287,7 @@ namespace TasksAPI.Services
 
             return _mapper.Map<IEnumerable<ProcurementsSubtaskModel>>(await _DBContext.TasksEntitiesProcurements.Where(t => idList.Contains(t.Id)).ToListAsync());
         }
-
-        public async Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks()
-        {
-            var tasks = await _DBContext.TasksEntities
-                .Where(task => task.TaskType == TaskTypes.PROCUREMENT)
-                .Select( t => new TasksEntities {
-                    Id = t.Id,
-                    TaskType = t.TaskType,
-                    TaskStatus = t.TaskStatus,
-                    Description = t.Description,
-                    CreatorId = t.CreatorId,
-                    UserName = t.Creator.Username,
-                    CreatedDate = t.CreatedDate,
-                    UpdatedDate = t.UpdatedDate,
-                    TasksEntitiesProcurements = t.TasksEntitiesProcurements.Where( r => r.TaskID == t.Id ).ToList(),
-                })
-                .ToListAsync();
-            
-            return _mapper.Map<IEnumerable<TasksModelWithProcurements>>(tasks);
-        }
-
-        public async Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks()
-        {
-
-            var tasks = await _DBContext.TasksEntities
-                .Where(task => task.TaskType == TaskTypes.TRANSFER)
-                .Select( t => new TasksEntities {
-                    Id = t.Id,
-                    TaskType = t.TaskType,
-                    TaskStatus = t.TaskStatus,
-                    Description = t.Description,
-                    CreatorId = t.CreatorId,
-                    UserName = t.Creator.Username,
-                    CreatedDate = t.CreatedDate,
-                    UpdatedDate = t.UpdatedDate,
-                    TasksEntitiesTransferList = t.TasksEntitiesTransferList.Where( r => r.TaskID == t.Id ).ToList(),
-                })
-                .ToListAsync();
-
-            return _mapper.Map<IEnumerable<TasksModelWithTransfer>>(tasks);
-        }
+        
 
         public async Task<IEnumerable<TasksEntities_TransferModel>> UpdateTransferSubTasks(IEnumerable<TransferSubtaskModelForUpdate> taskModel)
         {

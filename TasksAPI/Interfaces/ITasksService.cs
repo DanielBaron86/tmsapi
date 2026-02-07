@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using TasksAPI.Entities;
 using TasksAPI.Models;
+using TasksAPI.Services;
 
 namespace TasksAPI.Interfaces
 {
     public interface ITasksService
     {
 
-        public Task<IEnumerable<TasksModel>> GetAllTasks(int? taskType, int? taskStatus);
+        public Task< (IEnumerable<TasksModel>, PaginationMetadata)>  GetAllTasks(int? taskType, int? taskStatus,int pageNumber, int pageSize);
         public Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks();
         public Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks();
         public Task<TasksModel> GetTasksByID(int taskID);

@@ -14,7 +14,7 @@ namespace TasksAPI.Controllers
     public class GoodBaseController : ControllerBase
     {
 
-        const int MaxCitiesPagesSize = 1000;
+        const int MaxPagesSize = 1000;
         private readonly IGoodsBaseServices _goodsBaseService;
 
         public GoodBaseController(IConfiguration configuration, IGoodsBaseServices goodsInstancesServices)
@@ -34,7 +34,7 @@ namespace TasksAPI.Controllers
         {
             try
             {
-                if (pageSize > MaxCitiesPagesSize) pageSize = 1000;
+                if (pageSize > MaxPagesSize) pageSize = 1000;
                 var (baseItems, paginationMetadata) = await _goodsBaseService.GetBaseGoodTypes(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
