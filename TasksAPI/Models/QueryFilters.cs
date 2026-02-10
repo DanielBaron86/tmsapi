@@ -21,6 +21,4 @@ public class QueryFields
     public string keyField { get; set; }
     [JsonRequired]
     public string keyValue { get; set; }
-    [JsonRequired]
-    public string keyCondition { get; set; }
 }

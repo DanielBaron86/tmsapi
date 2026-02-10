@@ -64,7 +64,7 @@ namespace TasksAPI.Services
             
             foreach (var q in queryFilters.queryFields)
             {
-                collection = CreateFilter(collection, q.keyField, q.keyValue, q.keyCondition);
+                collection = CreateFilter(collection, q.keyField, q.keyValue);
             }
             
             var collectionReturn = await collection.OrderBy(c => c.Id)
@@ -247,14 +247,14 @@ namespace TasksAPI.Services
             return (collectionReturn,paginationMetadata);
         }
         
-        public static IQueryable<T> CreateFilter<T>(IQueryable<T> query, string propertyName, string searchTerm, string searchContion)
+        public static IQueryable<T> CreateFilter<T>(IQueryable<T> query, string propertyName, string searchTerm)
         {
             var parameter = Expression.Parameter(typeof(T),"e");
             var property = Expression.Property(parameter, propertyName);
             object value =  searchTerm;
             if (property.Type != typeof(string))
                 value = Convert.ChangeType(value, property.Type);
-            if (searchContion.ToLowerInvariant() == "where")
+            if (property.Type != typeof(string))
             {
                 var filterLambda = Expression.Lambda<Func<T, bool>>(
                     Expression.Equal(
