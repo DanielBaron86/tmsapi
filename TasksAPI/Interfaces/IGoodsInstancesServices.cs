@@ -8,7 +8,7 @@ namespace TasksAPI.Interfaces
     public interface IGoodsInstancesServices
     {
         Task< (IEnumerable<GoodsModels>, PaginationMetadata)>GetGoods(int pageNumber, int pageSize);
-       
+        Task< (IEnumerable<GoodsModels>, PaginationMetadata)>GetGoodsWithConditions(QueryFilters queryFiltersueryFilters);
         
         
         Task<GoodsModels> GetGoodById(int goodId);

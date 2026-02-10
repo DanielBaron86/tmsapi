@@ -191,5 +191,31 @@ public class GoodInstancesController : ControllerBase
             }
             
         }
+        
+        /// <summary>
+        /// Returns a list of all goods instances
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPost("query")]
+        public async Task<ActionResult<IEnumerable<GoodsModels>>> GelAllGoodsByQuery(QueryFilters queryFilters)
+        {
+            
+            try
+            {
+                
+                var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoodsWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                return Ok(itemInstances);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
+        }
     
 }

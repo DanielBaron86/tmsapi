@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using TasksAPI.DataBaseContext;
@@ -32,6 +33,8 @@ namespace TasksAPI.Services
                .Include( i => i.LocationTypesInstances.LocationTypesEntity)
                as IQueryable<GoodsTypesInstances>;
 
+           
+           
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
@@ -44,11 +47,36 @@ namespace TasksAPI.Services
 
             return (returnCollection,paginationMetadata);
         }
-        
-       
-        
 
-  
+        public async Task<(IEnumerable<GoodsModels>, PaginationMetadata)> GetGoodsWithConditions(QueryFilters queryFilters)
+        {
+            var pageSize = queryFilters.pageSize;
+           var pageNumber = queryFilters.pageNumber;
+            var collection =  _dbContext.GoodsTypesInstances
+                    .Include( i => i.GoodsTypes)
+                    .Include( i=> i.GoodsTypes.GoodModelBaseTypeEntity)
+                    .Include( i => i.LocationTypesInstances)
+                    .Include( i => i.LocationTypesInstances.LocationTypesEntity)
+                as IQueryable<GoodsTypesInstances>;
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            
+            foreach (var q in queryFilters.queryFields)
+            {
+                collection = CreateFilter(collection, q.keyField, q.keyValue, q.keyCondition);
+            }
+            
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            
+            var returnCollection = _mapper.Map<IEnumerable<GoodsModels>>(collectionReturn);
+
+            return (returnCollection,paginationMetadata);
+        }
+
 
         public async Task<GoodsModels> GetGoodById(int goodId)
         {
@@ -217,6 +245,43 @@ namespace TasksAPI.Services
                 .Take(pageSize)
                 .ToListAsync();
             return (collectionReturn,paginationMetadata);
+        }
+        
+        public static IQueryable<T> CreateFilter<T>(IQueryable<T> query, string propertyName, string searchTerm, string searchContion)
+        {
+            var parameter = Expression.Parameter(typeof(T),"e");
+            var property = Expression.Property(parameter, propertyName);
+            object value =  searchTerm;
+            if (property.Type != typeof(string))
+                value = Convert.ChangeType(value, property.Type);
+            if (searchContion.ToLowerInvariant() == "where")
+            {
+                var filterLambda = Expression.Lambda<Func<T, bool>>(
+                    Expression.Equal(
+                        property,
+                        Expression.Constant(value)
+                    ),
+                    parameter
+                );
+                return query.Where(filterLambda);
+            }
+            else
+            {
+                var filterLambda = Expression.Lambda<Func<T, bool>>(
+                    Expression.Call(
+                        property,
+                        typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) }),
+                        Expression.Constant(value)
+                    ),
+                    parameter
+                );
+              
+                return query.Where(filterLambda);
+            }
+            
+
+            
+            
         }
     }
 }

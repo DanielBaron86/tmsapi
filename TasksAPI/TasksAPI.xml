@@ -210,6 +210,14 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.GoodInstancesController.GelAllGoodsByQuery(TasksAPI.Models.QueryFilters)">
+            <summary>
+            Returns a list of all goods instances
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.GoodTypesController.GelAllGoodTypes(System.Int32,System.Int32)">
             <summary>
             Returns a list of good types
