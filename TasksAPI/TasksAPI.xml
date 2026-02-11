@@ -359,6 +359,13 @@
              <param name="pageSize"></param>
              <response code="200">return list of locations</response>
         </member>
+        <member name="M:TasksAPI.Controllers.LocationsController.GetAllWithQuery(TasksAPI.Models.QueryFilters)">
+             <summary>
+             Get a list of all locations
+             </summary>
+             <param name="queryFilters"></param>
+             <response code="200">return list of locations</response>
+        </member>
         <member name="M:TasksAPI.Controllers.LocationsController.GetAllLocationType">
             <summary>
             Get a list of all location types

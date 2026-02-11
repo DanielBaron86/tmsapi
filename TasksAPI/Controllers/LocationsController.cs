@@ -48,6 +48,30 @@ namespace TasksAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+        ///  <summary>
+        ///  Get a list of all locations
+        ///  </summary>
+        ///  <param name="queryFilters"></param>
+        ///  <response code="200">return list of locations</response>
+        [HttpPost("query")]
+
+        public async Task<ActionResult<IEnumerable<LocationTypesModel>>> GetAllWithQuery(QueryFilters queryFilters)
+        {
+            try
+            {
+                var (goodTypes, paginationMetadata) = await _locationService.GetLocationsWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(goodTypes);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
 
 
         /// <summary>

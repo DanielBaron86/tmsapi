@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LinqKit;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using TasksAPI.DataBaseContext;
@@ -32,6 +33,46 @@ namespace TasksAPI.Services
                 .ToListAsync();
             return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn),paginationMetadata);
             
+        }
+
+        public async Task<(IEnumerable<LocationUnitModel>, PaginationMetadata)> GetLocationsWithConditions(QueryFilters queryFilters)
+        {
+            var predicate = PredicateBuilder.New<LocationTypesInstances>(true);
+            if (queryFilters.queryFields != null)
+            {
+                foreach (var q in queryFilters.queryFields)
+                {
+                  //  collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                    var  predicateExpresion = ServiceUtils.CreateFilterForPredicateBuilder<LocationTypesInstances>(q.keyField, q.keyValue);
+                    switch(q.method.ToLowerInvariant()) 
+                    {
+                        case  "where":
+                            predicate = predicate.And(predicateExpresion);
+                            break;
+                        case  "or":
+                            predicate = predicate.Or(predicateExpresion);
+                            break;
+                    }
+                }
+            }
+            
+            var pageSize = queryFilters.pageSize;
+            var pageNumber = queryFilters.pageNumber;
+        //    var collection =  _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity) as IQueryable<LocationTypesInstances>;
+        var collection = _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity)
+            .AsExpandable()
+            .Where(predicate);
+
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+         
+            
+            var collectionReturn = await collection
+                .OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn),paginationMetadata);
         }
 
         public async Task<LocationUnitModel> GetLocationById(int locationID)
