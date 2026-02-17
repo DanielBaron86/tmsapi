@@ -50,7 +50,8 @@ namespace TasksAPI.Services
         {
             var tasks = await _DBContext.TasksEntities
                 .Where(task => task.TaskType == TaskTypes.PROCUREMENT)
-                .Select( t => new TasksEntities {
+                .Include(t => t.TasksEntitiesProcurements)
+                /*.Select( t => new TasksEntities {
                     Id = t.Id,
                     TaskType = t.TaskType,
                     TaskStatus = t.TaskStatus,
@@ -60,12 +61,25 @@ namespace TasksAPI.Services
                     CreatedDate = t.CreatedDate,
                     UpdatedDate = t.UpdatedDate,
                     TasksEntitiesProcurements = t.TasksEntitiesProcurements.Where( r => r.TaskID == t.Id ).ToList(),
-                })
+                })*/
                 .ToListAsync();
             
             return _mapper.Map<IEnumerable<TasksModelWithProcurements>>(tasks);
         }
-        
+
+        public async Task<IEnumerable<ProcurementsSubtaskModel>> GetAllProcurementSubTasks()
+        {
+            
+            var sql = _DBContext.TasksEntitiesProcurements
+                .Include(t => t.LocationTypesInstances)
+                .ToQueryString();
+            
+            var result = await _DBContext.TasksEntitiesProcurements
+                .Include(t => t.LocationTypesInstances)
+                .ToListAsync();
+            return  _mapper.Map<IEnumerable<ProcurementsSubtaskModel>>(result);
+        }
+
         public async Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks()
         {
 
@@ -157,7 +171,10 @@ namespace TasksAPI.Services
 
         public async Task<TasksModelWithProcurements> GetTasksModelWithProcurementsTasksByID(int taskID)
         {
-            var t = await _DBContext.TasksEntities.Include(t => t.TasksEntitiesProcurements).FirstOrDefaultAsync(t => t.Id == taskID);
+            var t = await _DBContext.TasksEntities
+                .Include(t => t.TasksEntitiesProcurements)
+                .ThenInclude( t => t.LocationTypesInstances)
+                .FirstOrDefaultAsync(t => t.Id == taskID);
             if (t == null || t.TaskType != TaskTypes.PROCUREMENT)
             {
                throw new ArgumentException("Task not found");
@@ -364,7 +381,7 @@ namespace TasksAPI.Services
                     countAddedItems = await AddNewProccesedItems(rejected, itemList, SNL, existingTransfers, fulfilment, subTask, countAddedItems);
                     if (countAddedItems > 0)
                     {
-                        var updateTask = new ProcurementsSubtaskModelForUpdate { Id = subTask.Id, GoodTypeId = subTask.GoodTypeID, Location = subTask.Location, Quantity = subTask.Quantity, RemainingQuantity = subTask.RemainingQuantity - countAddedItems };
+                        var updateTask = new ProcurementsSubtaskModelForUpdate { Id = subTask.Id,GoodType=subTask.GoodType, GoodTypeId = subTask.GoodTypeID,  Location = subTask.Location, Quantity = subTask.Quantity, RemainingQuantity = subTask.RemainingQuantity - countAddedItems };
                         await UpdateProcurementTaskDetails(new[] { updateTask });
                     }
                 }

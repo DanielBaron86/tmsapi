@@ -116,6 +116,24 @@ namespace TasksAPI.Controllers
             }
 
         }
+        
+        /// <summary>
+        /// Get all Procurements type sub tasks
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("procurement/subtasks")]
+        public async Task<ActionResult<ProcurementsSubtaskModel>> GetProcurementsSubTasks()
+        {
+            try
+            {
+                return Ok(await _tasksServices.GetAllProcurementSubTasks());
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+
+        }
 
         [HttpGet("procurement/{taskID}")]
         public async Task<ActionResult<TasksModelWithProcurements>> ProcurementsTasksByID(int taskID)

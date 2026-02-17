@@ -66,6 +66,7 @@ namespace TasksAPI.Models
         public int Quantity { get; set; }
         [JsonRequired]
         public int? RemainingQuantity { get; set; }
+        public LocationUnitModel LocationTypesInstances { get; set; }
     }
 
 

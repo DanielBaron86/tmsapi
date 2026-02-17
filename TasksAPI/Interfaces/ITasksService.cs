@@ -11,6 +11,7 @@ namespace TasksAPI.Interfaces
 
         public Task< (IEnumerable<TasksModel>, PaginationMetadata)>  GetAllTasks(int? taskType, int? taskStatus,int pageNumber, int pageSize);
         public Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks();
+        public Task<IEnumerable<ProcurementsSubtaskModel>> GetAllProcurementSubTasks();
         public Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks();
         public Task<TasksModel> GetTasksByID(int taskID);
         Task<TasksModel> UpdateTask(int taskID, UpdateTasksModel taskToUpdate);

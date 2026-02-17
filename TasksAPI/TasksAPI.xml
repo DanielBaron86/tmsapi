@@ -286,6 +286,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.GetProcurementsSubTasks">
+            <summary>
+            Get all Procurements type sub tasks
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.InventoryTasksBuilderController.UpdateProcurementSubTasks(System.Collections.Generic.IEnumerable{TasksAPI.Models.ProcurementsSubtaskModelForUpdate})">
             <summary>
             Update Procurement Task Subtasks
@@ -668,6 +674,30 @@
             <inheritdoc />
         </member>
         <member name="M:TasksAPI.Migrations.ItemInstanceView.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.ManyToMany">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.ManyToMany.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.ManyToMany.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.ManyToMany.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TasksAPI.Migrations.OneToMany">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.OneToMany.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.OneToMany.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TasksAPI.Migrations.OneToMany.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

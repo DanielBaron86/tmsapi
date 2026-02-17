@@ -135,6 +135,12 @@ namespace TasksAPI.DataBaseContext
                 .WithMany(e => e.TasksEntitiesProcurements)
                 .HasForeignKey(e => e.GoodTypeID);
 
+            modelBuilder.Entity<TasksEntitiesProcurements>()
+                .HasOne(e => e.LocationTypesInstances)
+                .WithMany(e => e.TasksEntitiesProcurements)
+                .HasForeignKey(e => e.Location);
+            
+
             modelBuilder.Entity<TasksEntitiesTransfer>()
                         .HasOne(e => e.LocationTypesInstances)
                         .WithMany(e => e.TasksEntitiesTransfer)

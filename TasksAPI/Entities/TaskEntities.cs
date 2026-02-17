@@ -37,9 +37,8 @@ namespace TasksAPI.Entities
         public int TaskID { get; set; }
 
         public GoodsTypesEntity? GoodsTypes { get; set; }
-
-        [ForeignKey("Location")]
-        public ICollection<LocationTypesInstances>? LocationTypesInstances { get; set; }
+  
+        public LocationTypesInstances? LocationTypesInstances { get; set; }
         [Required]
         public int Location { get; set; }
         [Required]
