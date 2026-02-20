@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Reflection;
 using System.Text;
+using Serilog.Events;
 using TasksAPI.Configuration;
 using TasksAPI.DataBaseContext;
 using TasksAPI.Interfaces;
@@ -20,8 +21,13 @@ using TasksAPI.Services;
 //Define Loggins Options
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information) // Hide noisy system logs
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning) // Only see Web warnings/errors
+    .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.File("logs/tasksapi.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File("logs/tasksapi.txt", 
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,12 +43,17 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new()
     {
+        
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
         ValidIssuer = builder.Configuration["Authentification:Issuer"],
         ValidAudience = builder.Configuration["Authentification:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentification:SecretForkey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Authentification:SecretForkey"])) 
+        
     };
 });
 
@@ -168,7 +179,8 @@ builder.Services.AddScoped<ITasksService, TasksServices>();
 builder.Services.AddScoped<IStoresOperationsService, StoresOperationsService>();
 builder.Services.AddScoped<IReportsServices, ReportsServices>();
 builder.Services.AddScoped<IClientServices, ClientService>();
-
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
 
@@ -215,6 +227,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+app.UseExceptionHandler();
+
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 //Configure Swagger Versioning support

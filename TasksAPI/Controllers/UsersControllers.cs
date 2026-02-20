@@ -172,7 +172,8 @@ namespace TasksAPI.Controllers
             var checkRefreshToken = await _userService.GetRefreshToken(resource, cancellationToken);
             if (checkRefreshToken == null || checkRefreshToken.Revoked || checkRefreshToken.ExpiryDate <= DateTime.UtcNow)
             {
-                return BadRequest("Refresh token not found or  expired");
+                return Unauthorized(new { message = "Refresh token not found or expired" });
+               
             }
 
             return Ok(await _userService.RefreshToken(resource, cancellationToken));

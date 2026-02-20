@@ -315,6 +315,7 @@ namespace TasksAPI.Services
                 var taskToBeUpdated = await _DBContext.TasksEntitiesTransfer.FirstOrDefaultAsync(t => t.Id == task.Id);
                 if (taskToBeUpdated == null)
                 {
+                    
                    throw new ArgumentException("Task not found");
 
                 }
@@ -331,7 +332,7 @@ namespace TasksAPI.Services
         {
             var task = await _DBContext.TasksEntities
                             .Where(t => t.TaskStatus == TaskTypesStatus.OPEN || t.TaskStatus == TaskTypesStatus.PENDING)
-                            .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found"); 
+                            .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found or already completed"); 
             var rejected = new List<RejectedProcurementTransfer>();
             var itemList = new List<GoodsModels>();
             var SNL = new List<string>();
@@ -402,7 +403,8 @@ namespace TasksAPI.Services
                             Price = item.Price,
                             SerialNumber = item.SerialNumber.ToUpper(),
                             LocationId = subTask.Location,
-                            Status = GoodsStatus.AVAILABLE
+                            Status = GoodsStatus.AVAILABLE,
+                            Quantity  = item.Quantity,
                         });
 
                         await _goodsInstancesService.CreateMovementHistory(addedItem.Id, fulfilment.Supplier, addedItem.LocationId, (int)GoodsStatus.AVAILABLE, fulfilment.UserId);
