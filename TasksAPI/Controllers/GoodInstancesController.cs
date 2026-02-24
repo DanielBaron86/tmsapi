@@ -208,6 +208,7 @@ public class GoodInstancesController : ControllerBase
                 var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoodsWithConditions(queryFilters);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
                 return Ok(itemInstances);
             }
             catch (Exception ex)
