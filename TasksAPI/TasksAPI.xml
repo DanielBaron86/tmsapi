@@ -597,7 +597,13 @@
             <param name="cancellationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:TasksAPI.Controllers.UsersControllers.GetAllUsers">
+        <member name="M:TasksAPI.Controllers.UsersControllers.GetAllUsers(System.Int32,System.Int32)">
+            <summary>
+            Returns all users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.UsersControllers.GetAllUsersGetUsersWithConditions(TasksAPI.Models.QueryFilters)">
             <summary>
             Returns all users
             </summary>

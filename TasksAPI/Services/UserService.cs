@@ -32,11 +32,49 @@ namespace TasksAPI.Services
         }
 
 
-        public async Task<IEnumerable<UserResource>> GetUsers()
-        {
-            var allUsers = await _DBContext.Users.ToListAsync();
-            return _mapper.Map<IEnumerable<UserResource>>(allUsers);
+        public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetUsers(int pageNumber, int pageSize)
+        {   
+            
+            var allUsers =  _DBContext.Users as IQueryable<UserEntity>;
+            var totalItemCount = await allUsers.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+            var collectionReturn = await allUsers.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
+            return (returnCollection,paginationMetadata);
         }
+
+        public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetUsersWithConditions(QueryFilters queryFilters)
+        {
+            var pageSize = queryFilters.pageSize;
+            var pageNumber = queryFilters.pageNumber;
+            var collection =   _DBContext.Users
+                as IQueryable<UserEntity>;
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+
+            if (queryFilters.queryFields != null)
+            {
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }    
+            }
+            
+            
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            
+            var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
+
+            return (returnCollection,paginationMetadata);
+        }
+        
 
         public async Task<UserResource> GetUserById(int userID)
         {

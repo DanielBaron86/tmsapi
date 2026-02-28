@@ -61,9 +61,12 @@ namespace TasksAPI.Services
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
             
-            foreach (var q in queryFilters.queryFields)
+            if (queryFilters.queryFields != null)
             {
-                collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }    
             }
             
             var collectionReturn = await collection.OrderBy(c => c.Id)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
@@ -77,10 +78,37 @@ namespace TasksAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize(Roles = "clerk")]
-        public async Task<ActionResult<IEnumerable<UserResource>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserResource>>> GetAllUsers(int pageNumber = 1, int pageSize = 10)
         {
-            var users = await _userService.GetUsers();
+            var (users, paginationMetadata) = await _userService.GetUsers(pageNumber, pageSize);
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
             return Ok(users);
+        }
+        
+        /// <summary>
+        /// Returns all users
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("query")]
+        [Authorize(Roles = "clerk")]
+        public async Task<ActionResult<IEnumerable<UserResource>>> GetAllUsersGetUsersWithConditions(QueryFilters queryFilters)
+        {
+            try
+            {
+                
+                var (users, paginationMetadata) = await _userService.GetUsersWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         
