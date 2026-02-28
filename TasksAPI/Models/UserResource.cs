@@ -12,7 +12,7 @@ namespace TasksAPI.Models
         [property: DataMember] DateTime? CreatedDate, 
         [property: DataMember] DateTime? UpdatedDate);
     
-    public sealed record UserResourceForUpdate(string Username, string Email, string FirstName, string LastName, int UserTypeId);
+    public sealed record UserResourceForUpdate(string Email, string FirstName, string LastName, int UserTypeId);
     public sealed record ClientResourceForUpdate(string Username, string Email, string FirstName, string LastName);
     public record LoginResponse(string Token, UserResource UserProfile, string refreshToken);
     
