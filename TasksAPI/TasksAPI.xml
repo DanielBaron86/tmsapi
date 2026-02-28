@@ -372,7 +372,7 @@
              <param name="queryFilters"></param>
              <response code="200">return list of locations</response>
         </member>
-        <member name="M:TasksAPI.Controllers.LocationsController.GetAllLocationType">
+        <member name="M:TasksAPI.Controllers.LocationsController.GetAllLocationType(System.Int32,System.Int32)">
             <summary>
             Get a list of all location types
             </summary>

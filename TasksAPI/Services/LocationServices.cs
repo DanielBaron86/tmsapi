@@ -109,10 +109,17 @@ namespace TasksAPI.Services
             return _mapper.Map<LocationUnitModel>(locationToPatch);
         }
 
-        public async Task<IEnumerable<LocationTypesModel>> GetLocationTypess()
+        public async Task< (IEnumerable<LocationTypesModel>, PaginationMetadata)> GetLocationTypess(int pageNumber, int pageSize)
         {
-            return _mapper.Map<IEnumerable<LocationTypesModel>>(await _DBContext.LocationEntity.ToListAsync());
-            
+            var collection =  _DBContext.LocationEntity as IQueryable<LocationTypesEntity>;
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+            var collectionReturn = await collection
+                .OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (_mapper.Map<IEnumerable<LocationTypesModel>>(collectionReturn),paginationMetadata);
         }
 
         public async Task<LocationTypesModel> GetLocationTypeById(int locationID)

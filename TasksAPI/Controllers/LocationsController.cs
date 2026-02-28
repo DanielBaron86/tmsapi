@@ -80,9 +80,23 @@ namespace TasksAPI.Controllers
         /// <returns></returns>
         [HttpGet("locationtype")]
 
-        public async Task<ActionResult<IEnumerable<LocationTypesModel>>> GetAllLocationType()
+        public async Task<ActionResult<IEnumerable<LocationTypesModel>>> GetAllLocationType(int pageNumber = 1, int pageSize = 10)
         {
-            return Ok(await _locationService.GetLocationTypess());
+            try
+            {
+                if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
+                var (locationTypes, paginationMetadata) = await _locationService.GetLocationTypess(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(locationTypes);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         /// <summary>

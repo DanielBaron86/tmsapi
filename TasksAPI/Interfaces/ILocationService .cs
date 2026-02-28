@@ -10,7 +10,9 @@ namespace TasksAPI.Interfaces
   
         Task< (IEnumerable<LocationUnitModel>, PaginationMetadata)>    GetLocations(int pageNumber, int pageSize);
         Task< (IEnumerable<LocationUnitModel>, PaginationMetadata)>GetLocationsWithConditions(QueryFilters queryFilters);
-        Task<IEnumerable<LocationTypesModel>> GetLocationTypess();
+        
+        Task< (IEnumerable<LocationTypesModel>, PaginationMetadata)> GetLocationTypess(int pageNumber, int pageSize);
+        
 
         Task<LocationUnitModel> GetLocationById(int locationID);
         Task<LocationTypesModel> GetLocationTypeById(int locationID);
