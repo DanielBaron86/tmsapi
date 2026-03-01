@@ -45,6 +45,28 @@ public class GoodTypesController : ControllerBase
             
     }
     
+    /// <summary>
+    /// Returns a list of good types
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("query")]
+    public async Task<ActionResult<IEnumerable<GoodsTypesModel>>> GelAllGoodTypesQuery(QueryFilters queryFilters)
+    {   
+        try
+        {
+            var (goodTypes, paginationMetadata) = await _goodsInstancesService.GetGoodTypesQuery(queryFilters);
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+            return Ok(goodTypes);
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest(ex.Message);
+        }
+            
+    }
+    
     
     /// <summary>
     /// Get Good Type by Id

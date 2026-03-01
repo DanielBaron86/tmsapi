@@ -224,6 +224,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.GoodTypesController.GelAllGoodTypesQuery(TasksAPI.Models.QueryFilters)">
+            <summary>
+            Returns a list of good types
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.GoodTypesController.GetGoodTypesById(System.Int32)">
             <summary>
             Get Good Type by Id
