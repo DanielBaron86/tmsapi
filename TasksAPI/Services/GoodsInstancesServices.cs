@@ -57,10 +57,6 @@ namespace TasksAPI.Services
                     .Include( i => i.LocationTypesInstances)
                     .Include( i => i.LocationTypesInstances.LocationTypesEntity)
                 as IQueryable<GoodsTypesInstances>;
-            
-            var totalItemCount = await collection.CountAsync();
-            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
-            
             if (queryFilters.queryFields != null)
             {
                 foreach (var q in queryFilters.queryFields)
@@ -68,6 +64,10 @@ namespace TasksAPI.Services
                     collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
                 }    
             }
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            
+           
             
             var collectionReturn = await collection.OrderBy(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))

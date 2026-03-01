@@ -52,10 +52,6 @@ namespace TasksAPI.Services
             var pageNumber = queryFilters.pageNumber;
             var collection =   _DBContext.Users
                 as IQueryable<UserEntity>;
-            
-            var totalItemCount = await collection.CountAsync();
-            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
-
             if (queryFilters.queryFields != null)
             {
                 foreach (var q in queryFilters.queryFields)
@@ -63,6 +59,11 @@ namespace TasksAPI.Services
                     collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
                 }    
             }
+            
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+
+           
             
             
             var collectionReturn = await collection.OrderBy(c => c.Id)
