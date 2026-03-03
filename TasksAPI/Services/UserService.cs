@@ -141,7 +141,7 @@ namespace TasksAPI.Services
                 Token = GenerateRefreshToken(),
                 Revoked = false,
                 UserId = user.Id,
-                ExpiryDate = DateTime.Now.AddMinutes(15),
+                ExpiryDate = DateTime.UtcNow.AddMinutes(15),
                     
             };
             await UpdateRefreshToken(refreshToken);
