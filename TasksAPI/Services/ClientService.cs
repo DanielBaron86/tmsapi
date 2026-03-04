@@ -35,6 +35,42 @@ namespace TasksAPI.Services
             return _mapper.Map<UserResource>(user);
 
         }
+        public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetClients(int pageNumber, int pageSize)
+        {
+            var collection =  _DBContext.Accounts
+                as IQueryable<Accounts>;
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
+            return (returnCollection,paginationMetadata);
+        }
+
+        public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetClientsWithConditions(QueryFilters queryFilters)
+        {
+            var pageSize = queryFilters.pageSize;
+            var pageNumber = queryFilters.pageNumber;
+            var collection = _DBContext.Accounts
+                as IQueryable<Accounts>;
+            if (queryFilters.queryFields != null)
+            {
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }    
+            }
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
+            return (returnCollection,paginationMetadata);
+        }
 
         public async Task<UserResource> Register(ClientResource resource, CancellationToken cancellationToken)
         {

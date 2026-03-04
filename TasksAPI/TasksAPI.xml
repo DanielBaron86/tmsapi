@@ -97,6 +97,20 @@
             <param name="cancellationToken"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.GetUsers(System.Int32,System.Int32)">
+            <summary>
+            Get Clients
+            </summary>
+            <param name="clientID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.ClientAccounts.GetUsers(TasksAPI.Models.QueryFilters)">
+            <summary>
+            Get Clients with Conditions
+            </summary>
+            <param name="clientID"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.ClientAccounts.GetUserByID(System.Int32)">
             <summary>
             Get Client by Id

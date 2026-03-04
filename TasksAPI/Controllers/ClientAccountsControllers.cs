@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +17,9 @@ namespace TasksAPI.Controllers
 
     public class ClientAccounts : ControllerBase
     {
-
+        
         private readonly IClientServices _clientService;
+        const int MaxPagesSize = 1000;    
 
 
 
@@ -66,7 +68,60 @@ namespace TasksAPI.Controllers
                 return BadRequest(new { ErrorMessage = e.Message });
             }
         }
+    
+        
+        /// <summary>
+        /// Get Clients
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpGet()]
+        [Authorize(Roles = "clerk")]
+        public async Task<ActionResult<UserResource>> GetUsers(int pageNumber = 1, int pageSize = 10)
+        {
+            
+            try
+            {
+                if (pageSize > MaxPagesSize) pageSize = 1000;
+                var (accounts, paginationMetadata) = await _clientService.GetClients(pageNumber, pageSize);
 
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Get Clients with Conditions
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns></returns>
+        [HttpPost("query")]
+        [Authorize(Roles = "clerk")]
+        public async Task<ActionResult<UserResource>> GetUsers(QueryFilters queryFilters)
+        {
+            
+            try
+            {
+                
+                var (accounts, paginationMetadata) = await _clientService.GetClientsWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Get Client by Id
