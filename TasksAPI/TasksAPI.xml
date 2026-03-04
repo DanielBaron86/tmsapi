@@ -527,6 +527,22 @@
             <param name="cartId"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GelAllRegistersbyView(System.Int32,System.Int32)">
+            <summary>
+            Returns a list of all Registers
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GelAllRegistersByQuery(TasksAPI.Models.QueryFilters)">
+            <summary>
+            Returns a list of all Registers with filters
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.StoresOperationsController.CreateRegister(TasksAPI.Models.CreateCashRegisterEntity)">
             <summary>
             Create a new cash register and assign it to a location

@@ -1,4 +1,6 @@
 ﻿using System.Text.Json.Serialization;
+using TasksAPI.Entities;
+
 namespace TasksAPI.Models
 {
     public struct CreateCashRegisterEntity
@@ -14,6 +16,7 @@ namespace TasksAPI.Models
         [JsonRequired]
         public int LocationId { get; set; }
         public string[]? Notes { get; set; }
+        public LocationUnitModel LocationTypesInstances { get; set; }
     }
 
     public struct CreateCashRegisterSessionsEntityModel

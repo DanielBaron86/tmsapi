@@ -16,6 +16,8 @@ namespace TasksAPI.Controllers
     [SwaggerControllerOrder(3)]
     public class StoresOperationsController : ControllerBase
     {
+        const int MaxPagesSize = 100;
+        
         private readonly IStoresOperationsService _storeServices;
         const int maxCitiesPagesSize = 20;
         public StoresOperationsController(IStoresOperationsService storeServices)
@@ -124,6 +126,61 @@ namespace TasksAPI.Controllers
 
                 return BadRequest(ex.Message);
             }
+        }
+        
+        
+        /// <summary>
+        /// Returns a list of all Registers
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("cash_register")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntityModel>>> GelAllRegistersbyView(int pageNumber = 1, int pageSize = 10)
+        {
+            
+            try
+            {
+                if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
+                var (itemInstances, paginationMetadata) = await _storeServices.GetCashRegisters(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(itemInstances);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
+        }
+        
+        /// <summary>
+        /// Returns a list of all Registers with filters
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPost("cash_register/query")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntityModel>>> GelAllRegistersByQuery(QueryFilters queryFilters)
+        {
+            
+            try
+            {
+                
+                var (itemInstances, paginationMetadata) = await _storeServices.GetCashRegisterWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(itemInstances);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         /// <summary>
