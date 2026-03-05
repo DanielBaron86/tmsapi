@@ -43,9 +43,9 @@ namespace TasksAPI.Controllers
                 var response = await _clientService.Register(resource, cancellationToken);
                 return Ok(response);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new { ErrorMessage = e.Message });
+                throw new Exception(ex.Message);
             }
         }
 
@@ -63,9 +63,9 @@ namespace TasksAPI.Controllers
                 var response = await _clientService.Login(resource, cancellationToken);
                 return Ok(response);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new { ErrorMessage = e.Message });
+                throw new Exception(ex.Message);
             }
         }
     
@@ -93,7 +93,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
         
@@ -119,7 +119,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -132,14 +132,20 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> GetUserByID(int clientID)
         {
-            var user = await _clientService.GetClientById(clientID);
-
-            if (user == null)
+            
+            try
             {
-                return NotFound();
+                var user = await _clientService.GetClientById(clientID);
+                if (user == null)
+                {
+                    throw new Exception("Client not found");
+                }
+                return Ok(user);
             }
-            return Ok(user);
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
        
@@ -157,12 +163,21 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> UpdateUser(int clientID, ClientResourceForUpdate user, CancellationToken cancellationToken)
         {
-            var result = await _clientService.UpdateClient(clientID, user, cancellationToken);
-            if (result == null)
+            
+            try
             {
-                return BadRequest();
+                var result = await _clientService.UpdateClient(clientID, user, cancellationToken);
+                if (result == null)
+                {
+                    throw new Exception("Client not found");
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         
@@ -201,9 +216,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _clientService.DeleteClient(clientID, CancellationToken.None));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
+                throw new Exception(ex.Message);
             }            
         }
     }

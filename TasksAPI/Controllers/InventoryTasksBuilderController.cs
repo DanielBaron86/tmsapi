@@ -49,7 +49,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
            
         }
@@ -70,9 +70,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _tasksServices.GetTasksByID(taskID));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -91,9 +91,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _tasksServices.UpdateTask(taskID, taskToUpdate));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -110,9 +110,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _tasksServices.GetAllProcurementTasks());
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -128,9 +128,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _tasksServices.GetAllProcurementSubTasks());
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -142,9 +142,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _tasksServices.GetTasksModelWithProcurementsTasksByID(taskID));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                throw new Exception(ex.Message);
             }
 
 
@@ -165,10 +165,10 @@ namespace TasksAPI.Controllers
                 return Ok(await _tasksServices.UpdateProcurementTaskDetails(taskModel));
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                return BadRequest(e.Message);
+                throw new Exception(ex.Message);;
             }
         }
 
@@ -188,7 +188,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -205,9 +205,9 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _tasksServices.GetAllTransferTasks());
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return NotFound(e.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -226,7 +226,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                throw new Exception(ex.Message);
             }
 
 
@@ -246,10 +246,10 @@ namespace TasksAPI.Controllers
                 return Ok(await _tasksServices.UpdateTransferSubTasks(taskModel));
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                return BadRequest(e.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -269,7 +269,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
 
         }
@@ -289,7 +289,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
 
         }
@@ -309,7 +309,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
         }
 
@@ -328,7 +328,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
         }
     }

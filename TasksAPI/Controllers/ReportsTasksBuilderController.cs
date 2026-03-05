@@ -40,7 +40,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -58,7 +58,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -78,7 +78,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -98,7 +98,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 

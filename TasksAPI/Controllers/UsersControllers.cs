@@ -45,9 +45,9 @@ namespace TasksAPI.Controllers
                 var response = await _userService.Register(resource, cancellationToken);
                 return Ok(response);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new { ErrorMessage = e.Message });
+                throw new Exception(ex.Message);
             }
         }
 
@@ -65,9 +65,9 @@ namespace TasksAPI.Controllers
                 var response = await _userService.Login(resource, cancellationToken);
                 return Ok(response);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(new { ErrorMessage = e.Message });
+                throw new Exception(ex.Message);
             }
         }
 
@@ -80,10 +80,18 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<IEnumerable<UserResource>>> GetAllUsers(int pageNumber = 1, int pageSize = 10)
         {
-            var (users, paginationMetadata) = await _userService.GetUsers(pageNumber, pageSize);
-            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
-            Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
-            return Ok(users);
+            try
+            {
+                var (users, paginationMetadata) = await _userService.GetUsers(pageNumber, pageSize);
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
         
         /// <summary>
@@ -122,14 +130,19 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> GetUserByID(int userID)
         {
-            var user = await _userService.GetUserById(userID);
-
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = await _userService.GetUserById(userID);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
             }
-            return Ok(user);
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
 

@@ -37,10 +37,10 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _storeServices.GetCartByID(cartId));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                return BadRequest(e.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -65,7 +65,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -102,10 +102,10 @@ namespace TasksAPI.Controllers
             {
                 return Ok(await _storeServices.RemoveCartDetail(cartDetailsId));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                return BadRequest(e.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -124,7 +124,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
         
@@ -151,7 +151,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }
@@ -178,7 +178,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }
@@ -197,7 +197,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -215,7 +215,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -234,7 +234,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -255,7 +255,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -275,7 +275,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message); 
+                throw new Exception(ex.Message);
             }
         }
 
@@ -295,7 +295,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
     }

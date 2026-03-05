@@ -40,7 +40,7 @@ public class GoodInstancesController : ControllerBase
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
         
@@ -59,7 +59,7 @@ public class GoodInstancesController : ControllerBase
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -72,12 +72,20 @@ public class GoodInstancesController : ControllerBase
         [HttpGet("{goodId}")]
         public async Task<ActionResult<GoodsModels>> GetGoodsById(int goodId)
         {
-            var good = await _goodsInstancesService.GetGoodById(goodId);
-            if (good == null)
+            try
             {
-                return NotFound();
+                var good = await _goodsInstancesService.GetGoodById(goodId);
+                if (good == null)
+                {
+                    throw new Exception("Good Not Found");
+                }
+                return Ok(good);
             }
-            return Ok(good);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
 
 
         }
@@ -103,7 +111,7 @@ public class GoodInstancesController : ControllerBase
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }
@@ -116,12 +124,20 @@ public class GoodInstancesController : ControllerBase
         [HttpGet("history/{goodId}")]
         public async Task<ActionResult<ICollection<ItemMovementEntity>>> GetGoodHistorysById(int goodId)
         {
-            var good = await _goodsInstancesService.GetGoodHistorysById(goodId);
-            if (good == null)
+            try
             {
-                return NotFound();
+                var good = await _goodsInstancesService.GetGoodHistorysById(goodId);
+                if (good == null)
+                {
+                    throw new Exception("Good History Not Found");
+                }
+                return Ok(good);
             }
-            return Ok(good);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+          
 
 
         }
@@ -141,7 +157,7 @@ public class GoodInstancesController : ControllerBase
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
         
@@ -160,7 +176,7 @@ public class GoodInstancesController : ControllerBase
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -187,7 +203,7 @@ public class GoodInstancesController : ControllerBase
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }
@@ -214,7 +230,7 @@ public class GoodInstancesController : ControllerBase
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }

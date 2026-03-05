@@ -45,7 +45,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
         
@@ -69,7 +69,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -94,7 +94,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }
@@ -107,12 +107,20 @@ namespace TasksAPI.Controllers
         [HttpGet("{locationid}")]
         public async Task<ActionResult<LocationUnitModel>> GetLocationById(int locationid)
         {
-            var location = await _locationService.GetLocationById(locationid);
-            if (location == null)
+            try
             {
-                return NotFound();
+                var location = await _locationService.GetLocationById(locationid);
+                if (location == null)
+                {
+                    throw new Exception("Location Not Found");
+                }
+                return Ok(location);
             }
-            return Ok(location);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+          
         }
 
 
@@ -124,12 +132,20 @@ namespace TasksAPI.Controllers
         [HttpGet("locationtype/{locationid}")]
         public async Task<ActionResult<LocationUnitModel>> GetLocationTypeById(int locationid)
         {
-            var location = await _locationService.GetLocationTypeById(locationid);
-            if (location == null)
+            try
             {
-                return NotFound();
+                var location = await _locationService.GetLocationTypeById(locationid);
+                if (location == null)
+                {
+                    throw new Exception("Location Type Not Found");
+                }
+                return Ok(location);
             }
-            return Ok(location);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
 
@@ -149,7 +165,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
 
@@ -172,7 +188,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
 
@@ -195,7 +211,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -217,7 +233,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -239,7 +255,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
 
 
@@ -260,7 +276,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }
@@ -282,7 +298,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
         }

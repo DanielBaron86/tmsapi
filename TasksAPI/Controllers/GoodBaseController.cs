@@ -45,7 +45,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
         }
         
@@ -57,17 +57,15 @@ namespace TasksAPI.Controllers
         [HttpPost()]
         public async Task<ActionResult<GoodBaseTypeModel>> CreateBaseModel(CreateGoodBaseTypeModel goodBaseModel)
         {
-            if (goodBaseModel == null) { return NotFound(); }
-
-            if (!ModelState.IsValid) { return BadRequest(); }
-
+            if (!ModelState.IsValid) { throw new Exception("Validation Error"); }
             try
             {
+                
                 return Ok(await _goodsBaseService.CreateBaseType(goodBaseModel));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
         }
 
@@ -86,7 +84,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+               throw new Exception(ex.Message);
             }
 
         }

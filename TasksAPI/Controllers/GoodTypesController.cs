@@ -40,7 +40,7 @@ public class GoodTypesController : ControllerBase
         catch (Exception ex)
         {
 
-            return BadRequest(ex.Message);
+            throw new Exception(ex.Message);
         }
             
     }
@@ -62,7 +62,7 @@ public class GoodTypesController : ControllerBase
         catch (Exception ex)
         {
 
-            return BadRequest(ex.Message);
+            throw new Exception(ex.Message);
         }
             
     }
@@ -76,12 +76,20 @@ public class GoodTypesController : ControllerBase
     [HttpGet("{goodId}")]
     public async Task<ActionResult<v_GoodsTypes>> GetGoodTypesById(int goodId)
     {
-        var good = await _goodsInstancesService.GetGoodTypeById(goodId);
-        if (good == null)
+        try
         {
-            return NotFound();
+            var good = await _goodsInstancesService.GetGoodTypeById(goodId);
+            if (good == null)
+            {
+                 throw new Exception("Good Type not found");
+            }
+            return Ok(good);
         }
-        return Ok(good);
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+        
 
 
     }
@@ -105,7 +113,7 @@ public class GoodTypesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            throw new Exception(ex.Message);
         }
     }
     
@@ -124,7 +132,7 @@ public class GoodTypesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            throw new Exception(ex.Message);
         }
 
     }
@@ -144,7 +152,7 @@ public class GoodTypesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            throw new Exception(ex.Message);
         }
 
     }
