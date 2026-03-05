@@ -112,7 +112,10 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity)
         {
-            var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances).Where(c => c.RegisterNumber == cashRegisterEntity.RegisterNumber).FirstOrDefaultAsync();
+            var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances)
+                .Where(c => c.RegisterNumber == cashRegisterEntity.RegisterNumber)
+                .Where(c =>c.LocationID==cashRegisterEntity.LocationId)
+                .FirstOrDefaultAsync();
             if (cashRegister != null)
             {
                 throw new ArgumentException($"Register number {cashRegister.RegisterNumber} already exists in {cashRegister.LocationTypesInstances.Address} - {cashRegister.LocationTypesInstances.Description}");
@@ -124,7 +127,7 @@ namespace TasksAPI.Services
             }
             else
             {
-                var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationId = cashRegisterEntity.LocationId, Notes = cashRegisterEntity.Notes });
+                var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationId = cashRegisterEntity.LocationId,RegisterNumber =cashRegisterEntity.RegisterNumber, Notes = cashRegisterEntity.Notes });
                 _DBContext.CashRegisterEntity.Add(newCashRegister);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
                 return _mapper.Map<CashRegisterEntityModel>(newCashRegister);
