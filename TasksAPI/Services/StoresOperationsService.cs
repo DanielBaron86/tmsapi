@@ -110,6 +110,10 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity)
         {
+            var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances).Where( c => c.RegisterNumber==cashRegisterEntity.RegisterNumber).FirstOrDefaultAsync();
+            if(cashRegister != null) {
+                throw new ArgumentException($"Register number {cashRegister.RegisterNumber} already exists in {cashRegister.LocationTypesInstances.Address} - {cashRegister.LocationTypesInstances.Description}");
+            }
             var location =await _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefaultAsync(t => t.Id == cashRegisterEntity.LocationId);
             if(location == null || location.LocationTypeID != 2) {
                throw new ArgumentException("Location doesn't exists or wrong type");

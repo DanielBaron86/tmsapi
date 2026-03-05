@@ -7,12 +7,15 @@ namespace TasksAPI.Models
     {
         [JsonRequired]
         public int LocationId { get; set; }
+        [JsonRequired]
+        public int RegisterNumber { get; set; }
         public string[]? Notes { get; set; }
     }
 
     public class CashRegisterEntityModel : BaseModel
     {
         public int Id { get; set; }
+        public int RegisterNumber { get; set; }
         [JsonRequired]
         public int LocationId { get; set; }
         public string[]? Notes { get; set; }

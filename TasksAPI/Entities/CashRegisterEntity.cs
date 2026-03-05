@@ -10,6 +10,7 @@ namespace TasksAPI.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public int RegisterNumber { get; set; }
 
         [ForeignKey("LocationID")]
         public LocationTypesInstances? LocationTypesInstances { get; set; }
