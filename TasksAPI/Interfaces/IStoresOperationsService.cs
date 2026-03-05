@@ -8,8 +8,8 @@ namespace TasksAPI.Interfaces
     public interface IStoresOperationsService
     {
         Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity);
-        Task< (IEnumerable<CashRegisterEntityModel>, PaginationMetadata)>GetCashRegisters(int pageNumber, int pageSize);
-        Task< (IEnumerable<CashRegisterEntityModel>, PaginationMetadata)>GetCashRegisterWithConditions(QueryFilters queryFilters);
+        Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisters(int pageNumber, int pageSize);
+        Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisterWithConditions(QueryFilters queryFilters);
         Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args);
         Task<CashRegisterEntitySessionsModel> CloseSession(int sessionId);
 
@@ -17,11 +17,11 @@ namespace TasksAPI.Interfaces
         Task<StoreCartsEntityDetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel);
         Task<StoreCartsEntityDetailsModel> AddReturnToCart(int cartId, CreateRegisterOperationsModel operationModel);
 
-        Task< (IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCarts(int pageNumber, int pageSize);
+        Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCarts(int pageNumber, int pageSize);
         Task<StoreCartsEntityModelWithDetails> GetCartByID(int cartId);
         Task<IEnumerable<StoreCartsEntityModelWithDetails>> GetCartsByAccountID(int accountId);
 
-        Task<StoreCartsEntityModelWithDetails> PayForCartByID(int cartId,Decimal money);
+        Task<StoreCartsEntityModelWithDetails> PayForCartByID(int cartId, Decimal money);
 
         Task<StoreCartsEntityDetailsModel> GetCartDetilsByID(int cartDetailsId);
 

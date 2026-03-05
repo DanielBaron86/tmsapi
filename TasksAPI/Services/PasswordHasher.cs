@@ -29,7 +29,7 @@ namespace TasksAPI.Services
             return salt;
         }
 
-        public static ValidationResponse ValidateToken(string authToken, string[] conf,bool ValidateLifetime =true)
+        public static ValidationResponse ValidateToken(string authToken, string[] conf, bool ValidateLifetime = true)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = new TokenValidationParameters()
@@ -47,18 +47,18 @@ namespace TasksAPI.Services
             IPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out validatedToken);
             if (principal != null)
             {
-                return new ValidationResponse(){IsValid = true,Principal=principal};  
+                return new ValidationResponse() { IsValid = true, Principal = principal };
             }
 
             return new ValidationResponse() { IsValid = false };
 
         }
-        
+
         public struct ValidationResponse
         {
             public bool IsValid;
             public IPrincipal? Principal;
         }
-        
+
     }
 }

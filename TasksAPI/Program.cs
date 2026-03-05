@@ -25,7 +25,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning) // Only see Web warnings/errors
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.File("logs/tasksapi.txt", 
+    .WriteTo.File("logs/tasksapi.txt",
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
@@ -43,7 +43,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new()
     {
-        
+
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
@@ -52,8 +52,8 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
         ValidIssuer = builder.Configuration["Authentification:Issuer"],
         ValidAudience = builder.Configuration["Authentification:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Authentification:SecretForkey"])) 
-        
+            Encoding.UTF8.GetBytes(builder.Configuration["Authentification:SecretForkey"]))
+
     };
 });
 
@@ -132,7 +132,7 @@ if (DBServer == "MySql")
                       maxRetryDelay: System.TimeSpan.FromSeconds(30),
                       errorNumbersToAdd: null)
                   );
-        
+
     });
 }
 else
@@ -214,7 +214,7 @@ builder.Services.AddAuthorization(options =>
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>();
-    Console.WriteLine(allowedOrigins);
+Console.WriteLine(allowedOrigins);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "open", policy =>

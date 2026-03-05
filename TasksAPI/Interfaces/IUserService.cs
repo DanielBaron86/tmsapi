@@ -13,8 +13,8 @@ namespace TasksAPI.Interfaces
         Task<UserResource> PatchUser(int userID, JsonPatchDocument patchUser, CancellationToken cancellationToken);
         Task<UserResource> GetUserById(int userID);
 
-        Task< (IEnumerable<UserResource>, PaginationMetadata)> GetUsers(int pageNumber, int pageSize);
-        Task< (IEnumerable<UserResource>, PaginationMetadata)>GetUsersWithConditions(QueryFilters queryFilters);
+        Task<(IEnumerable<UserResource>, PaginationMetadata)> GetUsers(int pageNumber, int pageSize);
+        Task<(IEnumerable<UserResource>, PaginationMetadata)> GetUsersWithConditions(QueryFilters queryFilters);
         Task<bool> DeleteUser(int userID, CancellationToken cancellationToken);
         Task<string> RefreshToken(RefreshResource resource, CancellationToken cancellationToken);
         Task<RefreshToken> GetRefreshToken(RefreshResource resource, CancellationToken cancellationToken);

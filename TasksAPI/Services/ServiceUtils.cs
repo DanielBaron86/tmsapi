@@ -6,9 +6,9 @@ public class ServiceUtils
 {
     public static IQueryable<T> CreateFilter<T>(IQueryable<T> query, string propertyName, string searchTerm)
     {
-        var parameter = Expression.Parameter(typeof(T),"e");
+        var parameter = Expression.Parameter(typeof(T), "e");
         var property = Expression.Property(parameter, propertyName);
-        object value =  searchTerm;
+        object value = searchTerm;
         if (property.Type != typeof(string))
             value = Convert.ChangeType(value, property.Type);
         if (property.Type != typeof(string))
@@ -35,12 +35,12 @@ public class ServiceUtils
             return query.Where(filterLambda);
         }
     }
-    
-    public static Expression<Func<T,bool>> CreateFilterForPredicateBuilder<T>(string propertyName, string searchTerm)
+
+    public static Expression<Func<T, bool>> CreateFilterForPredicateBuilder<T>(string propertyName, string searchTerm)
     {
-        var parameter = Expression.Parameter(typeof(T),"e");
+        var parameter = Expression.Parameter(typeof(T), "e");
         var property = Expression.Property(parameter, propertyName);
-        object value =  searchTerm;
+        object value = searchTerm;
         if (property.Type != typeof(string))
             value = Convert.ChangeType(value, property.Type);
         if (property.Type != typeof(string))

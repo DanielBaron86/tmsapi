@@ -37,7 +37,7 @@ namespace TasksAPI.Services
         }
         public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetClients(int pageNumber, int pageSize)
         {
-            var collection =  _DBContext.Accounts
+            var collection = _DBContext.Accounts
                 as IQueryable<Accounts>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
@@ -46,7 +46,7 @@ namespace TasksAPI.Services
                 .Take(pageSize)
                 .ToListAsync();
             var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
-            return (returnCollection,paginationMetadata);
+            return (returnCollection, paginationMetadata);
         }
 
         public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetClientsWithConditions(QueryFilters queryFilters)
@@ -60,7 +60,7 @@ namespace TasksAPI.Services
                 foreach (var q in queryFilters.queryFields)
                 {
                     collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
-                }    
+                }
             }
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
@@ -69,7 +69,7 @@ namespace TasksAPI.Services
                 .Take(pageSize)
                 .ToListAsync();
             var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
-            return (returnCollection,paginationMetadata);
+            return (returnCollection, paginationMetadata);
         }
 
         public async Task<UserResource> Register(ClientResource resource, CancellationToken cancellationToken)
@@ -112,7 +112,7 @@ namespace TasksAPI.Services
             if (user.PasswordHash != passwordHash)
                 throw new Exception("Username or password did not match.");
 
-         
+
             var key = _configuration["Authentification:SecretForkey"];
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -175,7 +175,7 @@ namespace TasksAPI.Services
             {
                 throw new ArgumentException($"User type {user.UserTypeId}, status {user.Status}. Please mark for delete first");
             }
-            
+
         }
 
 

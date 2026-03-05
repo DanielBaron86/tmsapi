@@ -35,12 +35,12 @@ namespace TasksAPI.Controllers
         /// <returns></returns>
         /// <response code="200">return list of tasks</response>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TasksModel>>> GetAllTasks(int? taskType, int? taskStatus,int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<TasksModel>>> GetAllTasks(int? taskType, int? taskStatus, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
                 if (pageSize > PagesSize) pageSize = PagesSize;
-                var (tasksModels, paginationMetadata) = await  _tasksServices.GetAllTasks(taskType, taskStatus,pageNumber, pageSize);
+                var (tasksModels, paginationMetadata) = await _tasksServices.GetAllTasks(taskType, taskStatus, pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
                 Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
@@ -51,7 +51,7 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-           
+
         }
 
         /** Generic Tasks **/
@@ -116,7 +116,7 @@ namespace TasksAPI.Controllers
             }
 
         }
-        
+
         /// <summary>
         /// Get all Procurements type sub tasks
         /// </summary>
@@ -168,7 +168,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);;
+                throw new Exception(ex.Message); ;
             }
         }
 
@@ -269,7 +269,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -289,7 +289,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
@@ -300,7 +300,7 @@ namespace TasksAPI.Controllers
         /// <param name="taskModel"></param>
         /// <returns></returns>
         [HttpPost("transfer")]
-        
+
         public async Task<ActionResult<IEnumerable<TasksModelWithTransfer>>> CreateTranferTask(CreateTransferModel taskModel)
         {
             try
@@ -309,7 +309,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -328,7 +328,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
     }

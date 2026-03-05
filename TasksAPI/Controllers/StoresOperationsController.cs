@@ -17,7 +17,7 @@ namespace TasksAPI.Controllers
     public class StoresOperationsController : ControllerBase
     {
         const int MaxPagesSize = 100;
-        
+
         private readonly IStoresOperationsService _storeServices;
         const int maxCitiesPagesSize = 20;
         public StoresOperationsController(IStoresOperationsService storeServices)
@@ -53,13 +53,13 @@ namespace TasksAPI.Controllers
                 int pageNumber = 1,
                 int pageSize = 10)
         {
-            
+
             try
             {
                 if (pageSize > maxCitiesPagesSize) pageSize = maxCitiesPagesSize;
                 var (carts, paginationMetadata) = await _storeServices.GetCarts(pageNumber, pageSize);
 
-                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
                 return Ok(carts);
             }
             catch (Exception ex)
@@ -127,8 +127,8 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
-        
+
+
         /// <summary>
         /// Returns a list of all Registers
         /// </summary>
@@ -138,7 +138,7 @@ namespace TasksAPI.Controllers
         [HttpGet("cash_register")]
         public async Task<ActionResult<IEnumerable<CashRegisterEntityModel>>> GelAllRegistersbyView(int pageNumber = 1, int pageSize = 10)
         {
-            
+
             try
             {
                 if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
@@ -153,9 +153,9 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-            
+
         }
-        
+
         /// <summary>
         /// Returns a list of all Registers with filters
         /// </summary>
@@ -165,10 +165,10 @@ namespace TasksAPI.Controllers
         [HttpPost("cash_register/query")]
         public async Task<ActionResult<IEnumerable<CashRegisterEntityModel>>> GelAllRegistersByQuery(QueryFilters queryFilters)
         {
-            
+
             try
             {
-                
+
                 var (itemInstances, paginationMetadata) = await _storeServices.GetCashRegisterWithConditions(queryFilters);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
@@ -180,7 +180,7 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace TasksAPI.Controllers
         {
             try
             {
-               return Ok( await _storeServices.CreateCashRegister(cashRegisterEntity));
+                return Ok(await _storeServices.CreateCashRegister(cashRegisterEntity));
             }
             catch (Exception ex)
             {
@@ -286,7 +286,7 @@ namespace TasksAPI.Controllers
         /// <param name="money"></param>
         /// <returns></returns>
         [HttpPost("pay_cart/{cartId}")]
-        public async Task<ActionResult<StoreCartsEntityModelWithDetails>> PayForCartByID(int cartId,[FromBody] Decimal money)
+        public async Task<ActionResult<StoreCartsEntityModelWithDetails>> PayForCartByID(int cartId, [FromBody] Decimal money)
         {
             try
             {

@@ -17,8 +17,8 @@ namespace TasksAPI.Entities
         public int LocationID { get; set; }
 
         internal string? InternalNotes { get; set; } = string.Empty;
-        
-        public ICollection<CashRegisterEntitySessions>? CashRegisterEntitySessions {  get; set; }
+
+        public ICollection<CashRegisterEntitySessions>? CashRegisterEntitySessions { get; set; }
 
         [NotMapped]
         public string[]? Notes

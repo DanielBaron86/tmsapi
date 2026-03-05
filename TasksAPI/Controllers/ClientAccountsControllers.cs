@@ -17,9 +17,9 @@ namespace TasksAPI.Controllers
 
     public class ClientAccounts : ControllerBase
     {
-        
+
         private readonly IClientServices _clientService;
-        const int MaxPagesSize = 1000;    
+        const int MaxPagesSize = 1000;
 
 
 
@@ -68,8 +68,8 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-    
-        
+
+
         /// <summary>
         /// Get Clients
         /// </summary>
@@ -79,7 +79,7 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> GetUsers(int pageNumber = 1, int pageSize = 10)
         {
-            
+
             try
             {
                 if (pageSize > MaxPagesSize) pageSize = 1000;
@@ -96,7 +96,7 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Get Clients with Conditions
         /// </summary>
@@ -106,10 +106,10 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> GetUsers(QueryFilters queryFilters)
         {
-            
+
             try
             {
-                
+
                 var (accounts, paginationMetadata) = await _clientService.GetClientsWithConditions(queryFilters);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
@@ -132,7 +132,7 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> GetUserByID(int clientID)
         {
-            
+
             try
             {
                 var user = await _clientService.GetClientById(clientID);
@@ -148,9 +148,9 @@ namespace TasksAPI.Controllers
             }
         }
 
-       
 
-       
+
+
 
         /// <summary>
         /// Update Client
@@ -163,7 +163,7 @@ namespace TasksAPI.Controllers
         [Authorize(Roles = "clerk")]
         public async Task<ActionResult<UserResource>> UpdateUser(int clientID, ClientResourceForUpdate user, CancellationToken cancellationToken)
         {
-            
+
             try
             {
                 var result = await _clientService.UpdateClient(clientID, user, cancellationToken);
@@ -177,10 +177,10 @@ namespace TasksAPI.Controllers
             {
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
-        
+
         /// <summary>
         /// Patch Client
         /// </summary>
@@ -219,7 +219,7 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }            
+            }
         }
     }
 }

@@ -21,10 +21,10 @@ namespace TasksAPI.Controllers
         {
             _goodsBaseService = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
         }
-        
-        
-        
-        
+
+
+
+
         /// <summary>
         /// Returs a list of base good types
         /// </summary>
@@ -45,10 +45,10 @@ namespace TasksAPI.Controllers
             catch (Exception ex)
             {
 
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Create Base Model
         /// </summary>
@@ -60,12 +60,12 @@ namespace TasksAPI.Controllers
             if (!ModelState.IsValid) { throw new Exception("Validation Error"); }
             try
             {
-                
+
                 return Ok(await _goodsBaseService.CreateBaseType(goodBaseModel));
             }
             catch (Exception ex)
             {
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -84,7 +84,7 @@ namespace TasksAPI.Controllers
             }
             catch (Exception ex)
             {
-               throw new Exception(ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }

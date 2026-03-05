@@ -15,19 +15,19 @@ public class GoodTypesController : ControllerBase
 {
     const int MaxPagesSize = 100;
     private readonly IGoodsTypesServices _goodsInstancesService;
-    
+
     public GoodTypesController(IConfiguration configuration, IGoodsTypesServices goodsInstancesServices)
     {
         _goodsInstancesService = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
     }
-    
+
     /// <summary>
     /// Returns a list of good types
     /// </summary>
     /// <returns></returns>
     [HttpGet()]
     public async Task<ActionResult<IEnumerable<GoodsTypesModel>>> GelAllGoodTypes(int pageNumber = 1, int pageSize = 10)
-    {   
+    {
         try
         {
             if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
@@ -42,16 +42,16 @@ public class GoodTypesController : ControllerBase
 
             throw new Exception(ex.Message);
         }
-            
+
     }
-    
+
     /// <summary>
     /// Returns a list of good types
     /// </summary>
     /// <returns></returns>
     [HttpPost("query")]
     public async Task<ActionResult<IEnumerable<GoodsTypesModel>>> GelAllGoodTypesQuery(QueryFilters queryFilters)
-    {   
+    {
         try
         {
             var (goodTypes, paginationMetadata) = await _goodsInstancesService.GetGoodTypesQuery(queryFilters);
@@ -64,10 +64,10 @@ public class GoodTypesController : ControllerBase
 
             throw new Exception(ex.Message);
         }
-            
+
     }
-    
-    
+
+
     /// <summary>
     /// Get Good Type by Id
     /// </summary>
@@ -81,7 +81,7 @@ public class GoodTypesController : ControllerBase
             var good = await _goodsInstancesService.GetGoodTypeById(goodId);
             if (good == null)
             {
-                 throw new Exception("Good Type not found");
+                throw new Exception("Good Type not found");
             }
             return Ok(good);
         }
@@ -89,12 +89,12 @@ public class GoodTypesController : ControllerBase
         {
             throw new Exception(ex.Message);
         }
-        
+
 
 
     }
-    
-    
+
+
     /// <summary>
     /// Create a new Good Type
     /// </summary>
@@ -116,7 +116,7 @@ public class GoodTypesController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
-    
+
     /// <summary>
     /// Update a good type
     /// </summary>
@@ -136,7 +136,7 @@ public class GoodTypesController : ControllerBase
         }
 
     }
-    
+
     /// <summary>
     /// Delete Good Types by ID
     /// </summary>

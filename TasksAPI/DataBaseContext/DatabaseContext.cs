@@ -41,7 +41,7 @@ namespace TasksAPI.DataBaseContext
         public virtual DbSet<v_GoodsTypes> v_GoodsTypes { get; set; }
         public virtual DbSet<v_GoodsTypesInstances> v_GoodsTypesInstances { get; set; }
 
-        
+
 
 
 
@@ -61,7 +61,7 @@ namespace TasksAPI.DataBaseContext
                     eb.Property(e => e.Type).HasColumnName("type");
                     eb.Property(e => e.Manufacturer).HasColumnName("manufacturer");
                 });
-            
+
             modelBuilder
                 .Entity<v_GoodsTypesInstances>(eb =>
                 {
@@ -80,21 +80,21 @@ namespace TasksAPI.DataBaseContext
                     eb.Property(e => e.Status).HasColumnName("Status");
                     eb.Property(e => e.Quantity).HasColumnName("Quantity");
                 });
-            
+
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Email).IsUnique());
             modelBuilder.Entity<UserEntity>(ut => ut.HasIndex(i => i.Username).IsUnique());
 
-            modelBuilder.Entity<GoodsTypesEntity>(ut => ut.HasIndex(i => i.GoodBaseId ) );
+            modelBuilder.Entity<GoodsTypesEntity>(ut => ut.HasIndex(i => i.GoodBaseId));
 
             modelBuilder.Entity<GoodsTypesEntity>()
                 .HasOne(g => g.GoodModelBaseTypeEntity)
                 .WithMany(g => g.GoodsTypesList)
                 .HasForeignKey(g => g.GoodBaseId)
                 .HasPrincipalKey(g => g.Id);
-                
-            
+
+
             modelBuilder.Entity<LocationTypesEntity>(ut => ut.HasIndex(i => i.LocationType).IsUnique());
-            
+
 
             modelBuilder.Entity<UserEntity>()
                         .HasOne(e => e.UserTypes)
@@ -106,9 +106,9 @@ namespace TasksAPI.DataBaseContext
                 .HasOne(e => e.UserEntity)
                 .WithOne(e => e.RefreshTokenEntity)
                 .HasForeignKey<RefreshTokenEntity>(e => e.userId);
-             
-                
-               
+
+
+
             modelBuilder.Entity<Accounts>()
                         .HasOne(e => e.UserTypes)
                         .WithMany(e => e.Accounts)
@@ -139,7 +139,7 @@ namespace TasksAPI.DataBaseContext
                 .HasOne(e => e.LocationTypesInstances)
                 .WithMany(e => e.TasksEntitiesProcurements)
                 .HasForeignKey(e => e.Location);
-            
+
 
             modelBuilder.Entity<TasksEntitiesTransfer>()
                         .HasOne(e => e.LocationTypesInstances)

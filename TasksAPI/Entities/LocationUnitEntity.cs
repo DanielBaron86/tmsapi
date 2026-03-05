@@ -12,7 +12,8 @@ namespace TasksAPI.Entities
         [Required]
         public int LocationTypeID { get; set; }
 
-        [Required][MaxLength(250)]
+        [Required]
+        [MaxLength(250)]
         public string Address { get; set; } = default!;
 
         [Required]

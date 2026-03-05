@@ -17,14 +17,14 @@ namespace TasksAPI.Controllers
     {
         const int MaxPagesSize = 100;
         private readonly IReportsServices _ReportsServices;
-        
+
         public ReportsTasksBuilderController(IReportsServices reportsServices)
         {
             _ReportsServices = reportsServices ?? throw new ArgumentNullException(nameof(reportsServices));
-            
+
         }
 
-      
+
 
         /// <summary>
         /// Create a new inventory type report. ReportMode 1 - Full list, 2 - Summary

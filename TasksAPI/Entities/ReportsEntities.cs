@@ -6,10 +6,11 @@ using TasksAPI.Models;
 
 namespace TasksAPI.Entities
 {
-    public class ReportsEntities: BaseEntity
+    public class ReportsEntities : BaseEntity
     {
 
-        public ReportsEntities() {
+        public ReportsEntities()
+        {
             ReportStatus = (int)DbEntityStatus.ACTIVE;
         }
 
@@ -17,7 +18,7 @@ namespace TasksAPI.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Descrption { get; set; } =String.Empty;
+        public string Descrption { get; set; } = String.Empty;
         [Required]
         public int ReportType { get; set; }
         [Required]
@@ -27,6 +28,6 @@ namespace TasksAPI.Entities
         public int ReportStatus { get; set; }
         public string Params { get; set; } = String.Empty;
 
-        public ICollection<ReportsEntitiesResults>? ReportsEntitiesResults {  get; set; }
+        public ICollection<ReportsEntitiesResults>? ReportsEntitiesResults { get; set; }
     }
 }

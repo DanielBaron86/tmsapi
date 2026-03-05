@@ -9,24 +9,24 @@ namespace TasksAPI.Services;
 
 public class GoodsBaseServices : IGoodsBaseServices
 {
-    
+
     private readonly DatabaseConnectContext _dbContext;
     private readonly IMapper _mapper;
-        
-         
+
+
     public GoodsBaseServices(DatabaseConnectContext context, IMapper mapper)
     {
 
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _dbContext = context ?? throw new ArgumentNullException(nameof(context));
     }
-    public async Task< (IEnumerable<GoodBaseTypeModel>, PaginationMetadata)>  GetBaseGoodTypes(int pageNumber, int pageSize)
+    public async Task<(IEnumerable<GoodBaseTypeModel>, PaginationMetadata)> GetBaseGoodTypes(int pageNumber, int pageSize)
     {
-            
-            
-            
+
+
+
         var collection = _dbContext.GoodModelBaseType.AsEnumerable() as IQueryable<GoodModelBaseTypeEntity>;
-            
+
         var totalItemCount = await collection.CountAsync();
         var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
@@ -34,13 +34,13 @@ public class GoodsBaseServices : IGoodsBaseServices
             .Skip(pageSize * (pageNumber - 1))
             .Take(pageSize)
             .ToListAsync();
-            
+
         var returnCollection = _mapper.Map<IEnumerable<GoodBaseTypeModel>>(collectionReturn);
 
-        return (returnCollection,paginationMetadata);
+        return (returnCollection, paginationMetadata);
     }
-    
-    public  async Task<GoodBaseTypeModel> CreateBaseType(CreateGoodBaseTypeModel goodBaseModel)
+
+    public async Task<GoodBaseTypeModel> CreateBaseType(CreateGoodBaseTypeModel goodBaseModel)
     {
         var goodBaseToBeCreated = _mapper.Map<GoodModelBaseTypeEntity>(goodBaseModel);
         _dbContext.Add(goodBaseToBeCreated);
@@ -51,7 +51,7 @@ public class GoodsBaseServices : IGoodsBaseServices
     public async Task<GoodBaseTypeModel> UpdateBaseType(int goodId, UpdateGoodBaseTypeModel goodBaseModel)
     {
         var itemToBeUpdated = await _dbContext.GoodModelBaseType.FirstOrDefaultAsync(g => g.Id == goodId) ?? throw new ArgumentException("Item not found");
-            
+
         _mapper.Map(goodBaseModel, itemToBeUpdated);
 
         await _dbContext.SaveChangesAsync(CancellationToken.None);

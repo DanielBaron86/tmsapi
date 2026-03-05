@@ -19,6 +19,6 @@ namespace TasksAPI.Entities
         public Decimal Paid { get; set; }
         public Decimal Remaining { get; set; }
         [JsonIgnore]
-        public ICollection<StoreCartsEntityDetails>? StoreCartsEntityDetails {  get; set; }
+        public ICollection<StoreCartsEntityDetails>? StoreCartsEntityDetails { get; set; }
     }
 }

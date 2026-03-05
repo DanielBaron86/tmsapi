@@ -16,12 +16,12 @@ namespace TasksAPI.Models
 
 
     public class CreateGoodsTypesModel
-    {   
-        [JsonRequired] 
+    {
+        [JsonRequired]
         public int GoodBaseId { get; set; }
-        [JsonRequired] 
+        [JsonRequired]
         public string Name { get; set; } = default!;
-        [JsonRequired] 
+        [JsonRequired]
         public string Description { get; set; } = default!;
         [JsonRequired]
         public int InventoryKey { get; set; }

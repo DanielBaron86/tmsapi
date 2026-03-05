@@ -33,9 +33,9 @@ namespace TasksAPI.Services
 
 
         public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetUsers(int pageNumber, int pageSize)
-        {   
-            
-            var allUsers =  _DBContext.Users as IQueryable<UserEntity>;
+        {
+
+            var allUsers = _DBContext.Users as IQueryable<UserEntity>;
             var totalItemCount = await allUsers.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
             var collectionReturn = await allUsers.OrderBy(c => c.Id)
@@ -43,39 +43,39 @@ namespace TasksAPI.Services
                 .Take(pageSize)
                 .ToListAsync();
             var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
-            return (returnCollection,paginationMetadata);
+            return (returnCollection, paginationMetadata);
         }
 
         public async Task<(IEnumerable<UserResource>, PaginationMetadata)> GetUsersWithConditions(QueryFilters queryFilters)
         {
             var pageSize = queryFilters.pageSize;
             var pageNumber = queryFilters.pageNumber;
-            var collection =   _DBContext.Users
+            var collection = _DBContext.Users
                 as IQueryable<UserEntity>;
             if (queryFilters.queryFields != null)
             {
                 foreach (var q in queryFilters.queryFields)
                 {
                     collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
-                }    
+                }
             }
-            
+
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
 
-           
-            
-            
+
+
+
             var collectionReturn = await collection.OrderBy(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
-            
+
             var returnCollection = _mapper.Map<IEnumerable<UserResource>>(collectionReturn);
 
-            return (returnCollection,paginationMetadata);
+            return (returnCollection, paginationMetadata);
         }
-        
+
 
         public async Task<UserResource> GetUserById(int userID)
         {
@@ -91,7 +91,7 @@ namespace TasksAPI.Services
             {
                 throw new ArgumentException("Username or Email already exists.");
             }
-            
+
             var user = new UserEntity
             {
                 Username = resource.Username,
@@ -112,7 +112,7 @@ namespace TasksAPI.Services
                 Revoked = false,
                 userId = createdUser.Id,
                 ExpiryDate = DateTime.Now.AddMinutes(15),
-                    
+
             };
             await _DBContext.RefreshTokenEntity.AddAsync(refreshToken);
             await _DBContext.SaveChangesAsync(cancellationToken);
@@ -120,7 +120,7 @@ namespace TasksAPI.Services
         }
 
 
-        
+
         public async Task<LoginResponse> Login(LoginResource resource, CancellationToken cancellationToken)
         {
             var user = await _DBContext.Users
@@ -131,41 +131,41 @@ namespace TasksAPI.Services
 
             var passwordHash = PasswordHasher.ComputeHash(resource.Password, user.PasswordSalt, _pepper, _iteration);
             if (user.PasswordHash != passwordHash)
-               throw new ArgumentException("Username or password did not match.");
-            
+                throw new ArgumentException("Username or password did not match.");
+
             var claimsForToken = GenerateClaimsForToken(user);
             var tokenToReturn = GenerateToken(claimsForToken);
-            var userprofile =  await GetUserById(user.Id);
+            var userprofile = await GetUserById(user.Id);
             var refreshToken = new RefreshTokenForUpdate()
             {
                 Token = GenerateRefreshToken(),
                 Revoked = false,
                 UserId = user.Id,
                 ExpiryDate = DateTime.UtcNow.AddMinutes(15),
-                    
+
             };
             await UpdateRefreshToken(refreshToken);
-            return new LoginResponse( tokenToReturn, userprofile,refreshToken.Token) ;
+            return new LoginResponse(tokenToReturn, userprofile, refreshToken.Token);
 
-         
+
         }
 
         public Task<string> RefreshToken(RefreshResource resource, CancellationToken cancellationToken)
         {
             var checkUser = _DBContext.Users.FirstOrDefault(u => u.Id == resource.userId);
             var isValidToken = ValidateToken(resource.oldToken, false);
-            if (checkUser!=null && isValidToken)
+            if (checkUser != null && isValidToken)
             {
                 var claims = GenerateClaimsForToken(checkUser);
-                return  Task.FromResult(GenerateToken(claims));
+                return Task.FromResult(GenerateToken(claims));
             }
             return Task.FromResult<string>(null);
         }
 
         public async Task<RefreshToken> GetRefreshToken(RefreshResource resource, CancellationToken cancellationToken)
         {
-            var refreshToken = await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync( r => r.Token == resource.refreshToken && r.userId == resource.userId ,cancellationToken);
-            return  _mapper.Map<RefreshToken>(refreshToken);
+            var refreshToken = await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync(r => r.Token == resource.refreshToken && r.userId == resource.userId, cancellationToken);
+            return _mapper.Map<RefreshToken>(refreshToken);
         }
 
         public async Task<UserResource> UpdateUser(int userID, UserResourceForUpdate userResource, CancellationToken cancellationToken)
@@ -175,7 +175,7 @@ namespace TasksAPI.Services
 
             if (userToBeUpdated == null)
             {
-               throw new ArgumentException(nameof(userToBeUpdated));
+                throw new ArgumentException(nameof(userToBeUpdated));
             }
 
             _mapper.Map(userResource, userToBeUpdated);
@@ -203,13 +203,13 @@ namespace TasksAPI.Services
             {
                 throw new ArgumentException($"User type {user.UserTypeId}, status {user.Status}. Please mark for delete first");
             }
-            
+
         }
 
-        public bool ValidateToken(string authToken,bool ValidateLifetime=true)
+        public bool ValidateToken(string authToken, bool ValidateLifetime = true)
         {
             var conf = new string[] { _configuration["Authentification:Issuer"], _configuration["Authentification:Audience"], _configuration["Authentification:SecretForkey"] };
-            var reply= PasswordHasher.ValidateToken(authToken, conf,ValidateLifetime);
+            var reply = PasswordHasher.ValidateToken(authToken, conf, ValidateLifetime);
             return reply.IsValid;
         }
 
@@ -218,13 +218,13 @@ namespace TasksAPI.Services
             var userToPatch = await _DBContext.Users.FirstOrDefaultAsync(u => u.Id == userID, cancellationToken);
             if (userToPatch == null)
             {
-               throw new ArgumentException("User not found");
+                throw new ArgumentException("User not found");
             }
             patchUser.ApplyTo(userToPatch);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
             return _mapper.Map<UserResource>(userToPatch);
         }
-        
+
         private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -232,7 +232,7 @@ namespace TasksAPI.Services
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
         }
-        
+
 
         private string GenerateToken(IEnumerable<Claim> claimsForToken)
         {
@@ -252,7 +252,8 @@ namespace TasksAPI.Services
         }
 
         private async Task<RefreshToken> UpdateRefreshToken(RefreshTokenForUpdate refreshToken)
-        {   var tokenToBeUpdated = await _DBContext.RefreshTokenEntity
+        {
+            var tokenToBeUpdated = await _DBContext.RefreshTokenEntity
                 .FirstOrDefaultAsync(x => x.Id == refreshToken.UserId);
             if (tokenToBeUpdated == null)
             {
@@ -262,8 +263,8 @@ namespace TasksAPI.Services
             await _DBContext.SaveChangesAsync(true);
             return _mapper.Map<RefreshToken>(await _DBContext.RefreshTokenEntity.FirstOrDefaultAsync(r => r.Token == tokenToBeUpdated.Token));
         }
-        
-       static List<Claim> GenerateClaimsForToken(UserEntity userEntity)
+
+        static List<Claim> GenerateClaimsForToken(UserEntity userEntity)
         {
             var claims = new List<Claim>
             {
@@ -273,12 +274,12 @@ namespace TasksAPI.Services
                 new Claim("family_name", userEntity.LastName)
             };
 
-            switch (userEntity.UserTypeId) 
+            switch (userEntity.UserTypeId)
             {
-                case  3:
+                case 3:
                     claims.Add(new Claim("role", "clerk"));
                     break;
-                case  4:
+                case 4:
                     claims.Add(new Claim("role", "clerk"));
                     claims.Add(new Claim("role", "supervisor"));
                     break;

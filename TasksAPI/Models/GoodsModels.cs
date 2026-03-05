@@ -2,10 +2,10 @@
 
 namespace TasksAPI.Models
 {
-    
+
     public class GoodBaseTypeModel : BaseModel
     {
-       
+
         public int Id { get; set; }
         public string Description { get; set; } = default!;
         public string Manufacturer { get; set; } = default!;
@@ -17,9 +17,9 @@ namespace TasksAPI.Models
         public string Description { get; set; } = default!;
         [JsonRequired]
         public string Manufacturer { get; set; } = default!;
-        
+
     }
-    
+
     public class UpdateGoodBaseTypeModel
     {
         [JsonRequired]
@@ -67,7 +67,7 @@ namespace TasksAPI.Models
     }
 
     public class FulfillGoodsModels
-    {   
+    {
         [JsonRequired]
         public Decimal Price { get; set; }
         public string? SerialNumber { get; set; } = default!;
@@ -84,7 +84,7 @@ namespace TasksAPI.Models
 
     public class CreateGoodsModels
     {
-    
+
         [JsonRequired]
         public int GoodModelId { get; set; }
         [JsonRequired]

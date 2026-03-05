@@ -14,21 +14,22 @@ using TasksAPI.Models;
 
 namespace TasksAPI.Services
 {
-    public class ReportsServices: IReportsServices
+    public class ReportsServices : IReportsServices
     {
         private readonly DatabaseConnectContext _DBContext;
         private readonly IMapper _mapper;
 
-        public ReportsServices(DatabaseConnectContext context, IMapper mapper) {
+        public ReportsServices(DatabaseConnectContext context, IMapper mapper)
+        {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _DBContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<ReportsEntitiesModel> CreateInventoryReport(CreateReportsEntitiesModel InventoryReportsModel)
         {
-           
 
-            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 1,ReportMode= InventoryReportsModel.ReportMode,Description = InventoryReportsModel.Description, Params = JsonConvert.SerializeObject(InventoryReportsModel.Params)  });
+
+            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 1, ReportMode = InventoryReportsModel.ReportMode, Description = InventoryReportsModel.Description, Params = JsonConvert.SerializeObject(InventoryReportsModel.Params) });
             _DBContext.Add(newReportTask);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
 
@@ -38,7 +39,7 @@ namespace TasksAPI.Services
         public async Task<ReportsEntitiesModel> CreateSalesReport(CreateSalesReportsEntitiesModel salesReportsMode)
         {
 
-            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 2, ReportMode= salesReportsMode.ReportMode,Description = salesReportsMode.Description, Params = JsonConvert.SerializeObject(salesReportsMode.Params) });
+            var newReportTask = _mapper.Map<ReportsEntities>(new ReportsEntitiesModel { ReportType = 2, ReportMode = salesReportsMode.ReportMode, Description = salesReportsMode.Description, Params = JsonConvert.SerializeObject(salesReportsMode.Params) });
             _DBContext.Add(newReportTask);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
 
@@ -48,14 +49,14 @@ namespace TasksAPI.Services
         public async Task<ReportsEntitiesResults> RetrieveReportResults(int reportResultsTaskId)
         {
             var result = await _DBContext.ReportsEntitiesResults
-                .FirstOrDefaultAsync( t => t.Id == reportResultsTaskId) ??throw new ArgumentException("Task not found"); 
+                .FirstOrDefaultAsync(t => t.Id == reportResultsTaskId) ?? throw new ArgumentException("Task not found");
             return result;
         }
 
         public async Task<int> RunReport(int reportTaskId)
         {
-            var TaskToRun =await _DBContext.ReportsEntities.FirstOrDefaultAsync(t => t.Id == reportTaskId) ??throw new ArgumentException("Task not found");
-            if(TaskToRun.ReportType == 1)
+            var TaskToRun = await _DBContext.ReportsEntities.FirstOrDefaultAsync(t => t.Id == reportTaskId) ?? throw new ArgumentException("Task not found");
+            if (TaskToRun.ReportType == 1)
             {
                 return await RunInventoryReport(reportTaskId, TaskToRun);
             }
@@ -64,10 +65,10 @@ namespace TasksAPI.Services
 
         public async Task<int> RunInventoryReport(int reportTaskId, ReportsEntities TaskToRun)
         {
-            
+
             var TaskParams = JsonConvert.DeserializeObject<ParamsModel>(TaskToRun.Params);
-            
-            if(TaskToRun.ReportMode ==1)
+
+            if (TaskToRun.ReportMode == 1)
             {
                 return await RunInventoryListReportint(reportTaskId, TaskParams);
             }
@@ -78,7 +79,7 @@ namespace TasksAPI.Services
             }
 
             return 0;
-            
+
         }
 
         public async Task<int> RunSalesReport(int reportTaskId, ReportsEntities TaskToRun)
@@ -100,13 +101,13 @@ namespace TasksAPI.Services
 
         }
 
-        private async Task<int> RunInventoryListReportint (int reportTaskId,ParamsModel ParamsModel)
+        private async Task<int> RunInventoryListReportint(int reportTaskId, ParamsModel ParamsModel)
         {
             List<int> locations = ParamsModel.Locations.ToList();
             List<int> goodTypes = ParamsModel.GoodTypes.ToList();
             List<int> goodStatus = ParamsModel.GoodStatus.ToList();
 
-   
+
 
             var reportResult = await _DBContext.GoodsTypesInstances
               .Where(t => !locations.Any() || locations.Contains(t.LocationId))
@@ -133,7 +134,8 @@ namespace TasksAPI.Services
         }
 
 
-        private async Task<int> RunInventorySummaryReportint(int reportTaskId, ParamsModel ParamsModel) {
+        private async Task<int> RunInventorySummaryReportint(int reportTaskId, ParamsModel ParamsModel)
+        {
 
             List<int> locations = ParamsModel.Locations.ToList();
             List<int> goodTypes = ParamsModel.GoodTypes.ToList();
@@ -143,15 +145,16 @@ namespace TasksAPI.Services
               .Where(t => !locations.Any() || locations.Contains(t.LocationId))
               .Where(t => !goodTypes.Any() || goodTypes.Contains(t.GoodModelId))
               .Where(t => !goodStatus.Any() || goodStatus.Contains(t.Status))
-              .Include(e => e.GoodsTypes)  
-              .GroupBy(e => new {  e.GoodsTypes.Name, e.GoodModelId, e.LocationId, e.Status })
-              .Select( e => new { 
+              .Include(e => e.GoodsTypes)
+              .GroupBy(e => new { e.GoodsTypes.Name, e.GoodModelId, e.LocationId, e.Status })
+              .Select(e => new
+              {
                   e.Key.GoodModelId,
                   e.Key.Name,
                   e.Key.LocationId,
-                  e.Key.Status, 
+                  e.Key.Status,
                   Count = e.Count()
-                  
+
               })
               .ToListAsync();
 
@@ -172,7 +175,8 @@ namespace TasksAPI.Services
         }
 
 
-        private async Task<int> RunSalesListReportint(int reportTaskId, SalesParamsModel ParamsModel) {
+        private async Task<int> RunSalesListReportint(int reportTaskId, SalesParamsModel ParamsModel)
+        {
             List<int> locations = ParamsModel.Locations.ToList();
             List<int> clerks = ParamsModel.Clerks.ToList();
             List<int> operationTypes = ParamsModel.OperationTypes.ToList();
@@ -185,7 +189,8 @@ namespace TasksAPI.Services
                 .Where(t => t.StoreCartsEntity.Status == 2)
                 .Where(t => t.StoreCartsEntity.CreatedDate.Date == DateTime.UtcNow.Date)
 
-                .Select(t => new { 
+                .Select(t => new
+                {
                     t.CartId,
                     t.StoreCartsEntity.clerktId,
                     t.OperationType,
@@ -211,39 +216,40 @@ namespace TasksAPI.Services
 
             return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }
-        private async Task<int> RunSalesSummaryReportint(int reportTaskId, SalesParamsModel ParamsModel) {
+        private async Task<int> RunSalesSummaryReportint(int reportTaskId, SalesParamsModel ParamsModel)
+        {
 
             List<int> locations = ParamsModel.Locations.ToList();
             List<int> clerks = ParamsModel.Clerks.ToList();
             List<int> operationTypes = ParamsModel.OperationTypes.ToList();
 
-//SELECT
-//clerk, slocation, operation,
-//SUM(total) total_stocks
-//FROM
-//(select distinct c.clerktId as clerk, c.storeLocation as slocation, p.OperationType as operation, c.Total as total from[StoreCartsEntity] c
-//inner join StoreCartsEntityDetails p on c.Id = p.CartId) qop
-//GROUP BY
-//clerk, slocation, operation
+            //SELECT
+            //clerk, slocation, operation,
+            //SUM(total) total_stocks
+            //FROM
+            //(select distinct c.clerktId as clerk, c.storeLocation as slocation, p.OperationType as operation, c.Total as total from[StoreCartsEntity] c
+            //inner join StoreCartsEntityDetails p on c.Id = p.CartId) qop
+            //GROUP BY
+            //clerk, slocation, operation
 
             var joinTable = await _DBContext.StoreCartsEntityDetails
-                            .Include( t => t.StoreCartsEntity)
+                            .Include(t => t.StoreCartsEntity)
                             .Where(t => !locations.Any() || locations.Contains(t.StoreCartsEntity.storeLocation))
                             .Where(t => !clerks.Any() || locations.Contains(t.StoreCartsEntity.clerktId))
                             .Where(t => !operationTypes.Any() || locations.Contains(t.OperationType))
                             .Where(t => t.StoreCartsEntity.Status == 2)
                             .Where(t => t.StoreCartsEntity.CreatedDate.Date == DateTime.Now.Date)
-                            .Select(t => new { t.StoreCartsEntity.clerktId, t.StoreCartsEntity.storeLocation, t.OperationType,t.StoreCartsEntity.Total })
+                            .Select(t => new { t.StoreCartsEntity.clerktId, t.StoreCartsEntity.storeLocation, t.OperationType, t.StoreCartsEntity.Total })
                             .Distinct()
                             .ToListAsync();
 
             var salesReport = joinTable
-                .GroupBy( l => new { l.clerktId ,l.storeLocation,l.OperationType})
-                .Select(s => new { s.First().clerktId , s.First().storeLocation, s.First().OperationType,Sum = s.Sum( x => x.Total) })
+                .GroupBy(l => new { l.clerktId, l.storeLocation, l.OperationType })
+                .Select(s => new { s.First().clerktId, s.First().storeLocation, s.First().OperationType, Sum = s.Sum(x => x.Total) })
                 .ToList();
 
 
-  
+
 
             StringBuilder sb = new StringBuilder();
             sb.Append(new string("clerktId,storeLocation,OperationType,Total"));
@@ -269,7 +275,7 @@ namespace TasksAPI.Services
 
         public async Task<int> DeleteReportResults(int resultsId)
         {
-            var reportResults =await _DBContext.ReportsEntitiesResults.FirstOrDefaultAsync(t => t.Id == resultsId) ?? throw new ArgumentException($"Report results {resultsId} not found");
+            var reportResults = await _DBContext.ReportsEntitiesResults.FirstOrDefaultAsync(t => t.Id == resultsId) ?? throw new ArgumentException($"Report results {resultsId} not found");
             _DBContext.Remove(reportResults);
             return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }

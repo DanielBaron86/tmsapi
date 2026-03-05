@@ -8,7 +8,8 @@ namespace TasksAPI.Entities
     public sealed class Accounts : BaseEntity
     {
 
-        public Accounts() {
+        public Accounts()
+        {
             Status = (int)DbEntityStatus.ACTIVE;
         }
 
@@ -30,14 +31,14 @@ namespace TasksAPI.Entities
         public int UserTypeId { get; set; }
 
         public int Status { get; set; }
-        
+
         public string PasswordSalt { get; set; } = default!;
         public string PasswordHash { get; set; } = default!;
 
         public UserTypes UserTypes { get; set; } = default!;
 
         public ICollection<AccountsGoodsEntity> AccountsGoodsEntity { get; set; } = default!;
-        
+
 
     }
 }

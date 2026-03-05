@@ -26,16 +26,16 @@ namespace TasksAPI.Models
     }
 
 
-    public class ReportsEntitiesModel :BaseModel
+    public class ReportsEntitiesModel : BaseModel
     {
- 
+
         public int Id { get; set; }
-        
+
         public string Description { get; set; } = String.Empty;
         public int ReportType { get; set; }
         public int ReportMode { get; set; }
-        public string? Params { get;set; }
-        
+        public string? Params { get; set; }
+
     }
 
     public struct GetReportsResults

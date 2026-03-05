@@ -16,7 +16,7 @@ namespace TasksAPI.Controllers
     public class LocationsController : ControllerBase
     {
         const int MaxPagesSize = 100;
-        
+
         private readonly ILocationService _locationService;
         public LocationsController(ILocationService locationService)
         {
@@ -48,7 +48,7 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
+
         ///  <summary>
         ///  Get a list of all locations
         ///  </summary>
@@ -96,7 +96,7 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace TasksAPI.Controllers
             {
                 throw new Exception(ex.Message);
             }
-          
+
         }
 
 
@@ -193,7 +193,7 @@ namespace TasksAPI.Controllers
 
 
         }
-        
+
 
         /// <summary>
         /// Update Location by ID
@@ -237,7 +237,7 @@ namespace TasksAPI.Controllers
             }
 
         }
-        
+
 
         /// <summary>
         /// Partialy Update location instance
@@ -278,7 +278,7 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
 
@@ -300,8 +300,8 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-            
+
         }
-        
+
     }
 }

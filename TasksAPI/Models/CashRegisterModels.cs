@@ -31,20 +31,21 @@ namespace TasksAPI.Models
         public string[]? Notes { get; set; }
     }
 
-    public class UpdateSessionsEntityModel 
+    public class UpdateSessionsEntityModel
     {
         [JsonRequired]
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
         [JsonRequired]
         public int AssignedClerk { get; set; }
         [JsonRequired]
-        public int CashRegisterId { get; set; }        
+        public int CashRegisterId { get; set; }
         public DateTime? CloseHour { get; set; }
 
         public string[]? Notes { get; set; }
     }
 
-    public class CashRegisterEntitySessionsModel : BaseModel {
+    public class CashRegisterEntitySessionsModel : BaseModel
+    {
         [JsonRequired]
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
         [JsonRequired]
@@ -88,7 +89,7 @@ namespace TasksAPI.Models
         public int Status { get; set; }  // 1 - Open, 2 - Paid
     }
     public class StoreCartsEntityModel : BaseModel
-    {        
+    {
         public int Id { get; set; }
         public int ClerktId { get; set; }
         public int StoreLocation { get; set; }
@@ -98,7 +99,7 @@ namespace TasksAPI.Models
         public Decimal Total { get; set; }
         public Decimal Paid { get; set; }
         public Decimal Remaining { get; set; }
-        
+
     }
 
     public class StoreCartsEntityModelWithDetails : StoreCartsEntityModel
@@ -106,9 +107,10 @@ namespace TasksAPI.Models
         public ICollection<StoreCartsEntityDetailsModel> StoreCartsEntityDetails { get; set; } = new List<StoreCartsEntityDetailsModel>();
     }
 
-    public struct CreateNewCart { 
+    public struct CreateNewCart
+    {
         [JsonRequired]
-        public int ClerkId { get; set; } 
+        public int ClerkId { get; set; }
         [JsonRequired]
         public int ClientId { get; set; }
         [JsonRequired]

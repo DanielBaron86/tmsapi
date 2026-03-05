@@ -22,30 +22,30 @@ namespace TasksAPI.Services
             _goodsInstancesService = goodsInstancesService ?? throw new ArgumentNullException(nameof(goodsInstancesService));
         }
 
-        public async  Task< (IEnumerable<TasksModel>, PaginationMetadata)>  GetAllTasks(int? taskType, int? taskStatus,int pageNumber, int pageSize)
+        public async Task<(IEnumerable<TasksModel>, PaginationMetadata)> GetAllTasks(int? taskType, int? taskStatus, int pageNumber, int pageSize)
         {
-          
+
             Expression<Func<TasksEntities, bool>> processingFunc = p =>
                 (taskType == null || (int)p.TaskType == taskType) &&
                 (taskStatus == null || (int)p.TaskStatus == taskStatus);
-            
+
             var collection = _DBContext.TasksEntities.Where(processingFunc)
                 .Include(t => t.Creator)
                 as IQueryable<TasksEntities>;
-            
+
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
-            
+
             var collectionReturn = await collection
                 .OrderBy(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
-            
-            return (_mapper.Map<IEnumerable<TasksModel>>(collectionReturn),paginationMetadata);
-            
+
+            return (_mapper.Map<IEnumerable<TasksModel>>(collectionReturn), paginationMetadata);
+
         }
-        
+
         public async Task<IEnumerable<TasksModelWithProcurements>> GetAllProcurementTasks()
         {
             var tasks = await _DBContext.TasksEntities
@@ -63,21 +63,21 @@ namespace TasksAPI.Services
                     TasksEntitiesProcurements = t.TasksEntitiesProcurements.Where( r => r.TaskID == t.Id ).ToList(),
                 })*/
                 .ToListAsync();
-            
+
             return _mapper.Map<IEnumerable<TasksModelWithProcurements>>(tasks);
         }
 
         public async Task<IEnumerable<ProcurementsSubtaskModel>> GetAllProcurementSubTasks()
         {
-            
+
             var sql = _DBContext.TasksEntitiesProcurements
                 .Include(t => t.LocationTypesInstances)
                 .ToQueryString();
-            
+
             var result = await _DBContext.TasksEntitiesProcurements
                 .Include(t => t.LocationTypesInstances)
                 .ToListAsync();
-            return  _mapper.Map<IEnumerable<ProcurementsSubtaskModel>>(result);
+            return _mapper.Map<IEnumerable<ProcurementsSubtaskModel>>(result);
         }
 
         public async Task<IEnumerable<TasksModelWithTransfer>> GetAllTransferTasks()
@@ -85,7 +85,8 @@ namespace TasksAPI.Services
 
             var tasks = await _DBContext.TasksEntities
                 .Where(task => task.TaskType == TaskTypes.TRANSFER)
-                .Select( t => new TasksEntities {
+                .Select(t => new TasksEntities
+                {
                     Id = t.Id,
                     TaskType = t.TaskType,
                     TaskStatus = t.TaskStatus,
@@ -94,7 +95,7 @@ namespace TasksAPI.Services
                     UserName = t.Creator.Username,
                     CreatedDate = t.CreatedDate,
                     UpdatedDate = t.UpdatedDate,
-                    TasksEntitiesTransferList = t.TasksEntitiesTransferList.Where( r => r.TaskID == t.Id ).ToList(),
+                    TasksEntitiesTransferList = t.TasksEntitiesTransferList.Where(r => r.TaskID == t.Id).ToList(),
                 })
                 .ToListAsync();
 
@@ -104,7 +105,7 @@ namespace TasksAPI.Services
         public async Task<TasksModel> GetTasksByID(int taskID)
         {
             var t = await _DBContext.TasksEntities
-                .Select( t => new TasksModel
+                .Select(t => new TasksModel
                 {
                     Id = t.Id,
                     TaskType = t.TaskType,
@@ -115,14 +116,14 @@ namespace TasksAPI.Services
                     CreatedDate = t.CreatedDate,
                     UpdatedDate = t.UpdatedDate,
                 })
-                .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
+                .FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException("Task not found");
 
             return _mapper.Map<TasksModel>(t);
         }
 
         public async Task<TasksModel> UpdateTask(int taskID, UpdateTasksModel taskToUpdate)
         {
-            var task = await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
+            var task = await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException("Task not found");
 
             _mapper.Map(taskToUpdate, task);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -132,9 +133,9 @@ namespace TasksAPI.Services
 
         public async Task<TasksModelWithProcurements> CreateProcurement(CreateProcurementModel taskModel)
         {
-            _= await _DBContext.Users
-                .Where( t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
-                .FirstOrDefaultAsync( t => t.Id == taskModel.CreatorId) ?? throw new ArgumentException($"User {taskModel.CreatorId} not found or inactive");
+            _ = await _DBContext.Users
+                .Where(t => t.UserTypeId != (int)EnumTypes.CLIENT && t.Status == (int)DbEntityStatus.ACTIVE)
+                .FirstOrDefaultAsync(t => t.Id == taskModel.CreatorId) ?? throw new ArgumentException($"User {taskModel.CreatorId} not found or inactive");
 
             var newTaskToCreate = new CreateTasksModel { Description = taskModel.Description, TaskType = TaskTypes.PROCUREMENT, UserId = taskModel.CreatorId, UserName = taskModel.UserName };
             var createdTask = await CreateTask(newTaskToCreate);
@@ -143,7 +144,7 @@ namespace TasksAPI.Services
             foreach (var singleGood in taskModel.GoodsOrder)
             {
 
-                var newProcurementTask = new TasksEntitiesProcurements { TaskID = createdTask.Id, GoodTypeID = singleGood.GoodTypeId, GoodType=singleGood.GoodType, Quantity = singleGood.Quantity, RemainingQuantity = singleGood.Quantity, Location = singleGood.Location };
+                var newProcurementTask = new TasksEntitiesProcurements { TaskID = createdTask.Id, GoodTypeID = singleGood.GoodTypeId, GoodType = singleGood.GoodType, Quantity = singleGood.Quantity, RemainingQuantity = singleGood.Quantity, Location = singleGood.Location };
 
                 await _DBContext.TasksEntitiesProcurements.AddAsync(newProcurementTask);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -154,7 +155,7 @@ namespace TasksAPI.Services
 
         public async Task<TasksModel> CreateTask(CreateTasksModel newTask)
         {
-            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, CreatorId = newTask.UserId ,UserName = newTask.UserName };
+            var createEntity = new TasksEntities { TaskType = newTask.TaskType, Description = newTask.Description, CreatorId = newTask.UserId, UserName = newTask.UserName };
 
             await _DBContext.TasksEntities.AddAsync(createEntity);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -164,20 +165,20 @@ namespace TasksAPI.Services
             }
             catch (Exception e)
             {
-                throw new ArgumentException("Error",e);
+                throw new ArgumentException("Error", e);
             }
-            
+
         }
 
         public async Task<TasksModelWithProcurements> GetTasksModelWithProcurementsTasksByID(int taskID)
         {
             var t = await _DBContext.TasksEntities
                 .Include(t => t.TasksEntitiesProcurements)
-                .ThenInclude( t => t.LocationTypesInstances)
+                .ThenInclude(t => t.LocationTypesInstances)
                 .FirstOrDefaultAsync(t => t.Id == taskID);
             if (t == null || t.TaskType != TaskTypes.PROCUREMENT)
             {
-               throw new ArgumentException("Task not found");
+                throw new ArgumentException("Task not found");
             }
             return _mapper.Map<TasksModelWithProcurements>(t);
         }
@@ -187,7 +188,7 @@ namespace TasksAPI.Services
             var t = await _DBContext.TasksEntities.Include(t => t.TasksEntitiesTransferList).FirstOrDefaultAsync(t => t.Id == taskID);
             if (t == null || t.TaskType != TaskTypes.TRANSFER)
             {
-               throw new ArgumentException("Task not found");
+                throw new ArgumentException("Task not found");
             }
             return _mapper.Map<TasksModelWithTransfer>(t);
         }
@@ -197,12 +198,12 @@ namespace TasksAPI.Services
             var taskToUpdate = await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID);
             if (taskToUpdate == null || taskToUpdate.TaskType != TaskTypes.PROCUREMENT)
             {
-               throw new ArgumentException("Task not found");
+                throw new ArgumentException("Task not found");
             }
 
             foreach (var order in GoodsOrder)
             {
-                await _DBContext.TasksEntitiesProcurements.AddAsync(new TasksEntitiesProcurements { TaskID = taskID, GoodTypeID = order.GoodTypeId, Quantity = order.Quantity, RemainingQuantity = order.Quantity, Location=order.Location});
+                await _DBContext.TasksEntitiesProcurements.AddAsync(new TasksEntitiesProcurements { TaskID = taskID, GoodTypeID = order.GoodTypeId, Quantity = order.Quantity, RemainingQuantity = order.Quantity, Location = order.Location });
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
             }
 
@@ -223,12 +224,12 @@ namespace TasksAPI.Services
 
         public async Task<ReturnTransferTask> AddItemsToTransferTask(int taskID, GoodsTransfer GoodsOrder, bool checkTask = true)
         {
-            
+
             var rejected = new List<RejectedGoodsTransfer>();
 
 
             var taskToUpdate = await _DBContext.TasksEntities.Where(t => t.TaskType == TaskTypes.TRANSFER)
-                    .FirstOrDefaultAsync(t => t.Id == taskID)??throw new ArgumentException("Task not found");
+                    .FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException("Task not found");
 
             var existingTransfers = await _DBContext.TasksEntitiesTransfer.Where(t => GoodsOrder.GoodId.Contains(t.GoodID))
                                                         .Where(t => t.TaskStatus == TaskTypesStatus.OPEN || t.TaskStatus == TaskTypesStatus.PENDING)
@@ -242,7 +243,7 @@ namespace TasksAPI.Services
             foreach (var order in GoodsOrder.GoodId.Except(existingTransfers))
             {
                 var transferedItem = await _goodsInstancesService.GetGoodById(order);
-                
+
                 var fromLocation = await _DBContext.LocationTypesInstances
                     .Where(l => l.Id == transferedItem.LocationId).FirstAsync();
                 var toLocation = await _DBContext.LocationTypesInstances
@@ -265,13 +266,13 @@ namespace TasksAPI.Services
                     }
                     else
                     {
-                        await _goodsInstancesService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.CreatorId); 
-                        
+                        await _goodsInstancesService.CreateMovementHistory(order, 0, 0, (int)GoodsStatus.IN_TRANSIT, taskToUpdate.CreatorId);
+
                         var markForTransfer = new JsonPatchDocument();
                         markForTransfer.Replace("Status", (int)GoodsStatus.IN_TRANSIT);
                         await _goodsInstancesService.PatchGood(order, markForTransfer);
-                        
-                        await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.SerialNumber, FromLocationName = fromLocation.Description, ToLocationName = toLocation.Description});
+
+                        await _DBContext.TasksEntitiesTransfer.AddAsync(new TasksEntitiesTransfer { TaskID = taskID, GoodID = order, FromLocation = transferedItem.LocationId, ToLocation = GoodsOrder.ToLocation, TaskStatus = TaskTypesStatus.PENDING, serialNumber = transferedItem.SerialNumber, FromLocationName = fromLocation.Description, ToLocationName = toLocation.Description });
                         await _DBContext.SaveChangesAsync(CancellationToken.None);
                     }
                 }
@@ -293,7 +294,7 @@ namespace TasksAPI.Services
                 var taskToBeUpdated = await _DBContext.TasksEntitiesProcurements.FirstOrDefaultAsync(t => t.Id == task.Id);
                 if (taskToBeUpdated == null)
                 {
-                   throw new ArgumentException("Task not found");
+                    throw new ArgumentException("Task not found");
 
                 }
                 _mapper.Map(task, taskToBeUpdated);
@@ -304,7 +305,7 @@ namespace TasksAPI.Services
 
             return _mapper.Map<IEnumerable<ProcurementsSubtaskModel>>(await _DBContext.TasksEntitiesProcurements.Where(t => idList.Contains(t.Id)).ToListAsync());
         }
-        
+
 
         public async Task<IEnumerable<TasksEntities_TransferModel>> UpdateTransferSubTasks(IEnumerable<TransferSubtaskModelForUpdate> taskModel)
         {
@@ -315,8 +316,8 @@ namespace TasksAPI.Services
                 var taskToBeUpdated = await _DBContext.TasksEntitiesTransfer.FirstOrDefaultAsync(t => t.Id == task.Id);
                 if (taskToBeUpdated == null)
                 {
-                    
-                   throw new ArgumentException("Task not found");
+
+                    throw new ArgumentException("Task not found");
 
                 }
                 _mapper.Map(task, taskToBeUpdated);
@@ -332,7 +333,7 @@ namespace TasksAPI.Services
         {
             var task = await _DBContext.TasksEntities
                             .Where(t => t.TaskStatus == TaskTypesStatus.OPEN || t.TaskStatus == TaskTypesStatus.PENDING)
-                            .FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found or already completed"); 
+                            .FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException("Task not found or already completed");
             var rejected = new List<RejectedProcurementTransfer>();
             var itemList = new List<GoodsModels>();
             var SNL = new List<string>();
@@ -346,7 +347,7 @@ namespace TasksAPI.Services
                 }
             }
 
-            var existingTransfers =await _DBContext.GoodsTypesInstances.Where(t => existingItems.Contains(t.serialNumber))
+            var existingTransfers = await _DBContext.GoodsTypesInstances.Where(t => existingItems.Contains(t.serialNumber))
                                                     .Where(t => t.Status != (int)GoodsStatus.DELETED || t.Status != (int)GoodsStatus.LOST)
                                                     .Select(t => t.serialNumber).Distinct()
                                                     .ToListAsync();
@@ -382,7 +383,7 @@ namespace TasksAPI.Services
                     countAddedItems = await AddNewProccesedItems(rejected, itemList, SNL, existingTransfers, fulfilment, subTask, countAddedItems);
                     if (countAddedItems > 0)
                     {
-                        var updateTask = new ProcurementsSubtaskModelForUpdate { Id = subTask.Id,GoodType=subTask.GoodType, GoodTypeId = subTask.GoodTypeID,  Location = subTask.Location, Quantity = subTask.Quantity, RemainingQuantity = subTask.RemainingQuantity - countAddedItems };
+                        var updateTask = new ProcurementsSubtaskModelForUpdate { Id = subTask.Id, GoodType = subTask.GoodType, GoodTypeId = subTask.GoodTypeID, Location = subTask.Location, Quantity = subTask.Quantity, RemainingQuantity = subTask.RemainingQuantity - countAddedItems };
                         await UpdateProcurementTaskDetails(new[] { updateTask });
                     }
                 }
@@ -404,7 +405,7 @@ namespace TasksAPI.Services
                             SerialNumber = item.SerialNumber.ToUpper(),
                             LocationId = subTask.Location,
                             Status = GoodsStatus.AVAILABLE,
-                            Quantity  = item.Quantity,
+                            Quantity = item.Quantity,
                         });
 
                         await _goodsInstancesService.CreateMovementHistory(addedItem.Id, fulfilment.Supplier, addedItem.LocationId, (int)GoodsStatus.AVAILABLE, fulfilment.UserId);
@@ -430,10 +431,10 @@ namespace TasksAPI.Services
 
         public async Task<ReturnFulfillTransferTask> FulfillTranfer(int taskID, FulfillTransferTask fulfillGoodsTransfer)
         {
-            var transferTask =await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ??throw new ArgumentException("Task not found");
+            var transferTask = await _DBContext.TasksEntities.FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException("Task not found");
             if (transferTask.TaskStatus != TaskTypesStatus.OPEN && transferTask.TaskStatus != TaskTypesStatus.PENDING)
             {
-               throw new ArgumentException($"Task status {transferTask.TaskStatus} - already proccessed");
+                throw new ArgumentException($"Task status {transferTask.TaskStatus} - already proccessed");
             }
 
 
@@ -454,7 +455,7 @@ namespace TasksAPI.Services
                     patchItem.Replace("locationId", item.ToLocation);
                     patchItem.Replace("Status", (int)GoodsStatus.AVAILABLE);
 
-                    var itemToPatch = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == item.GoodID) ??throw new ArgumentException("Item not found");
+                    var itemToPatch = await _DBContext.GoodsTypesInstances.FirstOrDefaultAsync(g => g.Id == item.GoodID) ?? throw new ArgumentException("Item not found");
                     await _goodsInstancesService.CreateMovementHistory(itemToPatch.Id, itemToPatch.LocationId, item.ToLocation, (int)GoodsStatus.AVAILABLE, fulfillGoodsTransfer.UserId);
 
                     patchItem.ApplyTo(itemToPatch);
@@ -533,10 +534,10 @@ namespace TasksAPI.Services
             return rejectedItem;
         }
 
-        public async  Task<int> DeleteInventoryTask(int taskID)
+        public async Task<int> DeleteInventoryTask(int taskID)
         {
-            var task = await _DBContext.TasksEntities.Where( t => t.TaskStatus == TaskTypesStatus.PENDING).FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException($"Task not found {nameof(taskID)}, or started procesing");
-            if(task.TaskType == TaskTypes.PROCUREMENT)
+            var task = await _DBContext.TasksEntities.Where(t => t.TaskStatus == TaskTypesStatus.PENDING).FirstOrDefaultAsync(t => t.Id == taskID) ?? throw new ArgumentException($"Task not found {nameof(taskID)}, or started procesing");
+            if (task.TaskType == TaskTypes.PROCUREMENT)
             {
                 var subtasks = await _DBContext.TasksEntitiesProcurements.Where(t => t.TaskID == task.Id).ToListAsync();
                 await DeleteProcurementSubtask(subtasks);
@@ -547,7 +548,7 @@ namespace TasksAPI.Services
                 await DeleteTransferSubtask(subtasks);
 
             }
-            
+
             _DBContext.Remove(task);
             return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }
@@ -555,7 +556,7 @@ namespace TasksAPI.Services
         private async Task<int> DeleteProcurementSubtask(IEnumerable<TasksEntitiesProcurements> list)
         {
             _DBContext.RemoveRange(list);
-           return await _DBContext.SaveChangesAsync(CancellationToken.None);
+            return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }
 
         private async Task<int> DeleteTransferSubtask(IEnumerable<TasksEntitiesTransfer> list)
@@ -563,12 +564,12 @@ namespace TasksAPI.Services
             foreach (var item in list)
             {
                 var patchDocument = new JsonPatchDocument();
-                patchDocument.Replace("Status",(int)GoodsStatus.AVAILABLE);
+                patchDocument.Replace("Status", (int)GoodsStatus.AVAILABLE);
                 await _goodsInstancesService.PatchGood(item.GoodID, patchDocument);
-                await _goodsInstancesService.CreateMovementHistory(item.GoodID,0,0,(int)GoodsStatus.AVAILABLE,0);
+                await _goodsInstancesService.CreateMovementHistory(item.GoodID, 0, 0, (int)GoodsStatus.AVAILABLE, 0);
                 _DBContext.Remove(item);
             }
-           return await _DBContext.SaveChangesAsync(CancellationToken.None);
+            return await _DBContext.SaveChangesAsync(CancellationToken.None);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace TasksAPI.Interfaces
 {
     public interface IClientServices
     {
-        Task< (IEnumerable<UserResource>, PaginationMetadata)>GetClients(int pageNumber, int pageSize);
-        Task< (IEnumerable<UserResource>, PaginationMetadata)>GetClientsWithConditions(QueryFilters queryFilters);
+        Task<(IEnumerable<UserResource>, PaginationMetadata)> GetClients(int pageNumber, int pageSize);
+        Task<(IEnumerable<UserResource>, PaginationMetadata)> GetClientsWithConditions(QueryFilters queryFilters);
         Task<UserResource> Register(ClientResource resource, CancellationToken cancellationToken);
         Task<string> Login(LoginResource resource, CancellationToken cancellationToken);
 

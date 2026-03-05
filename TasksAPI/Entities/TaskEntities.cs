@@ -17,12 +17,12 @@ namespace TasksAPI.Entities
         [Required]
         public int CreatorId { get; set; }
         [Required]
-        public string Description { get; set; } =string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         public ICollection<TasksEntitiesProcurements>? TasksEntitiesProcurements { get; set; }
         public ICollection<TasksEntitiesTransfer>? TasksEntitiesTransferList { get; set; }
         public UserEntity? Creator { get; set; }
-        public string? UserName {get; set;}
+        public string? UserName { get; set; }
 
     }
 
@@ -37,7 +37,7 @@ namespace TasksAPI.Entities
         public int TaskID { get; set; }
 
         public GoodsTypesEntity? GoodsTypes { get; set; }
-  
+
         public LocationTypesInstances? LocationTypesInstances { get; set; }
         [Required]
         public int Location { get; set; }

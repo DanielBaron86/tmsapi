@@ -91,9 +91,9 @@ namespace TasksAPI.Controllers
             {
                 throw new Exception(ex.Message);
             }
-            
+
         }
-        
+
         /// <summary>
         /// Returns all users
         /// </summary>
@@ -104,7 +104,7 @@ namespace TasksAPI.Controllers
         {
             try
             {
-                
+
                 var (users, paginationMetadata) = await _userService.GetUsersWithConditions(queryFilters);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
@@ -116,10 +116,10 @@ namespace TasksAPI.Controllers
 
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
-        
+
 
         /// <summary>
         /// Return user by ID
@@ -165,14 +165,14 @@ namespace TasksAPI.Controllers
             return result;
         }
 
-        
-     /// <summary>
-     /// Patch User Details
-     /// </summary>
-     /// <param name="userID"></param>
-     /// <param name="patchUser"></param>
-     /// <param name="cancellationToken"></param>
-     /// <returns></returns>
+
+        /// <summary>
+        /// Patch User Details
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="patchUser"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPatch("{userID}")]
         [Authorize(Policy = "Supervisor")]
         public async Task<ActionResult<UserResource>> PatchUser(int userID, JsonPatchDocument patchUser, CancellationToken cancellationToken)
@@ -204,9 +204,9 @@ namespace TasksAPI.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }            
+            }
         }
-        
+
         [HttpPost("refreshToken")]
         public async Task<ActionResult> refreshToken([FromBody] RefreshResource resource, CancellationToken cancellationToken)
         {
@@ -214,7 +214,7 @@ namespace TasksAPI.Controllers
             if (checkRefreshToken == null || checkRefreshToken.Revoked || checkRefreshToken.ExpiryDate <= DateTime.UtcNow)
             {
                 return Unauthorized(new { message = "Refresh token not found or expired" });
-               
+
             }
 
             return Ok(await _userService.RefreshToken(resource, cancellationToken));

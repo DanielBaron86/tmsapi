@@ -7,7 +7,8 @@ namespace TasksAPI.Profiles
 {
     public class ReportsProfiles : Profile
     {
-        public ReportsProfiles() {
+        public ReportsProfiles()
+        {
             CreateMap<ReportsEntities, ReportsEntitiesModel>();
             CreateMap<ReportsEntitiesModel, ReportsEntities>();
         }

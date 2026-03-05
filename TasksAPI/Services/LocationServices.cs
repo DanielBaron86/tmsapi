@@ -17,13 +17,13 @@ namespace TasksAPI.Services
         public LocationServices(DatabaseConnectContext context, IMapper mapper)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _DBContext = context ?? throw new ArgumentNullException(nameof(context)); 
+            _DBContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
 
-        public async Task < (IEnumerable<LocationUnitModel>, PaginationMetadata)> GetLocations(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<LocationUnitModel>, PaginationMetadata)> GetLocations(int pageNumber, int pageSize)
         {
-            var collection =  _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity) as IQueryable<LocationTypesInstances>;
+            var collection = _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity) as IQueryable<LocationTypesInstances>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
             var collectionReturn = await collection
@@ -31,46 +31,46 @@ namespace TasksAPI.Services
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
-            return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn),paginationMetadata);
-            
+            return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn), paginationMetadata);
+
         }
 
         public async Task<(IEnumerable<LocationUnitModel>, PaginationMetadata)> GetLocationsWithConditions(QueryFilters queryFilters)
         {
             var pageSize = queryFilters.pageSize;
             var pageNumber = queryFilters.pageNumber;
-        
-        var collection = _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity)
-                as IQueryable<LocationTypesInstances>;
-        if (queryFilters.queryFields != null)
-        {
-            foreach (var q in queryFilters.queryFields)
+
+            var collection = _DBContext.LocationTypesInstances.Include(l => l.LocationTypesEntity)
+                    as IQueryable<LocationTypesInstances>;
+            if (queryFilters.queryFields != null)
             {
-                collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
-            }    
-        }
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }
+            }
 
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
-         
-            
+
+
             var collectionReturn = await collection
                 .OrderBy(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
-            return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn),paginationMetadata);
+            return (_mapper.Map<IEnumerable<LocationUnitModel>>(collectionReturn), paginationMetadata);
         }
 
         public async Task<LocationUnitModel> GetLocationById(int locationID)
         {
-            var location = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
+            var location = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
             return _mapper.Map<LocationUnitModel>(location);
         }
 
         public async Task<LocationUnitModel> UpdateLocation(int locationID, LocationUnitForUpdate location)
         {
-            var locationToBeUpdated =await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
+            var locationToBeUpdated = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
 
             _mapper.Map(location, locationToBeUpdated);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -91,7 +91,7 @@ namespace TasksAPI.Services
 
         public async Task<bool> DeleteLocation(int locationID)
         {
-            var location = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
+            var location = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
 
             _DBContext.Remove(location);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -101,7 +101,7 @@ namespace TasksAPI.Services
 
         public async Task<LocationUnitModel> PatchLocation(int locationID, JsonPatchDocument location)
         {
-            var locationToPatch = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ??throw new ArgumentException("Location not found");
+            var locationToPatch = await _DBContext.LocationTypesInstances.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
 
             location.ApplyTo(locationToPatch);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -109,9 +109,9 @@ namespace TasksAPI.Services
             return _mapper.Map<LocationUnitModel>(locationToPatch);
         }
 
-        public async Task< (IEnumerable<LocationTypesModel>, PaginationMetadata)> GetLocationTypess(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<LocationTypesModel>, PaginationMetadata)> GetLocationTypess(int pageNumber, int pageSize)
         {
-            var collection =  _DBContext.LocationEntity as IQueryable<LocationTypesEntity>;
+            var collection = _DBContext.LocationEntity as IQueryable<LocationTypesEntity>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
             var collectionReturn = await collection
@@ -119,7 +119,7 @@ namespace TasksAPI.Services
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
-            return (_mapper.Map<IEnumerable<LocationTypesModel>>(collectionReturn),paginationMetadata);
+            return (_mapper.Map<IEnumerable<LocationTypesModel>>(collectionReturn), paginationMetadata);
         }
 
         public async Task<LocationTypesModel> GetLocationTypeById(int locationID)
@@ -140,31 +140,31 @@ namespace TasksAPI.Services
 
         public async Task<LocationTypesModel> UpdateLocationType(int locationID, EditLocationTypesModel location)
         {
-            var locationToBeUpdated =await _DBContext.LocationEntity.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location type not found");
+            var locationToBeUpdated = await _DBContext.LocationEntity.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location type not found");
 
             _mapper.Map(location, locationToBeUpdated);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
             return _mapper.Map<LocationTypesModel>(locationToBeUpdated);
-            
+
         }
 
         public async Task<int> DeleteLocationType(int locationID)
         {
-            var location =await _DBContext.LocationEntity.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
-            var count = await _DBContext.LocationTypesInstances.Where( t=> t.LocationTypeID == locationID).CountAsync();
+            var location = await _DBContext.LocationEntity.FirstOrDefaultAsync(l => l.Id == locationID) ?? throw new ArgumentException("Location not found");
+            var count = await _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == locationID).CountAsync();
 
             if (count <= 0)
             {
                 _DBContext.Remove(location);
-                return  await _DBContext.SaveChangesAsync(CancellationToken.None);
+                return await _DBContext.SaveChangesAsync(CancellationToken.None);
             }
             else
             {
                 throw new ArgumentException($"Location {locationID} has existing instances");
             }
 
-            
-            
+
+
         }
     }
 }

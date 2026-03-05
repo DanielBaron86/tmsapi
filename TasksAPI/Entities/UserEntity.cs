@@ -9,7 +9,8 @@ namespace TasksAPI.Entities
     public sealed class UserEntity : BaseEntity
     {
 
-        public UserEntity() {
+        public UserEntity()
+        {
             Status = (int)DbEntityStatus.ACTIVE;
         }
 
@@ -31,17 +32,18 @@ namespace TasksAPI.Entities
         public int UserTypeId { get; set; }
 
         public int Status { get; set; }
-        
+
         public string PasswordSalt { get; set; } = default!;
         public string PasswordHash { get; set; } = default!;
         public UserTypes UserTypes { get; set; } = default!;
-        public RefreshTokenEntity RefreshTokenEntity  { get; set; } = default!;
+        public RefreshTokenEntity RefreshTokenEntity { get; set; } = default!;
 
         public ICollection<TasksEntities> TasksEntities { get; set; } = default!;
         public ICollection<CashRegisterEntitySessions> CashRegisterEntitySessions { get; set; } = default!;
-        }
-    
-    public class RefreshTokenEntity :  BaseEntity {
+    }
+
+    public class RefreshTokenEntity : BaseEntity
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

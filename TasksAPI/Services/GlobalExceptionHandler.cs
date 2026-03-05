@@ -14,13 +14,13 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             InvalidOperationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
-        
+
         _logger.LogError(
-            exception, 
-            "An unhandled exception occurred while processing {Method} {Path}", 
-            httpContext.Request.Method, 
+            exception,
+            "An unhandled exception occurred while processing {Method} {Path}",
+            httpContext.Request.Method,
             httpContext.Request.Path);
-        
+
         var problemDetails = new ProblemDetails
         {
             Status = statusCode,
@@ -29,13 +29,13 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             Detail = exception.Message,
             Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
         };
-            
+
         httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return true;
     }
-    
+
     private static string GetTitleForStatus(int statusCode) => statusCode switch
     {
         401 => "Unauthorized",

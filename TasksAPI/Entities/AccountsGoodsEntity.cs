@@ -6,7 +6,7 @@ namespace TasksAPI.Entities
     {
         public int Id { get; set; }
         [ForeignKey("AccountId")]
-        public Accounts? Accounts {  get; set; }
+        public Accounts? Accounts { get; set; }
         public int AccountId { get; set; }
         public int GoodId { get; set; }
         public double price { get; set; }

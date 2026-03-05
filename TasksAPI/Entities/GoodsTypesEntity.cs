@@ -13,7 +13,7 @@ namespace TasksAPI.Entities
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         public int GoodBaseId { get; set; }
         public string Name { get; set; } = default!;

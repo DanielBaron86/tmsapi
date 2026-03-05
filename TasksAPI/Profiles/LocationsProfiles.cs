@@ -17,7 +17,7 @@ namespace TasksAPI.Profiles
             CreateMap<LocationTypesEntity, LocationTypesModel>();
             CreateMap<CreateLocationTypesModel, LocationTypesEntity>();
             CreateMap<EditLocationTypesModel, LocationTypesEntity>();
-            
+
 
         }
     }

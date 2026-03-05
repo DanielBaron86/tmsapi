@@ -9,13 +9,14 @@ using TasksAPI.Models;
 
 namespace TasksAPI.Services
 {
-    public class StoresOperationsService: IStoresOperationsService
+    public class StoresOperationsService : IStoresOperationsService
     {
         private readonly DatabaseConnectContext _DBContext;
         private readonly IGoodsInstancesServices _goodsInstancesServices;
         private readonly IMapper _mapper;
 
-        public StoresOperationsService(DatabaseConnectContext context, IMapper mapper, IGoodsInstancesServices goodsInstancesServices) {
+        public StoresOperationsService(DatabaseConnectContext context, IMapper mapper, IGoodsInstancesServices goodsInstancesServices)
+        {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _DBContext = context ?? throw new ArgumentNullException(nameof(context));
             _goodsInstancesServices = goodsInstancesServices ?? throw new ArgumentNullException(nameof(goodsInstancesServices));
@@ -23,15 +24,15 @@ namespace TasksAPI.Services
 
         public async Task<StoreCartsEntityDetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel)
         {
-            
-            var checkCart = await _DBContext.StoreCartsEntity.Where(t => t.Status == 1).FirstOrDefaultAsync(t => t.Id == cartId) ??throw new ArgumentException("Cart not found or already closed");
 
-            var items =await _DBContext.StoreCartsEntityDetails.Where(t => t.CartId == checkCart.Id).Where(t => t.GoodId == operationModel.GoodId).FirstOrDefaultAsync();
-            if(operationModel.OperationType ==1)
+            var checkCart = await _DBContext.StoreCartsEntity.Where(t => t.Status == 1).FirstOrDefaultAsync(t => t.Id == cartId) ?? throw new ArgumentException("Cart not found or already closed");
+
+            var items = await _DBContext.StoreCartsEntityDetails.Where(t => t.CartId == checkCart.Id).Where(t => t.GoodId == operationModel.GoodId).FirstOrDefaultAsync();
+            if (operationModel.OperationType == 1)
             {
-                _=await _DBContext.GoodsTypesInstances.Where(t => t.Id == operationModel.GoodId && t.LocationId == checkCart.storeLocation).FirstOrDefaultAsync() ?? throw new Exception("Item not found in this location");
+                _ = await _DBContext.GoodsTypesInstances.Where(t => t.Id == operationModel.GoodId && t.LocationId == checkCart.storeLocation).FirstOrDefaultAsync() ?? throw new Exception("Item not found in this location");
             }
-            
+
             if (items == null)
             {
                 var checkItem = await _DBContext.GoodsTypesInstances.FirstAsync(t => t.Id == operationModel.GoodId) ?? throw new Exception($"Item with id {operationModel.GoodId} not found ");
@@ -63,11 +64,12 @@ namespace TasksAPI.Services
 
                 return _mapper.Map<StoreCartsEntityDetailsModel>(newOperation);
             }
-            else {
+            else
+            {
                 throw new Exception($"Item with id {operationModel.GoodId}  already in cart");
-                    }
+            }
 
-             
+
         }
 
         private void ValidateCartItem(CreateRegisterOperationsModel operationModel, StoreCartsEntity checkCart, GoodsTypesInstances checkItem)
@@ -96,7 +98,7 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntitySessionsModel> CloseSession(int sessionId)
         {
-            var session = await _DBContext.CashRegisterEntitySessions.FirstOrDefaultAsync(t => t.Id == sessionId) ??throw new ArgumentException("Session not found");  
+            var session = await _DBContext.CashRegisterEntitySessions.FirstOrDefaultAsync(t => t.Id == sessionId) ?? throw new ArgumentException("Session not found");
 
             var patcher = new JsonPatchDocument();
             patcher.Replace("SessionStatus", 2);
@@ -110,27 +112,30 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity)
         {
-            var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances).Where( c => c.RegisterNumber==cashRegisterEntity.RegisterNumber).FirstOrDefaultAsync();
-            if(cashRegister != null) {
+            var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances).Where(c => c.RegisterNumber == cashRegisterEntity.RegisterNumber).FirstOrDefaultAsync();
+            if (cashRegister != null)
+            {
                 throw new ArgumentException($"Register number {cashRegister.RegisterNumber} already exists in {cashRegister.LocationTypesInstances.Address} - {cashRegister.LocationTypesInstances.Description}");
             }
-            var location =await _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefaultAsync(t => t.Id == cashRegisterEntity.LocationId);
-            if(location == null || location.LocationTypeID != 2) {
-               throw new ArgumentException("Location doesn't exists or wrong type");
+            var location = await _DBContext.LocationTypesInstances.Where(t => t.LocationTypeID == 2).FirstOrDefaultAsync(t => t.Id == cashRegisterEntity.LocationId);
+            if (location == null || location.LocationTypeID != 2)
+            {
+                throw new ArgumentException("Location doesn't exists or wrong type");
             }
-            else {
+            else
+            {
                 var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationId = cashRegisterEntity.LocationId, Notes = cashRegisterEntity.Notes });
                 _DBContext.CashRegisterEntity.Add(newCashRegister);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
                 return _mapper.Map<CashRegisterEntityModel>(newCashRegister);
             }
-            
+
         }
 
         public async Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisters(int pageNumber, int pageSize)
         {
-            var collection =  _DBContext.CashRegisterEntity
-                    .Include( c => c.LocationTypesInstances)
+            var collection = _DBContext.CashRegisterEntity
+                    .Include(c => c.LocationTypesInstances)
                 as IQueryable<CashRegisterEntity>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
@@ -139,22 +144,22 @@ namespace TasksAPI.Services
                 .Take(pageSize)
                 .ToListAsync();
             var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntityModel>>(collectionReturn);
-            return (returnCollection,paginationMetadata);
+            return (returnCollection, paginationMetadata);
         }
 
         public async Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisterWithConditions(QueryFilters queryFilters)
         {
             var pageSize = queryFilters.pageSize;
             var pageNumber = queryFilters.pageNumber;
-            var collection =  _DBContext.CashRegisterEntity
-                    .Include( c => c.LocationTypesInstances)
+            var collection = _DBContext.CashRegisterEntity
+                    .Include(c => c.LocationTypesInstances)
                 as IQueryable<CashRegisterEntity>;
             if (queryFilters.queryFields != null)
             {
                 foreach (var q in queryFilters.queryFields)
                 {
                     collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
-                }    
+                }
             }
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
@@ -162,18 +167,18 @@ namespace TasksAPI.Services
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
-            
+
             var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntityModel>>(collectionReturn);
 
-            return (returnCollection,paginationMetadata);
+            return (returnCollection, paginationMetadata);
         }
 
 
         public async Task<StoreCartsEntityModel> CreateNewCart(CreateNewCart CreateNewCart)
         {
-            var session = await _DBContext.CashRegisterEntitySessions.Where( t => t.SessionStatus == 1).FirstOrDefaultAsync( t => t.AssignedClerk == CreateNewCart.ClerkId) ??throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
-            
-            var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionId = session.Id, Status = 1 ,ClientId = CreateNewCart.ClientId, ClerktId = CreateNewCart.ClerkId, StoreLocation= CreateNewCart.StoreLocation });
+            var session = await _DBContext.CashRegisterEntitySessions.Where(t => t.SessionStatus == 1).FirstOrDefaultAsync(t => t.AssignedClerk == CreateNewCart.ClerkId) ?? throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
+
+            var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionId = session.Id, Status = 1, ClientId = CreateNewCart.ClientId, ClerktId = CreateNewCart.ClerkId, StoreLocation = CreateNewCart.StoreLocation });
 
             _DBContext.StoreCartsEntity.Add(cartToCreate);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -184,24 +189,25 @@ namespace TasksAPI.Services
 
         public async Task<StoreCartsEntityModelWithDetails> GetCartByID(int cartId)
         {
-            var newCart = await _DBContext.StoreCartsEntity.Include( t => t.StoreCartsEntityDetails).FirstOrDefaultAsync(t => t.Id == cartId);
+            var newCart = await _DBContext.StoreCartsEntity.Include(t => t.StoreCartsEntityDetails).FirstOrDefaultAsync(t => t.Id == cartId);
             return _mapper.Map<StoreCartsEntityModelWithDetails>(newCart);
         }
 
         public async Task<StoreCartsEntityDetailsModel> GetCartDetilsByID(int cartDetailsId)
         {
-            var details =await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync(t => t.Id == cartDetailsId) ??throw new ArgumentException("Fail");
+            var details = await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync(t => t.Id == cartDetailsId) ?? throw new ArgumentException("Fail");
 
             return _mapper.Map<StoreCartsEntityDetailsModel>(details);
         }
 
-        public async  Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
+        public async Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args)
         {
-            _=await _DBContext.CashRegisterEntity.FirstOrDefaultAsync( t => t.Id ==args.CashRegisterId) ??throw new ArgumentException("Register not found");
+            _ = await _DBContext.CashRegisterEntity.FirstOrDefaultAsync(t => t.Id == args.CashRegisterId) ?? throw new ArgumentException("Register not found");
 
-            var checkClerk = await _DBContext.CashRegisterEntitySessions.Where( t=> t.AssignedClerk == args.AssignedClerk && t.SessionStatus == 1).FirstOrDefaultAsync();
-            if(checkClerk != null ) {
-               throw new ArgumentException("Clerk is already assigned to register. Please close session with id " + checkClerk.Id);
+            var checkClerk = await _DBContext.CashRegisterEntitySessions.Where(t => t.AssignedClerk == args.AssignedClerk && t.SessionStatus == 1).FirstOrDefaultAsync();
+            if (checkClerk != null)
+            {
+                throw new ArgumentException("Clerk is already assigned to register. Please close session with id " + checkClerk.Id);
             }
 
             var newSession = _mapper.Map<CashRegisterEntitySessions>(new CashRegisterEntitySessionsModel { AssignedClerk = args.AssignedClerk, SessionStatus = 1, CashRegisterId = args.CashRegisterId, OpenHour = DateTime.UtcNow, Notes = args.Notes });
@@ -212,49 +218,51 @@ namespace TasksAPI.Services
 
         }
 
-        public async Task<StoreCartsEntityModelWithDetails> PayForCartByID(int cartId,Decimal money)
+        public async Task<StoreCartsEntityModelWithDetails> PayForCartByID(int cartId, Decimal money)
         {
-            var cartToBePayed =await _DBContext.StoreCartsEntity.FirstOrDefaultAsync(t => t.Id == cartId) ??throw new ArgumentException("Cart not found");
-            
-            if(cartToBePayed.Status == 2) {throw new ArgumentException("Cart already paid and closed"); }
+            var cartToBePayed = await _DBContext.StoreCartsEntity.FirstOrDefaultAsync(t => t.Id == cartId) ?? throw new ArgumentException("Cart not found");
 
-            if(cartToBePayed.Total < 0 && money > 0)
+            if (cartToBePayed.Status == 2) { throw new ArgumentException("Cart already paid and closed"); }
+
+            if (cartToBePayed.Total < 0 && money > 0)
             {
                 money = Decimal.Multiply(money, -1);
             }
 
             var applyPayment = new JsonPatchDocument();
-            applyPayment.Replace("Paid", Decimal.Add(cartToBePayed.Paid,money));
+            applyPayment.Replace("Paid", Decimal.Add(cartToBePayed.Paid, money));
             applyPayment.ApplyTo(cartToBePayed);
-            applyPayment.Replace("Remaining", Decimal.Subtract(cartToBePayed.Total,cartToBePayed.Paid));
+            applyPayment.Replace("Remaining", Decimal.Subtract(cartToBePayed.Total, cartToBePayed.Paid));
             applyPayment.ApplyTo(cartToBePayed);
 
-            if(cartToBePayed.Remaining <= 0)
+            if (cartToBePayed.Remaining <= 0)
             {
                 applyPayment.Replace("Status", 2);
                 applyPayment.ApplyTo(cartToBePayed);
 
                 var SellGoods = new List<SellGoods>();
                 var returnGoodsIds = new List<int>();
-                var goods =await _DBContext.StoreCartsEntityDetails.Where( t => t.CartId == cartToBePayed.Id).ToListAsync();
-                foreach (var good in goods) { 
-                    if(good.OperationType == 1)
+                var goods = await _DBContext.StoreCartsEntityDetails.Where(t => t.CartId == cartToBePayed.Id).ToListAsync();
+                foreach (var good in goods)
+                {
+                    if (good.OperationType == 1)
                     {
-                        SellGoods.Add( 
-                            new SellGoods { ClerkId = cartToBePayed.clerktId, StoreLocation = cartToBePayed.storeLocation, GoodId= good.GoodId, Price= good.Price }
+                        SellGoods.Add(
+                            new SellGoods { ClerkId = cartToBePayed.clerktId, StoreLocation = cartToBePayed.storeLocation, GoodId = good.GoodId, Price = good.Price }
                             );
                     }
-                    
-                    if( good.OperationType == 2)
+
+                    if (good.OperationType == 2)
                     {
                         returnGoodsIds.Add(good.GoodId);
                     }
                 }
                 await _goodsInstancesServices.SellItem(cartToBePayed.clientId, SellGoods);
-                if(returnGoodsIds.Count > 0) {
+                if (returnGoodsIds.Count > 0)
+                {
                     await _goodsInstancesServices.ReturnItems(cartToBePayed.clientId, new ReturnGoods { ClerkId = cartToBePayed.clerktId, ReturnLocation = cartToBePayed.storeLocation, GoodId = returnGoodsIds });
                 }
-                
+
             }
 
             await _DBContext.SaveChangesAsync(CancellationToken.None);
@@ -263,7 +271,7 @@ namespace TasksAPI.Services
 
         public async Task<int> RemoveCart(int cartId)
         {
-            var cartItem =await _DBContext.StoreCartsEntity
+            var cartItem = await _DBContext.StoreCartsEntity
                 .Include(t => t.StoreCartsEntityDetails)
                 .Where(t => t.Status == 1)
                 .FirstOrDefaultAsync(t => t.Id == cartId) ?? throw new ArgumentException($"{nameof(cartId)} not found");
@@ -282,25 +290,25 @@ namespace TasksAPI.Services
 
         public async Task<int> RemoveCartDetail(int cartDetailsId)
         {
-            var cartItem = await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync( t => t.Id == cartDetailsId) ??throw new ArgumentException("Cart item not found");
+            var cartItem = await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync(t => t.Id == cartDetailsId) ?? throw new ArgumentException("Cart item not found");
             _DBContext.Remove(cartItem);
             var patchJson = new JsonPatchDocument();
-            patchJson.Replace("Status",(int) GoodsStatus.AVAILABLE);
+            patchJson.Replace("Status", (int)GoodsStatus.AVAILABLE);
             await _goodsInstancesServices.PatchGood(cartItem.GoodId, patchJson);
 
             var updateCart = await _DBContext.StoreCartsEntity.FirstOrDefaultAsync(t => t.Id == cartItem.CartId);
-            var patchCart =new JsonPatchDocument();
-            
-            patchCart.Replace("Total",Decimal.Subtract(updateCart.Total, cartItem.Price));
+            var patchCart = new JsonPatchDocument();
+
+            patchCart.Replace("Total", Decimal.Subtract(updateCart.Total, cartItem.Price));
             patchCart.Replace("Remaining", Decimal.Subtract(updateCart.Remaining, cartItem.Price));
             patchCart.ApplyTo(updateCart);
 
             return await _DBContext.SaveChangesAsync(CancellationToken.None);
-            
+
         }
 
 
-        public async Task< (IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCarts(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCarts(int pageNumber, int pageSize)
         {
             var collection = _DBContext.StoreCartsEntity as IQueryable<StoreCartsEntity>;
             var totalItemCount = await collection.CountAsync();
@@ -317,7 +325,7 @@ namespace TasksAPI.Services
 
         public async Task<IEnumerable<StoreCartsEntityModelWithDetails>> GetCartsByAccountID(int accountId)
         {
-            return _mapper.Map<IEnumerable<StoreCartsEntityModelWithDetails>>(await _DBContext.StoreCartsEntity.Include(t => t.StoreCartsEntityDetails).Where(t => t.clientId == accountId).ToListAsync(CancellationToken.None) );
+            return _mapper.Map<IEnumerable<StoreCartsEntityModelWithDetails>>(await _DBContext.StoreCartsEntity.Include(t => t.StoreCartsEntityDetails).Where(t => t.clientId == accountId).ToListAsync(CancellationToken.None));
         }
     }
 }

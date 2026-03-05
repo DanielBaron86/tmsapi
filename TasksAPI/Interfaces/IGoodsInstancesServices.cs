@@ -7,17 +7,17 @@ namespace TasksAPI.Interfaces
 {
     public interface IGoodsInstancesServices
     {
-        Task< (IEnumerable<GoodsModels>, PaginationMetadata)>GetGoods(int pageNumber, int pageSize);
-        Task< (IEnumerable<GoodsModels>, PaginationMetadata)>GetGoodsWithConditions(QueryFilters queryFilters);
-        
-        
+        Task<(IEnumerable<GoodsModels>, PaginationMetadata)> GetGoods(int pageNumber, int pageSize);
+        Task<(IEnumerable<GoodsModels>, PaginationMetadata)> GetGoodsWithConditions(QueryFilters queryFilters);
+
+
         Task<GoodsModels> GetGoodById(int goodId);
-       
+
 
         Task<GoodsModels> CreateGood(CreateGoodsModels goodUnitModel);
-        
+
         Task<GoodsModels> UpdateGood(int goodId, UpdateGoodsModels good);
-        
+
         Task<GoodsModels> PatchGood(int goodId, JsonPatchDocument patchGood);
         Task<bool> DeleteGoods(int goodId);
         Task<IEnumerable<AccountsGoodsEntity>> SellItem(int clientId, ICollection<SellGoods> args);
@@ -26,10 +26,10 @@ namespace TasksAPI.Interfaces
         Task<IEnumerable<AccountsGoodsEntity>> ReturnItems(int userId, ReturnGoods returnGoods);
 
         Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodId);
-        
-        Task< (IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)>GetGoodsByView(int pageNumber, int pageSize);
-        
-        
+
+        Task<(IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)> GetGoodsByView(int pageNumber, int pageSize);
+
+
 
     }
 }
