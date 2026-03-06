@@ -535,6 +535,14 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.UpdateRegister(System.Int32,TasksAPI.Models.CreateCashRegisterEntity)">
+            <summary>
+            Update Register
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.StoresOperationsController.GelAllRegistersByQuery(TasksAPI.Models.QueryFilters)">
             <summary>
             Returns a list of all Registers with filters

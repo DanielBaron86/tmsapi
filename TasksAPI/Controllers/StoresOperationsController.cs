@@ -155,6 +155,29 @@ namespace TasksAPI.Controllers
             }
 
         }
+        
+        /// <summary>
+        /// Update Register
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPut("cash_register/{id}")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntityModel>>> UpdateRegister(int id, CreateCashRegisterEntity updateModel)
+        {
+
+            try
+            {
+                var registerItem= await _storeServices.UpdateRegister(id, updateModel);
+                return Ok(registerItem);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+        }
 
         /// <summary>
         /// Returns a list of all Registers with filters

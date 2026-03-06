@@ -135,6 +135,28 @@ namespace TasksAPI.Services
 
         }
 
+        public async Task<CashRegisterEntityModel> UpdateRegister(int id, CreateCashRegisterEntity updateModel)
+        {
+            var registerToBeUpdated =  await _DBContext.CashRegisterEntity.FirstOrDefaultAsync(t => t.Id == id);
+            if (registerToBeUpdated == null)
+            {
+             throw    new ArgumentException($"Register with id {id} not found");
+            }
+            var checkDuplicate = await _DBContext.CashRegisterEntity
+                .Include(c => c.LocationTypesInstances)    
+                .Where(r => r.LocationID==updateModel.LocationId)
+                .FirstOrDefaultAsync(t => t.RegisterNumber == updateModel.RegisterNumber);
+            if (checkDuplicate != null)
+            {
+                throw new ArgumentException($"Register number {checkDuplicate.RegisterNumber} already exists in Location Id {checkDuplicate.LocationID} Address {checkDuplicate.LocationTypesInstances.Address} - {checkDuplicate.LocationTypesInstances.Description}");
+            }
+            _mapper.Map(updateModel, registerToBeUpdated);
+            await _DBContext.SaveChangesAsync(CancellationToken.None);
+            var updatedRegister = await _DBContext.CashRegisterEntity.Include(r => r.LocationTypesInstances).FirstOrDefaultAsync(g => g.Id == registerToBeUpdated.Id);
+            
+            return _mapper.Map<CashRegisterEntityModel>(updatedRegister);
+        }
+
         public async Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisters(int pageNumber, int pageSize)
         {
             var collection = _DBContext.CashRegisterEntity

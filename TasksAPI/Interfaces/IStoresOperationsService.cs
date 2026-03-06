@@ -8,6 +8,7 @@ namespace TasksAPI.Interfaces
     public interface IStoresOperationsService
     {
         Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity);
+        Task<CashRegisterEntityModel> UpdateRegister(int id, CreateCashRegisterEntity updateModel);
         Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisters(int pageNumber, int pageSize);
         Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisterWithConditions(QueryFilters queryFilters);
         Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args);
