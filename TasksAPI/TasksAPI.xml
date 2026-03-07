@@ -535,6 +535,13 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GetRegisterById(System.Int32)">
+            <summary>
+            Get Register by Id
+            </summary>
+            <param name="registerId"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.StoresOperationsController.UpdateRegister(System.Int32,TasksAPI.Models.CreateCashRegisterEntity)">
             <summary>
             Update Register
@@ -570,6 +577,22 @@
             Close existing cash register sessions
             </summary>
             <param name="sessionId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GelAllRegisterSessions(System.Int32,System.Int32)">
+            <summary>
+            Returns a list of all register Session
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GelAllSessionsByQuery(TasksAPI.Models.QueryFilters)">
+            <summary>
+            Returns a list of all registers Sessions with filters
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
             <returns></returns>
         </member>
         <member name="M:TasksAPI.Controllers.StoresOperationsController.CreateNewCart(TasksAPI.Models.CreateNewCart)">

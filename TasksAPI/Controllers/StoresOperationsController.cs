@@ -157,6 +157,25 @@ namespace TasksAPI.Controllers
         }
         
         /// <summary>
+        /// Get Register by Id
+        /// </summary>
+        /// <param name="registerId"></param>
+        /// <returns></returns>
+        [HttpGet("cash_register/{registerId}")]
+        public async Task<ActionResult<int>> GetRegisterById(int registerId)
+        {
+            try
+            {
+                return Ok(await _storeServices.GetCashRegistersById(registerId));
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+        
+        /// <summary>
         /// Update Register
         /// </summary>
         /// <param name="pageNumber"></param>
@@ -259,6 +278,60 @@ namespace TasksAPI.Controllers
             {
                 throw new Exception(ex.Message);
             }
+        }
+        
+        /// <summary>
+        /// Returns a list of all register Session
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("get_sessions")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntitySessionsModel>>> GelAllRegisterSessions(int pageNumber = 1, int pageSize = 10)
+        {
+
+            try
+            {
+                if (pageSize > MaxPagesSize) pageSize = MaxPagesSize;
+                var (returnInstance, paginationMetadata) = await _storeServices.GetSession(pageNumber, pageSize);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(returnInstance);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+        }
+        
+        /// <summary>
+        /// Returns a list of all registers Sessions with filters
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPost("get_sessions/query")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntitySessionsModel>>> GelAllSessionsByQuery(QueryFilters queryFilters)
+        {
+
+            try
+            {
+
+                var (returnInstance, paginationMetadata) = await _storeServices.GetSessionrWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(returnInstance);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
         }
 
 

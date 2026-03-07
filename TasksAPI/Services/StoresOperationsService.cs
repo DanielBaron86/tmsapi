@@ -172,6 +172,16 @@ namespace TasksAPI.Services
             return (returnCollection, paginationMetadata);
         }
 
+        public async Task<CashRegisterEntityModel> GetCashRegistersById(int registerId)
+        {
+            var registerInstance =  await _DBContext.CashRegisterEntity.Include( r => r.LocationTypesInstances).FirstOrDefaultAsync(t => t.Id == registerId);
+            if (registerInstance == null)
+            {
+                throw    new ArgumentException($"Register with id {registerId} not found");
+            }
+            return _mapper.Map<CashRegisterEntityModel>(registerInstance);
+        }
+
         public async Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisterWithConditions(QueryFilters queryFilters)
         {
             var pageSize = queryFilters.pageSize;
@@ -194,6 +204,46 @@ namespace TasksAPI.Services
                 .ToListAsync();
 
             var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntityModel>>(collectionReturn);
+
+            return (returnCollection, paginationMetadata);
+        }
+
+        public async Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSession(int pageNumber, int pageSize)
+        {
+            var collection = _DBContext.CashRegisterEntitySessions.Include( s => s.User)
+                as IQueryable<CashRegisterEntitySessions>;
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntitySessionsModel>>(collectionReturn);
+            return (returnCollection, paginationMetadata);
+        }
+
+        public async Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSessionrWithConditions(QueryFilters queryFilters)
+        {
+            var pageSize = queryFilters.pageSize;
+            var pageNumber = queryFilters.pageNumber;
+            var collection = _DBContext.CashRegisterEntitySessions.Include( s => s.User)
+                as IQueryable<CashRegisterEntitySessions>;
+            
+            if (queryFilters.queryFields != null)
+            {
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }
+            }
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntitySessionsModel>>(collectionReturn);
 
             return (returnCollection, paginationMetadata);
         }

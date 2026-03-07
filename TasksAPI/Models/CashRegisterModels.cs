@@ -46,6 +46,7 @@ namespace TasksAPI.Models
 
     public class CashRegisterEntitySessionsModel : BaseModel
     {
+        public int Id { get; set; }
         [JsonRequired]
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
         [JsonRequired]
@@ -57,6 +58,7 @@ namespace TasksAPI.Models
         public DateTime? CloseHour { get; set; }
 
         public string[]? Notes { get; set; }
+        public UserResource? User { get; set; }
     }
 
     public struct CreateRegisterOperationsModel
