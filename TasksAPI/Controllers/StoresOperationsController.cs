@@ -155,7 +155,7 @@ namespace TasksAPI.Controllers
             }
 
         }
-        
+
         /// <summary>
         /// Get Register by Id
         /// </summary>
@@ -174,7 +174,7 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Update Register
         /// </summary>
@@ -187,7 +187,7 @@ namespace TasksAPI.Controllers
 
             try
             {
-                var registerItem= await _storeServices.UpdateRegister(id, updateModel);
+                var registerItem = await _storeServices.UpdateRegister(id, updateModel);
                 return Ok(registerItem);
             }
             catch (Exception ex)
@@ -279,7 +279,7 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Returns a list of all register Session
         /// </summary>
@@ -306,7 +306,7 @@ namespace TasksAPI.Controllers
             }
 
         }
-        
+
         /// <summary>
         /// Returns a list of all registers Sessions with filters
         /// </summary>

@@ -12,8 +12,8 @@ namespace TasksAPI.Interfaces
         Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisters(int pageNumber, int pageSize);
         Task<CashRegisterEntityModel> GetCashRegistersById(int registerId);
         Task<(IEnumerable<CashRegisterEntityModel>, PaginationMetadata)> GetCashRegisterWithConditions(QueryFilters queryFilters);
-        
-        
+
+
         Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSession(int pageNumber, int pageSize);
         Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSessionrWithConditions(QueryFilters queryFilters);
         Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args);

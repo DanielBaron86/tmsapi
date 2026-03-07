@@ -114,7 +114,7 @@ namespace TasksAPI.Services
         {
             var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances)
                 .Where(c => c.RegisterNumber == cashRegisterEntity.RegisterNumber)
-                .Where(c =>c.LocationID==cashRegisterEntity.LocationId)
+                .Where(c => c.LocationID == cashRegisterEntity.LocationId)
                 .FirstOrDefaultAsync();
             if (cashRegister != null)
             {
@@ -127,7 +127,7 @@ namespace TasksAPI.Services
             }
             else
             {
-                var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationId = cashRegisterEntity.LocationId,RegisterNumber =cashRegisterEntity.RegisterNumber, Notes = cashRegisterEntity.Notes });
+                var newCashRegister = _mapper.Map<CashRegisterEntity>(new CashRegisterEntityModel { LocationId = cashRegisterEntity.LocationId, RegisterNumber = cashRegisterEntity.RegisterNumber, Notes = cashRegisterEntity.Notes });
                 _DBContext.CashRegisterEntity.Add(newCashRegister);
                 await _DBContext.SaveChangesAsync(CancellationToken.None);
                 return _mapper.Map<CashRegisterEntityModel>(newCashRegister);
@@ -137,14 +137,14 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntityModel> UpdateRegister(int id, CreateCashRegisterEntity updateModel)
         {
-            var registerToBeUpdated =  await _DBContext.CashRegisterEntity.FirstOrDefaultAsync(t => t.Id == id);
+            var registerToBeUpdated = await _DBContext.CashRegisterEntity.FirstOrDefaultAsync(t => t.Id == id);
             if (registerToBeUpdated == null)
             {
-             throw    new ArgumentException($"Register with id {id} not found");
+                throw new ArgumentException($"Register with id {id} not found");
             }
             var checkDuplicate = await _DBContext.CashRegisterEntity
-                .Include(c => c.LocationTypesInstances)    
-                .Where(r => r.LocationID==updateModel.LocationId)
+                .Include(c => c.LocationTypesInstances)
+                .Where(r => r.LocationID == updateModel.LocationId)
                 .FirstOrDefaultAsync(t => t.RegisterNumber == updateModel.RegisterNumber);
             if (checkDuplicate != null)
             {
@@ -153,7 +153,7 @@ namespace TasksAPI.Services
             _mapper.Map(updateModel, registerToBeUpdated);
             await _DBContext.SaveChangesAsync(CancellationToken.None);
             var updatedRegister = await _DBContext.CashRegisterEntity.Include(r => r.LocationTypesInstances).FirstOrDefaultAsync(g => g.Id == registerToBeUpdated.Id);
-            
+
             return _mapper.Map<CashRegisterEntityModel>(updatedRegister);
         }
 
@@ -174,10 +174,10 @@ namespace TasksAPI.Services
 
         public async Task<CashRegisterEntityModel> GetCashRegistersById(int registerId)
         {
-            var registerInstance =  await _DBContext.CashRegisterEntity.Include( r => r.LocationTypesInstances).FirstOrDefaultAsync(t => t.Id == registerId);
+            var registerInstance = await _DBContext.CashRegisterEntity.Include(r => r.LocationTypesInstances).FirstOrDefaultAsync(t => t.Id == registerId);
             if (registerInstance == null)
             {
-                throw    new ArgumentException($"Register with id {registerId} not found");
+                throw new ArgumentException($"Register with id {registerId} not found");
             }
             return _mapper.Map<CashRegisterEntityModel>(registerInstance);
         }
@@ -210,7 +210,7 @@ namespace TasksAPI.Services
 
         public async Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSession(int pageNumber, int pageSize)
         {
-            var collection = _DBContext.CashRegisterEntitySessions.Include( s => s.User)
+            var collection = _DBContext.CashRegisterEntitySessions.Include(s => s.User)
                 as IQueryable<CashRegisterEntitySessions>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
@@ -226,9 +226,9 @@ namespace TasksAPI.Services
         {
             var pageSize = queryFilters.pageSize;
             var pageNumber = queryFilters.pageNumber;
-            var collection = _DBContext.CashRegisterEntitySessions.Include( s => s.User)
+            var collection = _DBContext.CashRegisterEntitySessions.Include(s => s.User)
                 as IQueryable<CashRegisterEntitySessions>;
-            
+
             if (queryFilters.queryFields != null)
             {
                 foreach (var q in queryFilters.queryFields)
