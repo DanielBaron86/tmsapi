@@ -198,7 +198,7 @@ namespace TasksAPI.Services
             }
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
-            var collectionReturn = await collection.OrderBy(c => c.Id)
+            var collectionReturn = await collection.OrderByDescending(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
@@ -214,7 +214,7 @@ namespace TasksAPI.Services
                 as IQueryable<CashRegisterEntitySessions>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
-            var collectionReturn = await collection.OrderBy(c => c.Id)
+            var collectionReturn = await collection.OrderByDescending(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
