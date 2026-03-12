@@ -40,6 +40,7 @@ namespace TasksAPI.Entities
 
         public ICollection<TasksEntities> TasksEntities { get; set; } = default!;
         public ICollection<CashRegisterEntitySessions> CashRegisterEntitySessions { get; set; } = default!;
+        public ICollection<StoreCartsEntity>? StoreCartsEntity { get; set; }
     }
 
     public class RefreshTokenEntity : BaseEntity

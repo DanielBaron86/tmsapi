@@ -25,6 +25,7 @@ namespace TasksAPI.Entities
         public ICollection<TasksEntitiesTransfer>? TasksEntitiesTransfer { get; set; }
         public ICollection<TasksEntitiesProcurements>? TasksEntitiesProcurements { get; set; }
         public ICollection<CashRegisterEntity>? CashRegisterEntity { get; set; }
+        public ICollection<StoreCartsEntity>? StoreCartsEntity { get; set; }
 
     }
 }

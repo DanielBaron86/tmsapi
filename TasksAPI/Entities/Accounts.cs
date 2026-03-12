@@ -38,7 +38,6 @@ namespace TasksAPI.Entities
         public UserTypes UserTypes { get; set; } = default!;
 
         public ICollection<AccountsGoodsEntity> AccountsGoodsEntity { get; set; } = default!;
-
-
+        public ICollection<StoreCartsEntity>? StoreCartsEntity { get; set; }
     }
 }

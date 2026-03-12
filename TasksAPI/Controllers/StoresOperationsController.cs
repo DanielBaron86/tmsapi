@@ -68,6 +68,33 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
+        
+        /// <summary>
+        /// Returns a list of all Carts with filters
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPost("carts/query")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntityModel>>> GetCartsByQuery(QueryFilters queryFilters)
+        {
+
+            try
+            {
+
+                var (cartsInstances, paginationMetadata) = await _storeServices.GetCartsWithConditions(queryFilters);
+
+                Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+                return Ok(cartsInstances);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+        }
 
 
         /// <summary>

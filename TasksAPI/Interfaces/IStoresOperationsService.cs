@@ -24,6 +24,7 @@ namespace TasksAPI.Interfaces
         Task<StoreCartsEntityDetailsModel> AddReturnToCart(int cartId, CreateRegisterOperationsModel operationModel);
 
         Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCarts(int pageNumber, int pageSize);
+        Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCartsWithConditions(QueryFilters queryFilters);
         Task<StoreCartsEntityModelWithDetails> GetCartByID(int cartId);
         Task<IEnumerable<StoreCartsEntityModelWithDetails>> GetCartsByAccountID(int accountId);
 

@@ -164,7 +164,17 @@ namespace TasksAPI.DataBaseContext
             modelBuilder.Entity<StoreCartsEntityDetails>()
                         .Property(p => p.Price)
                         .HasColumnType("decimal(18,4)");
-
+            modelBuilder.Entity<StoreCartsEntityDetails>()
+                .HasOne(p => p.GoodsTypesInstance)
+                .WithMany(p => p.StoreCartsEntityDetails)
+                .HasForeignKey(p => p.GoodId);
+                
+                
+            // modelBuilder.Entity<StoreCartsEntityDetails>()
+            //     .HasMany(p => p.GoodsTypesInstances)
+            //     .WithMany(p => p.StoreCartsEntityDetails)
+            //     .UsingEntity(j => j.ToTable("StoreCartDetails_GoodsInstances"));
+              
             modelBuilder.Entity<StoreCartsEntity>()
                         .Property(p => p.Total)
                         .HasColumnType("decimal(18,4)");
@@ -174,6 +184,18 @@ namespace TasksAPI.DataBaseContext
             modelBuilder.Entity<StoreCartsEntity>()
                         .Property(p => p.Remaining)
                         .HasColumnType("decimal(18,4)");
+            modelBuilder.Entity<StoreCartsEntity>()
+                .HasOne(e => e.LocationTypesInstances)
+                .WithMany(e => e.StoreCartsEntity)
+                .HasForeignKey(e => e.storeLocation);
+            modelBuilder.Entity<StoreCartsEntity>()
+                .HasOne(e => e.Accounts)
+                .WithMany(e => e.StoreCartsEntity)
+                .HasForeignKey(e => e.clientId);
+            modelBuilder.Entity<StoreCartsEntity>()
+                .HasOne(e => e.UserEntity)
+                .WithMany(e => e.StoreCartsEntity)
+                .HasForeignKey(e => e.clientId);
 
 
 

@@ -30,7 +30,7 @@ namespace TasksAPI.Services
             var items = await _DBContext.StoreCartsEntityDetails.Where(t => t.CartId == checkCart.Id).Where(t => t.GoodId == operationModel.GoodId).FirstOrDefaultAsync();
             if (operationModel.OperationType == 1)
             {
-                _ = await _DBContext.GoodsTypesInstances.Where(t => t.Id == operationModel.GoodId && t.LocationId == checkCart.storeLocation).FirstOrDefaultAsync() ?? throw new Exception("Item not found in this location");
+                _ = await _DBContext.GoodsTypesInstances.Where(t => t.Id == operationModel.GoodId && t.LocationId == checkCart.storeLocation).FirstOrDefaultAsync() ?? throw new Exception($"Item {operationModel.GoodId} not found in location {checkCart.storeLocation}");
             }
 
             if (items == null)
@@ -172,6 +172,7 @@ namespace TasksAPI.Services
             return (returnCollection, paginationMetadata);
         }
 
+
         public async Task<CashRegisterEntityModel> GetCashRegistersById(int registerId)
         {
             var registerInstance = await _DBContext.CashRegisterEntity.Include(r => r.LocationTypesInstances).FirstOrDefaultAsync(t => t.Id == registerId);
@@ -222,7 +223,8 @@ namespace TasksAPI.Services
             return (returnCollection, paginationMetadata);
         }
 
-        public async Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSessionrWithConditions(QueryFilters queryFilters)
+        public async Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSessionrWithConditions(
+            QueryFilters queryFilters)
         {
             var pageSize = queryFilters.pageSize;
             var pageNumber = queryFilters.pageNumber;
@@ -236,15 +238,16 @@ namespace TasksAPI.Services
                     collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
                 }
             }
+
             var totalItemCount = await collection.CountAsync();
-            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            var paginationMetadata =
+                new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
             var collectionReturn = await collection.OrderBy(c => c.Id)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
 
             var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntitySessionsModel>>(collectionReturn);
-
             return (returnCollection, paginationMetadata);
         }
 
@@ -252,7 +255,9 @@ namespace TasksAPI.Services
         public async Task<StoreCartsEntityModel> CreateNewCart(CreateNewCart CreateNewCart)
         {
             var session = await _DBContext.CashRegisterEntitySessions.Where(t => t.SessionStatus == 1).FirstOrDefaultAsync(t => t.AssignedClerk == CreateNewCart.ClerkId) ?? throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
-
+            var location =
+                await _DBContext.LocationTypesInstances.Where(l => l.LocationTypeID ==(int)LocationTypesList.STORE ).FirstOrDefaultAsync(l => l.Id == CreateNewCart.StoreLocation) ?? throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");;
+            
             var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionId = session.Id, Status = 1, ClientId = CreateNewCart.ClientId, ClerktId = CreateNewCart.ClerkId, StoreLocation = CreateNewCart.StoreLocation });
 
             _DBContext.StoreCartsEntity.Add(cartToCreate);
@@ -262,15 +267,24 @@ namespace TasksAPI.Services
 
         }
 
+       
+
         public async Task<StoreCartsEntityModelWithDetails> GetCartByID(int cartId)
         {
-            var newCart = await _DBContext.StoreCartsEntity.Include(t => t.StoreCartsEntityDetails).FirstOrDefaultAsync(t => t.Id == cartId);
+            var newCart = await _DBContext.StoreCartsEntity
+                .Include(t => t.StoreCartsEntityDetails)
+                .ThenInclude(d => d.GoodsTypesInstance )
+                .Include(t => t.LocationTypesInstances)
+                .Include(e => e.Accounts)
+                .Include(e => e.UserEntity)
+                .FirstOrDefaultAsync(t => t.Id == cartId);
             return _mapper.Map<StoreCartsEntityModelWithDetails>(newCart);
         }
 
         public async Task<StoreCartsEntityDetailsModel> GetCartDetilsByID(int cartDetailsId)
         {
-            var details = await _DBContext.StoreCartsEntityDetails.FirstOrDefaultAsync(t => t.Id == cartDetailsId) ?? throw new ArgumentException("Fail");
+            var details = await _DBContext.StoreCartsEntityDetails
+                .FirstOrDefaultAsync(t => t.Id == cartDetailsId) ?? throw new ArgumentException("Fail");
 
             return _mapper.Map<StoreCartsEntityDetailsModel>(details);
         }
@@ -385,16 +399,42 @@ namespace TasksAPI.Services
 
         public async Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCarts(int pageNumber, int pageSize)
         {
-            var collection = _DBContext.StoreCartsEntity as IQueryable<StoreCartsEntity>;
+            var collection = _DBContext.StoreCartsEntity
+                    .Include(t => t.StoreCartsEntityDetails)
+                as IQueryable<StoreCartsEntity>;
             var totalItemCount = await collection.CountAsync();
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
-            var collectionReturn = await collection.OrderBy(c => c.clientId)
+            var collectionReturn = await collection.OrderByDescending(c => c.clientId)
                    .Skip(pageSize * (pageNumber - 1))
                    .Take(pageSize)
                    .ToListAsync();
             var returnCollection = _mapper.Map<IEnumerable<StoreCartsEntityModelWithDetails>>(collectionReturn);
 
+            return (returnCollection, paginationMetadata);
+        }
+        
+        public async Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCartsWithConditions(QueryFilters queryFilters)
+        {
+            var pageSize = queryFilters.pageSize;
+            var pageNumber = queryFilters.pageNumber;
+            var collection = _DBContext.StoreCartsEntity
+                    .Include(t => t.StoreCartsEntityDetails)
+                as IQueryable<StoreCartsEntity>;
+            if (queryFilters.queryFields != null)
+            {
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }
+            }
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            var collectionReturn = await collection.OrderByDescending(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            var returnCollection = _mapper.Map<IEnumerable<StoreCartsEntityModelWithDetails>>(collectionReturn);
             return (returnCollection, paginationMetadata);
         }
 

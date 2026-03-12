@@ -506,6 +506,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:TasksAPI.Controllers.StoresOperationsController.GetCartsByQuery(TasksAPI.Models.QueryFilters)">
+            <summary>
+            Returns a list of all Carts with filters
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
         <member name="M:TasksAPI.Controllers.StoresOperationsController.GetCartByAccountID(System.Int32)">
             <summary>
             Get all carts from a client

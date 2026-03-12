@@ -26,6 +26,7 @@ namespace TasksAPI.Entities
 
         public GoodsTypesEntity? GoodsTypes { get; set; }
         public TasksEntitiesTransfer? TasksEntitiesTransfer { get; }
+        public ICollection<StoreCartsEntityDetails>? StoreCartsEntityDetails { get; set; }
 
     }
 }

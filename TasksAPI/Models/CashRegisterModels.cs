@@ -79,6 +79,7 @@ namespace TasksAPI.Models
         public int CartId { get; set; }
         public int OperationType { get; set; } // 1- Sale , 2 - Return
         public int GoodId { get; set; }
+        public GoodsModels GoodsTypesInstance { get; set; }
         public Decimal Price { get; set; }
         public string[]? Notes { get; set; }
     }
@@ -94,8 +95,11 @@ namespace TasksAPI.Models
     {
         public int Id { get; set; }
         public int ClerktId { get; set; }
+        public UserResource? UserEntity { get; set; }
         public int StoreLocation { get; set; }
+        public LocationUnitModel? LocationTypesInstances { get; set; }
         public int ClientId { get; set; }
+        public UserResource? Accounts { get; set; }
         public int SessionId { get; set; }
         public int Status { get; set; }  // 1 - Open, 2 - Paid
         public Decimal Total { get; set; }

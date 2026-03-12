@@ -20,5 +20,8 @@ namespace TasksAPI.Entities
         public Decimal Remaining { get; set; }
         [JsonIgnore]
         public ICollection<StoreCartsEntityDetails>? StoreCartsEntityDetails { get; set; }
+        public LocationTypesInstances? LocationTypesInstances { get; set; }
+        public Accounts? Accounts { get; set; }
+        public UserEntity? UserEntity { get; set; }
     }
 }
