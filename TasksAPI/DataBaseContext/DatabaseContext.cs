@@ -168,13 +168,13 @@ namespace TasksAPI.DataBaseContext
                 .HasOne(p => p.GoodsTypesInstance)
                 .WithMany(p => p.StoreCartsEntityDetails)
                 .HasForeignKey(p => p.GoodId);
-                
-                
+
+
             // modelBuilder.Entity<StoreCartsEntityDetails>()
             //     .HasMany(p => p.GoodsTypesInstances)
             //     .WithMany(p => p.StoreCartsEntityDetails)
             //     .UsingEntity(j => j.ToTable("StoreCartDetails_GoodsInstances"));
-              
+
             modelBuilder.Entity<StoreCartsEntity>()
                         .Property(p => p.Total)
                         .HasColumnType("decimal(18,4)");

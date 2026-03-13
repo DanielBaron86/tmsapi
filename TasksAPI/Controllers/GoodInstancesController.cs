@@ -106,6 +106,7 @@ public class GoodInstancesController : ControllerBase
             var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoods(pageNumber, pageSize);
 
             Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
             return Ok(itemInstances);
         }
         catch (Exception ex)

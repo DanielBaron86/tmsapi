@@ -24,7 +24,7 @@ namespace TMSTest
 
 
         [Fact]
-        public async void TestUSerRegistrationAndLogin()
+        public async Task TestUSerRegistrationAndLogin()
         {
             var dbOptions = new DbContextOptionsBuilder<DatabaseConnectContext>()
             .UseInMemoryDatabase(databaseName: "TMSAPI")

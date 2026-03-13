@@ -256,8 +256,8 @@ namespace TasksAPI.Services
         {
             var session = await _DBContext.CashRegisterEntitySessions.Where(t => t.SessionStatus == 1).FirstOrDefaultAsync(t => t.AssignedClerk == CreateNewCart.ClerkId) ?? throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");
             var location =
-                await _DBContext.LocationTypesInstances.Where(l => l.LocationTypeID ==(int)LocationTypesList.STORE ).FirstOrDefaultAsync(l => l.Id == CreateNewCart.StoreLocation) ?? throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} ");;
-            
+                await _DBContext.LocationTypesInstances.Where(l => l.LocationTypeID == (int)LocationTypesList.STORE).FirstOrDefaultAsync(l => l.Id == CreateNewCart.StoreLocation) ?? throw new ArgumentException($"No opened registers found for clerk with id {CreateNewCart.ClerkId} "); ;
+
             var cartToCreate = _mapper.Map<StoreCartsEntity>(new StoreCartsEntityModel { SessionId = session.Id, Status = 1, ClientId = CreateNewCart.ClientId, ClerktId = CreateNewCart.ClerkId, StoreLocation = CreateNewCart.StoreLocation });
 
             _DBContext.StoreCartsEntity.Add(cartToCreate);
@@ -267,13 +267,13 @@ namespace TasksAPI.Services
 
         }
 
-       
+
 
         public async Task<StoreCartsEntityModelWithDetails> GetCartByID(int cartId)
         {
             var newCart = await _DBContext.StoreCartsEntity
                 .Include(t => t.StoreCartsEntityDetails)
-                .ThenInclude(d => d.GoodsTypesInstance )
+                .ThenInclude(d => d.GoodsTypesInstance)
                 .Include(t => t.LocationTypesInstances)
                 .Include(e => e.Accounts)
                 .Include(e => e.UserEntity)
@@ -413,7 +413,7 @@ namespace TasksAPI.Services
 
             return (returnCollection, paginationMetadata);
         }
-        
+
         public async Task<(IEnumerable<StoreCartsEntityModelWithDetails>, PaginationMetadata)> GetCartsWithConditions(QueryFilters queryFilters)
         {
             var pageSize = queryFilters.pageSize;

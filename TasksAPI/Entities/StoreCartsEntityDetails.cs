@@ -17,8 +17,8 @@ namespace TasksAPI.Entities
         public int OperationType { get; set; } // 1- Sale , 2 - Return , 3 - Others
 
         public int GoodId { get; set; }
-        [ForeignKey("GoodId")] 
-        public GoodsTypesInstances? GoodsTypesInstance { get; set; } 
+        [ForeignKey("GoodId")]
+        public GoodsTypesInstances? GoodsTypesInstance { get; set; }
         [Required]
         public Decimal Price { get; set; }
 

@@ -60,6 +60,7 @@ namespace TasksAPI.Controllers
                 var (carts, paginationMetadata) = await _storeServices.GetCarts(pageNumber, pageSize);
 
                 Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+                Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
                 return Ok(carts);
             }
             catch (Exception ex)
@@ -68,7 +69,7 @@ namespace TasksAPI.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Returns a list of all Carts with filters
         /// </summary>
