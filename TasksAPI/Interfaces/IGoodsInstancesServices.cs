@@ -9,8 +9,8 @@ namespace TasksAPI.Interfaces
     {
         Task<(IEnumerable<GoodsModels>, PaginationMetadata)> GetGoods(int pageNumber, int pageSize);
         Task<(IEnumerable<GoodsModels>, PaginationMetadata)> GetGoodsWithConditions(QueryFilters queryFilters);
-
-
+        Task<(IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)> GetGoodsByView(int pageNumber, int pageSize);
+        Task<(IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)> GetGoodsByViewWithConditions(QueryFilters queryFilters);
         Task<GoodsModels> GetGoodById(int goodId);
 
 
@@ -27,7 +27,7 @@ namespace TasksAPI.Interfaces
 
         Task<ICollection<ItemMovementEntity>> GetGoodHistorysById(int goodId);
 
-        Task<(IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)> GetGoodsByView(int pageNumber, int pageSize);
+
 
 
 

@@ -236,4 +236,31 @@ public class GoodInstancesController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Returns a view of all goods instances with Conditions
+    /// </summary>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <returns></returns>
+    [HttpPost("view/query")]
+    public async Task<ActionResult<IEnumerable<GoodsModels>>> GetGoodsByViewWithConditions(QueryFilters queryFilters)
+    {
+
+        try
+        {
+
+            var (itemInstances, paginationMetadata) = await _goodsInstancesService.GetGoodsByViewWithConditions(queryFilters);
+
+            Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            Response.Headers.Append("Access-Control-Expose-Headers", "X-Pagination");
+            return Ok(itemInstances);
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
+
+    }
+
 }

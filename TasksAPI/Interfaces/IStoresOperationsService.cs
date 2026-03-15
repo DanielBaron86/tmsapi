@@ -18,6 +18,7 @@ namespace TasksAPI.Interfaces
         Task<(IEnumerable<CashRegisterEntitySessionsModel>, PaginationMetadata)> GetSessionrWithConditions(QueryFilters queryFilters);
         Task<CashRegisterEntitySessionsModel> OpenNewSession(CreateCashRegisterSessionsEntityModel args);
         Task<CashRegisterEntitySessionsModel> CloseSession(int sessionId);
+        Task<CashRegisterEntitySessionsModel> GetActiveSessionForUser(int userId);
 
         Task<StoreCartsEntityModel> CreateNewCart(CreateNewCart CreateNewCart);
         Task<StoreCartsEntityDetailsModel> AddDetailsToCart(int cartId, CreateRegisterOperationsModel operationModel);

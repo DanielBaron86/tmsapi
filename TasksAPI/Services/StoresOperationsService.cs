@@ -110,6 +110,7 @@ namespace TasksAPI.Services
 
         }
 
+
         public async Task<CashRegisterEntityModel> CreateCashRegister(CreateCashRegisterEntity cashRegisterEntity)
         {
             var cashRegister = await _DBContext.CashRegisterEntity.Include(c => c.LocationTypesInstances)
@@ -249,6 +250,15 @@ namespace TasksAPI.Services
 
             var returnCollection = _mapper.Map<IEnumerable<CashRegisterEntitySessionsModel>>(collectionReturn);
             return (returnCollection, paginationMetadata);
+        }
+        public async Task<CashRegisterEntitySessionsModel> GetActiveSessionForUser(int userId)
+        {
+            var session = await _DBContext.CashRegisterEntitySessions
+                .Include(t => t.User)
+                .Include(t => t.CashRegisterEntity)
+                .ThenInclude(t => t.LocationTypesInstances)
+                .Where(t => t.SessionStatus == 1).FirstOrDefaultAsync(t => t.AssignedClerk == userId) ?? throw new ArgumentException($"No opened registers found for clerk with id {userId} ");
+            return _mapper.Map<CashRegisterEntitySessionsModel>(session);
         }
 
 

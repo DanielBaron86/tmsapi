@@ -336,6 +336,32 @@ namespace TasksAPI.Controllers
         }
 
         /// <summary>
+        /// Returns active session for user
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("get_sessions/active/{userId}")]
+        public async Task<ActionResult<IEnumerable<CashRegisterEntitySessionsModel>>> GetActiveSessionForUser(int userId)
+        {
+
+            try
+            {
+
+                var activeSession = await _storeServices.GetActiveSessionForUser(userId);
+
+
+                return Ok(activeSession);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+        /// <summary>
         /// Returns a list of all registers Sessions with filters
         /// </summary>
         /// <param name="pageNumber"></param>

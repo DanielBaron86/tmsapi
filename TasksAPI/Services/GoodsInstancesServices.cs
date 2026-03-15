@@ -80,6 +80,7 @@ namespace TasksAPI.Services
         }
 
 
+
         public async Task<GoodsModels> GetGoodById(int goodId)
         {
             var good = await _dbContext.GoodsTypesInstances
@@ -248,6 +249,31 @@ namespace TasksAPI.Services
                 .ToListAsync();
             return (collectionReturn, paginationMetadata);
         }
+
+        public async Task<(IEnumerable<v_GoodsTypesInstances>, PaginationMetadata)> GetGoodsByViewWithConditions(
+            QueryFilters queryFilters)
+        {
+            var pageSize = queryFilters.pageSize;
+            var pageNumber = queryFilters.pageNumber;
+            var collection = _dbContext.v_GoodsTypesInstances
+
+                as IQueryable<v_GoodsTypesInstances>;
+            if (queryFilters.queryFields != null)
+            {
+                foreach (var q in queryFilters.queryFields)
+                {
+                    collection = ServiceUtils.CreateFilter(collection, q.keyField, q.keyValue);
+                }
+            }
+            var totalItemCount = await collection.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, queryFilters.pageSize, queryFilters.pageNumber);
+            var collectionReturn = await collection.OrderBy(c => c.Id)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+            return (collectionReturn, paginationMetadata);
+        }
+
 
 
     }

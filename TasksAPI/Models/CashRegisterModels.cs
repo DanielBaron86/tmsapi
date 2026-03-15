@@ -51,14 +51,16 @@ namespace TasksAPI.Models
         public int SessionStatus { get; set; } // 1- Open , 2- Closed
         [JsonRequired]
         public int AssignedClerk { get; set; }
+        public UserResource? User { get; set; }
         [JsonRequired]
         public int CashRegisterId { get; set; }
+        public CashRegisterEntityModel CashRegisterEntity { get; set; }
 
         public DateTime? OpenHour { get; set; }
         public DateTime? CloseHour { get; set; }
 
         public string[]? Notes { get; set; }
-        public UserResource? User { get; set; }
+
     }
 
     public struct CreateRegisterOperationsModel
